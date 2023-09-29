@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-      <div className='bg-main-blue-web'>
+      <div className='bg-main-blue-web '>
         mohammad
       </div>
     </>
