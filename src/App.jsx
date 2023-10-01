@@ -5,8 +5,8 @@ function App() {
 
   return (
     <>
-      <div className='bg-main-blue-web '>
-        mohammad
+      <div>
+        
       </div>
     </>
   )
