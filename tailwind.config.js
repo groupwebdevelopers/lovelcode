@@ -22,7 +22,12 @@ export default {
 
       },
       fontFamily:{
-        'ray':'ray-font'
+        'Ray-Medium':'Ray-Medium',
+        'Ray-Light':'Ray-Light',
+        'Ray-ExtraBold':'Ray-ExtraBold',
+        'Ray-ExtraBlack':'Ray-ExtraBlack',
+        'Ray-Bold':'Ray-Bold',
+        'Ray-Black':'Ray-Black',
       }
     },
   },

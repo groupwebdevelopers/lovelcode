@@ -1,0 +1,24 @@
+@font-face {
+    font-family: Ray-Medium;
+    src: url(./Ray-Medium.ttf);
+}
+@font-face {
+    font-family: Ray-Light;
+    src: url(./Ray-Light.ttf);
+}
+@font-face {
+    font-family: Ray-ExtraBold;
+    src: url(./Ray-ExtraBold.ttf);
+}
+@font-face {
+    font-family: Ray-ExtraBlack;
+    src: url(./Ray-ExtraBlack.ttf);
+}
+@font-face {
+    font-family: Ray-Bold;
+    src: url(./Ray-Bold.ttf);
+}
+@font-face {
+    font-family: Ray-Black;
+    src: url(./Ray-Black.ttf);
+}
