@@ -1,15 +1,14 @@
 import { useState } from 'react'
+import routes from './routes/routes'
+import { useRoutes } from 'react-router-dom'
 
 function App() {
-  
-
-  return (
-    <>
-      <div>
-        
-      </div>
-    </>
-  )
+    const router = useRoutes(routes)
+    return (
+        <>
+            {router}
+        </>
+    )
 }
 
 export default App
