@@ -5,6 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '1rem'
+    },
+    boxShadow: {
+      'normal': '0px 0px 4px 0px rgba(0, 0, 0, 0.14)',
+    },
     extend: {
       colors: {
         'main-bg-web': '#eee',
