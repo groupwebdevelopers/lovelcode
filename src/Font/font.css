@@ -22,3 +22,27 @@
     font-family: Ray-Black;
     src: url(./Ray-Black.ttf);
 }
+
+
+
+
+@font-face {
+    font-family: ANJOMANFANUM-HEAVY;
+    src: url(./ANJOMANFANUM-HEAVY.TTF);
+}
+@font-face {
+    font-family: ANJOMANFANUM-MEDIUM;
+    src: url(./ANJOMANFANUM-MEDIUM.TTF);
+}
+@font-face {
+    font-family: ANJOMANFANUM-SEMIBOLD;
+    src: url(./ANJOMANFANUM-SEMIBOLD.TTF);
+}
+@font-face {
+    font-family: ANJOMANFANUM-THIN;
+    src: url(./ANJOMANFANUM-THIN.TTF);
+}
+@font-face {
+    font-family: ANJOMANFANUM-ULTRABOLD;
+    src: url(./ANJOMANFANUM-ULTRABOLD.TTF);
+}

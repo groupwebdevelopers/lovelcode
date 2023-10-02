@@ -21,13 +21,19 @@ export default {
         'main-light-web': '#fff',
 
       },
-      fontFamily:{
-        'Ray-Medium':'Ray-Medium',
-        'Ray-Light':'Ray-Light',
-        'Ray-ExtraBold':'Ray-ExtraBold',
-        'Ray-ExtraBlack':'Ray-ExtraBlack',
-        'Ray-Bold':'Ray-Bold',
-        'Ray-Black':'Ray-Black',
+      fontFamily: {
+        'Ray-Medium': 'Ray-Medium',
+        'Ray-Light': 'Ray-Light',
+        'Ray-ExtraBold': 'Ray-ExtraBold',
+        'Ray-ExtraBlack': 'Ray-ExtraBlack',
+        'Ray-Bold': 'Ray-Bold',
+        'Ray-Black': 'Ray-Black',
+
+        'ANJOMANFANUM-HEAVY': 'ANJOMANFANUM-HEAVY',
+        'ANJOMANFANUM-MEDIUM': 'ANJOMANFANUM-MEDIUM',
+        'ANJOMANFANUM-SEMIBOLD': 'ANJOMANFANUM-SEMIBOLD',
+        'ANJOMANFANUM-THIN': 'ANJOMANFANUM-THIN',
+        'ANJOMANFANUM-ULTRABOLD': 'ANJOMANFANUM-ULTRABOLD'
       }
     },
   },
