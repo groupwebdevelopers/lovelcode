@@ -3,6 +3,6 @@ import Portfolio from "../pages/Portfolio/Portfolio"
 
 const routes = [
     { path: '/', element: <Home /> },
-    { path: '/Portfolio', element: <Portfolio /> },
+    { path: '/portfolio', element: <Portfolio /> },
 ]
 export default routes
