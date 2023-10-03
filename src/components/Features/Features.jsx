@@ -42,9 +42,7 @@ export default function Features() {
                   <div className="box2 bg-white md:w-[450px] md:h-[230px] w-[380px] h-[200px]  md:mr-[70px] mr-[15px]  rounded-3xl flex flex-col items-center gap-6 mt-[30px]">
                     <div className="mt-4">
                       <h1 className="font-Ray-Black">
-                        درصد رضایت و آمار سایت
-                        <span className="text-main-blue-web">لاول کد</span> از
-                        زمان ایجاد آن
+                        درصد رضایت و آمار سایت  <span className="text-main-blue-web" >لاول کد  </span>  از زمان ایجاد آن
                       </h1>
                     </div>
 
@@ -79,7 +77,7 @@ export default function Features() {
                       className="md:w-[200px] w-[140px] md:mr-10 mr-[25px]"
                     />
                     <h1 className="font-Ray-ExtraBold md:text-xl text-lg">
-                      بهره مندی از متخصیصن
+                      بهره مندی از متخصصین
                     </h1>
                   </div>
 
