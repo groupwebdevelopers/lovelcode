@@ -1,7 +1,15 @@
-import React from 'react'
+import React from "react";
 
 export default function SocialNetworks() {
   return (
-    <div>SocialNetworks</div>
-  )
+    <>
+      <div>
+        <div className="all">
+           <div className="box">
+
+           </div>
+        </div>
+      </div>
+    </>
+  );
 }
