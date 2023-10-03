@@ -47,19 +47,19 @@ export default function Features() {
                     </div>
 
                     <div className="font-Ray-Bold">
-                      <span>97.6 درصد</span>
+                      <span className="font-ANJOMANFANUM-MEDIUM text-sm"> 97.6 درصد</span>
                       <span className="mr-[130px]">نرخ رضایت مشتریان </span>
                       <hr className="w-[310px]" />
                     </div>
 
                     <div className="font-Ray-Bold">
-                      <span>3000+</span>
+                      <span className="font-ANJOMANFANUM-MEDIUM  text-sm">3000+</span>
                       <span className="mr-[145px]">مشتری از سراسر ایران</span>
                       <hr className="w-[310px]" />
                     </div>
 
                     <div className="font-Ray-Bold">
-                      <span>50000+</span>
+                      <span className="font-ANJOMANFANUM-MEDIUM  text-sm">50000+</span>
                       <span className="mr-[110px]">
                         کاربران فعال محصولات ما
                       </span>
