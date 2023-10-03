@@ -39,16 +39,16 @@ export default function Portfolios() {
               <div className="flex justify-center mr-6 mt-6 gap-2">
                 <button
                   onClick={() => swiperRef.current.slideNext()}
-                  className="bi bi-chevron-right bg-white text-main-dark-text-web w-9 h-9 rounded-[10px] nextEl"
+                  className="bi bi-chevron-right bg-white text-main-dark-text-web w-9 h-9 rounded-[10px] nextEl hover:bg-main-blue-web hover:text-white duration-300"
                 ></button>
                 <button
                   onClick={() => swiperRef.current.slidePrev()}
-                  className="bi bi-chevron-left bg-white text-main-dark-text-web w-9 h-9 rounded-[10px] prevEl"
+                  className="bi bi-chevron-left bg-white text-main-dark-text-web w-9 h-9 rounded-[10px] prevEl hover:bg-main-blue-web hover:text-white duration-300"
                 ></button>
               </div>
             </div>
           </div>
-          <div className="l col-span-8 -translate-x-60">
+          <div className="l col-span-8 xl:-translate-x-60">
             <Swiper
               ref={swiperRef}
               // navigation={true}
@@ -65,15 +65,15 @@ export default function Portfolios() {
               className="mySwiper"
               breakpoints={{
                 640: {
-                  slidesPerView: 2,
+                  slidesPerView: 1,
                   spaceBetween: 20,
                 },
                 768: {
-                  slidesPerView: 2,
+                  slidesPerView: 1,
                   spaceBetween: 30,
                 },
                 1024: {
-                  slidesPerView: 2,
+                  slidesPerView: 1,
                   spaceBetween: 30,
                 },
                 1200: {
@@ -102,6 +102,15 @@ export default function Portfolios() {
               </SwiperSlide>
               <SwiperSlide>
                 <Portfolio
+                  img={"./images/mainweb/3D/Sec3/1.png"}
+                  title={"شرکت آسازیست"}
+                  desc={
+                    "شرکت آسازیست اردم، ارائه دهنده راهکار های ارگانیک برای دفع آفات است. تیم ما افتخار همکاری با این مجموعه بین المللی را داشته است."
+                  }
+                ></Portfolio>
+              </SwiperSlide>
+              <SwiperSlide>
+                <Portfolio
                   img={"./images/mainweb/3D/Sec3/2.png"}
                   title={"شرکت آسازیست"}
                   desc={
@@ -109,6 +118,7 @@ export default function Portfolios() {
                   }
                 ></Portfolio>
               </SwiperSlide>
+              
             </Swiper>
           </div>
         </div>
