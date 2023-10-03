@@ -18,25 +18,25 @@ export default function Portfolios() {
   return (
     <div className="overflow-x-hidden">
       <div className="container">
-        <div className="col grid grid-cols-12 bg-gradient-to-br from-[#1875FF] to-[#8B18FF] px-16 py-20 rounded-[55px]">
-          <div className="r text-white col-span-4  w-[263px]">
-            <div>
-              <h2 className="font-Ray-ExtraBold text-3xl">
+        <div className="col grid grid-cols-1 xl:grid-cols-12 bg-gradient-to-br from-[#1875FF] to-[#8B18FF] px-16 py-20 rounded-[55px]">
+          <div className="r text-white xl:col-span-4  xl:w-[263px]">
+            <div className="text-center md:text-right">
+              <h2 className="xl:font-Ray-ExtraBold xl:text-3xl font-Ray-ExtraBold text-2xl ">
                 نمونه کار های تیم لاول کد
               </h2>
-              <p className="text-lg font-bold mt-3">
+              <p className="xl:text-lg xl:font-bold mt-3 text-sm">
                 در بازاری که همه حرف میزنند، ترجیح میدهیم چیزی نگوییم، چرا که در
                 انتها ما با کارهایمان قضاوت میشویم نه حرف هایمان
               </p>
             </div>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col md:items-start items-center">
               <div>
-                <Link className="flex gap-1 items-center mt-14 bg-white text-main-dark-text-web justify-center w-32 rounded-xl h-12 font-Ray-Bold text-sm">
+                <Link className="flex gap-1 items-center mt-14 bg-white text-main-dark-text-web justify-center xl:w-32 xl:rounded-xl px-2 py-1 rounded-md xl:h-12 xl:font-Ray-Bold xl:text-sm">
                   <p>مشارهده همه</p>
                   <i className="bi bi-arrow-left"></i>
                 </Link>
               </div>
-              <div className="flex justify-center mr-6 mt-6 gap-2">
+              <div className="flex justify-center mr-6 mt-10 gap-2 ">
                 <button
                   onClick={() => swiperRef.current.slideNext()}
                   className="bi bi-chevron-right bg-white text-main-dark-text-web w-9 h-9 rounded-[10px] nextEl hover:bg-main-blue-web hover:text-white duration-300"
@@ -48,7 +48,7 @@ export default function Portfolios() {
               </div>
             </div>
           </div>
-          <div className="l col-span-8 xl:-translate-x-60">
+          <div className="l xl:col-span-8 xl:-translate-x-60 ">
             <Swiper
               ref={swiperRef}
               // navigation={true}
@@ -76,7 +76,7 @@ export default function Portfolios() {
                   slidesPerView: 1,
                   spaceBetween: 30,
                 },
-                1200: {
+                1280: {
                   slidesPerView: 2.5,
                   spaceBetween: 30,
                 },

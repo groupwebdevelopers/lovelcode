@@ -18,7 +18,7 @@ export default function DesignPlan({color,vector,title,price,list}) {
               alt=""
             />
           </div>
-          <div className="main text-[18px] flex flex-col items-center mt-4">
+          <div className="main text-[18px] flex flex-col items-center mt-7">
             <h3 className="font-Ray-Black text-main-dark-text-web">
               {title}
             </h3>
