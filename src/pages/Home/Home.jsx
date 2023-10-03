@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import MenuContext from '../../context/MenuContext'
 import Menu from '../../components/Menu/Menu'
 import Overlay from '../../components/Overlay/Overlay'
 import Header from '../../components/Header/Header'
@@ -13,27 +12,19 @@ import Customers from '../../components/Customers/Customers'
 import Footer from '../../components/Footer/Footer'
 
 export default function Home() {
-    const [menuDisplay, setMenuDisplay] = useState(false)
-    const menuDisplayHandler = (display) => {
-        setMenuDisplay(display)
-    }
     return (
-        <MenuContext.Provider
-            value={{menuDisplay, menuDisplayHandler}}
-        >
-            <div className='relative'>
-                <Menu />
-                <Overlay />
-                <Header />
-                <DesignPlans />
-                <Portfolio />
-                <Features />
-                <SocialNetworks />
-                <NewsAndArticles />
-                <Introduction />
-                <Customers />
-                <Footer />
-            </div>
-        </MenuContext.Provider>
+        <div className='relative'>
+            <Menu />
+            <Overlay />
+            <Header />
+            <DesignPlans />
+            <Portfolio />
+            <Features />
+            <SocialNetworks />
+            <NewsAndArticles />
+            <Introduction />
+            <Customers />
+            <Footer />
+        </div>
     )
 }
