@@ -29,7 +29,7 @@ export default function DesignPlan({color,vector,title,price,list}) {
           <div className="ul flex flex-col items-start justify-center text-main-dark-text-web mt-6">
             {
               list.map((li)=>(
-            <div className="flex items-center gap-1">
+            <div key={li.id} className="flex items-center gap-1">
               <i className={`bi ${li.checked} ${li.checked === 'bi-x' ? 'text-main-red-web text-2xl' : 'text-main-green-web'} text-xl`}></i>
               <p className="text-[14px] font-Ray-ExtraBold">
                 {li.title}

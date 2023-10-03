@@ -176,7 +176,7 @@ export default function DesignPlans() {
     },
   ];
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div className="container grid grid-cols-1 md:grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4">
       {boxses.map((item)=>(
         <div key={item.id}>
           <DesignPlan color={item.color} vector={item.vector} title={item.title} price={item.price} list={item.list}></DesignPlan>
