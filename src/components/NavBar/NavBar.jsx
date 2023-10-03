@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
+import MenuContext from '../../context/MenuContext'
 
 export default function NavBar() {
+    const menuContext = useContext(MenuContext)
+    const showMenu = () => {
+        menuContext.menuDisplayHandler(true)
+    }
     return (
-        <div className='container flex items-center justify-between pt-[30px] mb-10 sm:mb-16 lg:mb-24'>
+        <div className='container flex items-center justify-between pt-4 md:pt-[30px] mb-10 sm:mb-16 lg:mb-24'>
             <div className="flex items-center gap-x-2.5">
                 <Link to='/' className="flex items-center justify-center shadow-normal lg:h-[55px] lg:w-[55px] h-12 w-12 bg-white rounded-xl lg:rounded-2xl">
                     <img src="./images/mainweb/3D/Sec1/path28.svg" className='h-7 lg:h-[31px]' alt="" />
@@ -58,7 +63,7 @@ export default function NavBar() {
                     ثبت نام
                 </Link>
             </div>
-            <div className='block md:hidden text-xl cursor-pointer'>
+            <div className='block md:hidden text-xl cursor-pointer' onClick={showMenu}>
                 <i class="bi bi-list"></i>
             </div>
         </div>
