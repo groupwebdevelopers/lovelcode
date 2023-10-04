@@ -52,7 +52,6 @@ export default function Portfolios() {
             <Swiper
               ref={swiperRef}
               // navigation={true}
-              loop={true}
               navigation={{
                 prevEl: ".prevEl",
                 nextEl: ".nextEl",
