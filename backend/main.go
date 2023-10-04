@@ -5,7 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
+
 	"lovelcode/router"
+	"lovelcode/database"
 )
 
 
@@ -21,9 +23,11 @@ func main(){
 
 
 	//add html views
-	database.Setup()
+	if err:=database.Setup(); err!=nil{
+		log.Fatal("can't connect to database")
+	}
 	//settings.Setup()
 	app.Static("/static", "../frontend/public")
-	router.Route()
+	router.Route(app)
 	log.Fatal(app.Listen(":8000"))
 }

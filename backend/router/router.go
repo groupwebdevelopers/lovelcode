@@ -5,7 +5,7 @@ import (
 	"lovelcode/handlers"
 )
 
-func Route(app *fiber.App) error{
+func Route(app *fiber.App) {
 	
 	apiOnly := app.Group("/", handlers.ApiOnly)
 
@@ -14,5 +14,5 @@ func Route(app *fiber.App) error{
 	auth.Post("/signup", handlers.Signup)
 
 	apiOnly.Get("/", handlers.Home)
-
+	
 }
