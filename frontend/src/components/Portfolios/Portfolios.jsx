@@ -20,7 +20,7 @@ export default function Portfolios() {
       <div className="container">
         <div className="col grid grid-cols-1 xl:grid-cols-12 bg-gradient-to-br from-[#1875FF] to-[#8B18FF] px-16 py-20 rounded-[55px]">
           <div className="r text-white xl:col-span-4  xl:w-[263px]">
-            <div className="text-center md:text-right">
+            <div className="text-center xl:text-right">
               <h2 className="xl:font-Ray-ExtraBold xl:text-3xl font-Ray-ExtraBold text-2xl ">
                 نمونه کار های تیم لاول کد
               </h2>
