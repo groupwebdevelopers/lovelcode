@@ -51,13 +51,13 @@ const NewsSlider = () => {
     <div className="w-full auto relative lg:mt-10 mt-4">
       <button
         onClick={() => swiperRef.current.slidePrev()}
-        className="prevEl absolute w-12 h-40 lg:w-16 lg:h-16 top-28 -right-16 lg:-right-20 z-50  bg-white lg:rounded-full rounded-l-full  text-violet-600 opacity-90 "
+        className="prevEl absolute w-12 h-40 lg:w-16 lg:h-16 top-28 -right-16 lg:-right-24 z-50  bg-white lg:rounded-full rounded-l-full  text-violet-600 opacity-90 "
       >
         <i className="bi bi-chevron-compact-right text-2xl"></i>
       </button>
       <button
         onClick={() => swiperRef.current.slideNext()}
-        className="nextEl absolute w-12 h-40 lg:w-16 lg:h-16 top-28 -left-16 lg:-left-20 z-50  bg-white lg:rounded-full rounded-r-full  text-violet-600 opacity-90  "
+        className="nextEl absolute w-12 h-40 lg:w-16 lg:h-16 top-28 -left-16 lg:-left-24 z-50  bg-white lg:rounded-full rounded-r-full  text-violet-600 opacity-90  "
       >
         <i className=" bi bi-chevron-compact-left text-2xl"></i>
       </button>
