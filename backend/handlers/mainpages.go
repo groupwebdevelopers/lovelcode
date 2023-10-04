@@ -5,6 +5,6 @@ import (
 )
 
 
-func Home(c *fiber.Ctx){
-	
+func Home(c *fiber.Ctx) error{
+	return c.JSON(fiber.Map{"msg":"hello i'm working"})
 }
