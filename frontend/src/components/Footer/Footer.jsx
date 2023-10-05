@@ -74,12 +74,12 @@ export default function Footer() {
                       <i className="bi bi-geo-alt"></i>
                       <p>
                         تهران ، شهرک غرب , خیابان غرب , طبقه <span>3</span>،
-                        واحد <span>303</span>
+                        واحد <span className="font-Ray-Medium">303</span>
                       </p>
                     </li>
                     <li className="flex gap-2 items-center">
                       <i className="bi bi-telephone"></i>
-                      <p>09392848554 - 09392848554</p>
+                      <p className="font-ANJOMANFANUM-MEDIUM">09392848554 - 09392848554</p>
                     </li>
                     <li className="flex gap-2 items-center">
                       <i className="bi bi-envelope"></i>
