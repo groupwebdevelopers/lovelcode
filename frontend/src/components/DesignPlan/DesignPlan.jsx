@@ -4,7 +4,7 @@ export default function DesignPlan({color,vector,title,price,list}) {
   return (
     <>
       <div className="flex justify-center">
-        <div className="bg-white rounded-[30px] p-4 flex flex-col items-center justify-between w-[270px] h-[664px]">
+        <div className="bg-white rounded-[30px] p-4 flex flex-col items-center justify-between w-[270px] h-[662px]">
           <div>
           <div className={`relative ${color}  w-[239px] h-48 rounded-[20px] overflow-hidden`}>
             <img
