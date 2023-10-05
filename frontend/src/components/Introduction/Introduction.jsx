@@ -42,7 +42,7 @@ export default function Introduction() {
   const [active, setActive] = useState("front");
   const filteredItems = data.filter((item) => item.expert === active);
   return (
-    <div className="w-full  lg:px-36 pt-20">
+    <div className="w-full  lg:px-36 py-20">
       <div className="w-full h-auto flex font-Ray-ExtraBold text-3xl justify-center gap-1">
         <span className="text-main-dark-text-web">معرفی اعضای تیم </span>
         <span className="text-main-blue-web">لاول کد </span>
@@ -55,7 +55,7 @@ export default function Introduction() {
           <div className="lg:w-[30rem] w-[85%] h-12 text-main-dark-text-web cursor-pointer flex justify-between items-center  bg-white rounded-xl">
             <span
               onClick={() => setActive("front")}
-              className={`h-full px-4 font-Ray-Light lg:text-base text-xs  rounded-xl flex items-center transition-all duration-300 ${
+              className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
                 active === "front"
                   ? "bg-blue-500 text-white"
                   : "bg-white text-main-dark-text-web"
@@ -65,7 +65,7 @@ export default function Introduction() {
             </span>
             <span
               onClick={() => setActive("back")}
-              className={`h-full px-4 font-Ray-Light lg:text-base text-xs  rounded-xl flex items-center transition-all duration-300 ${
+              className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
                 active === "back"
                   ? "bg-blue-500 text-white"
                   : "bg-white text-main-dark-text-web"
@@ -75,7 +75,7 @@ export default function Introduction() {
             </span>
             <span
               onClick={() => setActive("designer")}
-              className={`h-full px-4 font-Ray-Light lg:text-base text-xs  rounded-xl flex items-center transition-all duration-300 ${
+              className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
                 active === "designer"
                   ? "bg-blue-500 text-white"
                   : "bg-white text-main-dark-text-web"

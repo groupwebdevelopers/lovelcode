@@ -3,7 +3,7 @@ import NewsSlider from "./NewsSlider";
 
 export default function NewsAndArticles() {
   return (
-    <div className=" w-auto h-[43rem] bg-gradient-to-l from-[#004EC2] to-[#8B18FF] flex flex-col items-center mt-20 mb-40 lg:px-36 px-16">
+    <div className=" w-auto h-[38rem] md:h-[43rem] bg-gradient-to-l from-[#004EC2] to-[#8B18FF] flex flex-col items-center mt-20 mb-40 lg:px-36 px-16">
       <div className="w-full h-40 flex py-4 justify-center relative">
         <div className="flex flex-col text-main-light-web items-center gap-2 ">
           <h3 className="font-Ray-ExtraBold text-xl md:text-2xl lg:text-[30px]  lg:mt-10 mt-4">

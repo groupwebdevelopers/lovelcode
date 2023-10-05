@@ -104,19 +104,19 @@ const NewsSlider = () => {
                     className="object-cover "
                   />
                   <div className="w-full flex flex-col items-start mt-4 text-second-gray-text-web">
-                    <h2 className="font-Ray-ExtraBold text-main-dark-text-web">
+                    <h2 className="font-Ray-ExtraBold text-main-dark-text-web h-12 md:h-8">
                       {item.title}
                     </h2>
-                    <p className="font-Ray-Medium mt-2 h-20">{item.para}</p>
+                    <p className="font-Ray-Medium mt-2 h-32 md:h-28 text-sm md:text-base">{item.para}</p>
                   </div>
-                  <div className="w-full h-auto flex justify-start gap-8 mt-8">
+                  <div className="w-full h-auto flex justify-start gap-8 ">
                     <div className="flex gap-2 items-center">
                       <img
                         src="images/mainweb/Icons/Group 2226.png"
                         alt="png"
                         className="w-4 h-4"
                       />
-                      <span className="font-Ray-Light">علیرضا رحمانی</span>
+                      <span className="font-Ray-Light text-sm md:text-base">علیرضا رحمانی</span>
                     </div>
                     <div className="flex gap-2 items-center">
                       <img
@@ -124,11 +124,11 @@ const NewsSlider = () => {
                         alt="png"
                         className="w-4 h-4"
                       />
-                      <span className="font-Ray-Light">1402/07/07</span>
+                      <span className="font-Ray-Light text-sm md:text-base">1402/07/07</span>
                     </div>
                   </div>
                 </div>
-                <button className="w-full h-14 flex justify-center items-center gap-2 mt-8 border-t border-solid text-second-gray-text-web hover:bg-main-blue-web hover:text-main-bg-web transition-all duration-300 rounded-b-2xl">
+                <button className="w-full h-14 flex justify-center items-center gap-2 mt-2 md:mt-4 border-t border-solid text-second-gray-text-web hover:bg-main-blue-web hover:text-main-bg-web transition-all duration-300 rounded-b-2xl">
                   <img
                     src="../../../public/images/mainweb/Icons/Group 2191.png"
                     alt=""
