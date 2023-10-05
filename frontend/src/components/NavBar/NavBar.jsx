@@ -64,7 +64,7 @@ export default function NavBar() {
                 </Link>
             </div>
             <div className='block md:hidden text-xl cursor-pointer' onClick={showMenu}>
-                <i class="bi bi-list"></i>
+                <i className="bi bi-list"></i>
             </div>
         </div>
     )

@@ -42,7 +42,7 @@ export default function DesignPlan({color,vector,title,price,list}) {
           </div>
           <Link className="flex items-center justify-center gap-2 bg-main-blue-web text-white px-14 py-[14px] rounded-[12px] " to={'#'}>
             <button className="text-[14px] font-Ray-Bold">ثبت درخاست</button>
-            <i class="bi bi-arrow-left"></i>
+            <i className="bi bi-arrow-left"></i>
           </Link>
         </div>
       </div>
