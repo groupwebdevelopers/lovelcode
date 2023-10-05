@@ -13,8 +13,8 @@ func Setup() error{
 	if err!=nil{
 		return err
 	}
-	DB = &db
-	db.AutoMigrate(&User{})
+	DB = db
+	//db.AutoMigrate(&User{})
 
 	return nil
 }
