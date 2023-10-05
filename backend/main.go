@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+//	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +11,7 @@ import (
 	"lovelcode/router"
 	"lovelcode/database"
 "fmt"
+"mime"
 )
 
 
@@ -50,5 +51,6 @@ func main(){
 	//})
 	
 	router.Route(app)
-	log.Fatal(app.Listen(":8000"))
+	//log.Fatal(app.Listen(":8000"))
+	fmt.Println("jsx",mime.TypeByExtension(".jsx"))
 }
