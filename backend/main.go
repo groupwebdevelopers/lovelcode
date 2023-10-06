@@ -28,11 +28,11 @@ func main(){
 	}))
 
 	// remove
-	_ = database.DB
+	// _ = database.DB
 	
-	//if err:=database.Setup(); err!=nil{
-	//	log.Fatal("can't connect to database")
-	//}
+	if err:=database.Setup(); err!=nil{
+		log.Fatal("can't connect to database. err:", err)
+	}
 	//settings.Setup()
 	app.Static("/", "../frontend/dist")
 	
