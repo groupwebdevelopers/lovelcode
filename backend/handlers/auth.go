@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"time"	
+	"net/mail"
+	"crypto/sha256"
 	
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -26,6 +28,14 @@ func Signin(c *fiber.Ctx) error{
 	if err:= c.BodyParser(&ss).Error; err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
 	}
+
+	
+	// check email
+	if err := checkEmail(ss.Email); err!=nil{
+		return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
+	}
+	// hash password
+	ss.Password = hash(ss.Password)
 
 	// check user already exist
 
@@ -69,6 +79,14 @@ func Signup(c *fiber.Ctx) error{
 		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
 	}
 
+	// check email
+	if err := checkEmail(ss.Email); err!=nil{
+		return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
+	}
+	// hash password
+	ss.Password = hash(ss.Password)
+	
+
 	// check user already exist
 
 	var user models.User
@@ -107,4 +125,15 @@ func Signup(c *fiber.Ctx) error{
 	})
 	return c.Status(200).JSON(fiber.Map{"msg": "user created"})
 
+}
+
+func hash(s string) string{
+	h:= sha256.New()
+	h.Write([]byte(s))
+	return string(h.Sum(nil))
+}
+
+func checkEmail(e string) error{
+	_, err := mail.ParseAddress(e)
+	return err
 }
