@@ -8,11 +8,12 @@ import (
 func Route(app *fiber.App) {
 	
 	apiOnly := app.Group("/", handlers.ApiOnly)
+	apiV1 := apiOnly.Group("/v1")
 
-	auth := apiOnly.Group("/auth")
+	auth := apiV1.Group("/auth")
 	auth.Post("/signin", handlers.Signin)
 	auth.Post("/signup", handlers.Signup)
 
-	apiOnly.Get("/", handlers.Home)
+	apiV1.Get("/", handlers.Home)
 	
 }
