@@ -12,7 +12,7 @@ import (
 )
 
 
-func CreateToken(user models.User) (string, error){
+func CreateToken(user models.User, tokenExpHours uint8) (string, error){
 
 
 
@@ -20,7 +20,7 @@ func CreateToken(user models.User) (string, error){
 	secret := os.Getenv("secret") + "se"
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA,
 		jwt.MapClaims{
-				"exp" : time.Now().Add(72 * time.Hour).Unix(),
+				"exp" : time.Now().Add(time.Duration(tokenExpHours) * time.Hour).Unix(),
 				"iss": "localhost", // todo:must changed
 			
 				"email": user.Email,

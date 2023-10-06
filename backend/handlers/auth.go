@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	
+	"time"	
 	
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ import (
 )
 
 
-
+const tokenExpHours uint8 = 72
 
 func Signin(c *fiber.Ctx) error{
 	type SigninStruct struct{
@@ -39,12 +39,16 @@ func Signin(c *fiber.Ctx) error{
 
 	// create token
 
-	token, err := utils.CreateToken(user)
+	token, err := utils.CreateToken(user, tokenExpHours)
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
 
-	c.Cookie("token", token)
+	c.Cookie(&fiber.Cookie{
+		Name: "token",
+		Value: token,
+		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
+	})
 	return c.Status(200).JSON(fiber.Map{"msg": "you signin"})
 
 }
@@ -90,12 +94,17 @@ func Signup(c *fiber.Ctx) error{
 
 	// create token
 
-	token, err := utils.CreateToken(user)
+	token, err := utils.CreateToken(user, tokenExpHours)
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
 
-	c.Cookie("token", token)
+
+	c.Cookie(&fiber.Cookie{
+		Name: "token",
+		Value: token,
+		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
+	})
 	return c.Status(200).JSON(fiber.Map{"msg": "user created"})
 
 }
