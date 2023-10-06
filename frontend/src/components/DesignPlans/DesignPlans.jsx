@@ -180,7 +180,7 @@ export default function DesignPlans() {
       <div className="container">
         <div className=" flex flex-col items-center xl:flex-row">
           <div className="flex xl:flex-1 justify-center flex-col items-center xl:mr-[180px] text-center">
-            <h2 className="font-Ray-ExtraBlack text-xl xl:text-3xl text-main-dark-text-web">
+            <h2 className="font-Ray-ExtraBold text-xl xl:text-3xl text-main-dark-text-web">
               هزینه پلن های طراحی سایت{""}
               <span className="text-main-blue-web"> لاول کد</span>
             </h2>
