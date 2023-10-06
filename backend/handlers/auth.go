@@ -15,7 +15,38 @@ import (
 
 
 func Signin(c *fiber.Ctx) error{
-return c.SendStatus(1)	
+	type SigninStruct struct{
+		Email string `json:email`
+		Password string `json:password`
+	}
+
+	// check json and extract data from it
+
+	var ss SigninStruct
+	if err:= c.BodyParser(&ss).Error; err!=nil{
+		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
+	}
+
+	// check user already exist
+
+	var user models.User
+	query := models.User{Email: ss.Email}
+	if err:= database.DB.First(&user, &query).Error; err==gorm.ErrRecordNotFound{
+		return c.Status(400).JSON(fiber.Map{"error":"user not found"})
+	}else if err!=nil{
+		return utils.ServerError(c, err)
+	}
+
+	// create token
+
+	token, err := utils.CreateToken(user)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+
+	c.Cookie("token", token)
+	return c.Status(200).JSON(fiber.Map{"msg": "you signin"})
+
 }
 
 
@@ -57,11 +88,14 @@ func Signup(c *fiber.Ctx) error{
 		return c.SendStatus(500)
 	}
 
+	// create token
+
 	token, err := utils.CreateToken(user)
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
 
-	return c.Status(200).JSON(fiber.Map{"token":token, "msg": "user created"})
+	c.Cookie("token", token)
+	return c.Status(200).JSON(fiber.Map{"msg": "user created"})
 
 }
