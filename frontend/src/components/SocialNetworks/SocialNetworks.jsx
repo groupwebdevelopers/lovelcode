@@ -5,19 +5,19 @@ const socialNetworksData = [
     title: "مارا در اینستاگرام دنبال کنید.",
     buttonText: "دنبال کنید",
     imageSrc: "./images/mainweb/3D/Sec5/Instagram1.png",
-    backgroundColor: "#f61231",
+    backgroundColor: "main-red-web",
   },
   {
     title: "ارسال پیام در تلگرام به لاول کد.",
     buttonText: "ارسال پیام",
     imageSrc: "./images/mainweb/3D/Sec5/telegram.png",
-    backgroundColor: "#5ab1eb",
+    backgroundColor: "main-blue-web",
   },
   {
     title: "ارسال پیام در واتساپ به لاول کد.",
     buttonText: "ارسال پیام",
     imageSrc: "./images/mainweb/3D/Sec5/Whatsapp4.png",
-    backgroundColor: "#45b945",
+    backgroundColor: "main-green-web",
   },
 ];
 
@@ -25,10 +25,10 @@ export default function SocialNetworks() {
   return (
     <div className="container">
       <div className="all mt-10 xl:flex xl:justify-between xl:flex-row flex flex-col items-center lg:mr-[0] xl:mr-[0]">
-        {socialNetworksData.map((network, index) => (
+        {socialNetworksData.map((network, id) => (
           <div
-            key={index}
-            className={`box bg-[${network.backgroundColor}] max-w-[385px] rounded-3xl h-[120px] flex mt-[50px]`}
+            key={id}
+            className={`box bg-${network.backgroundColor} max-w-[385px] rounded-3xl h-[120px] flex mt-[50px]`}
           >
             <div className="pb w-[40%] m-[20px]">
               <h1 className="text-white font-Ray-Bold">{network.title}</h1>
