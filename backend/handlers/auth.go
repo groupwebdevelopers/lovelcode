@@ -4,7 +4,7 @@ import (
 	"time"	
 	"net/mail"
 	"crypto/sha256"
-	
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -25,7 +25,7 @@ func Signin(c *fiber.Ctx) error{
 	// check json and extract data from it
 
 	var ss SigninStruct
-	if err:= c.BodyParser(&ss).Error; err!=nil{
+	if err:= c.BodyParser(&ss); err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
 	}
 
@@ -66,16 +66,16 @@ func Signin(c *fiber.Ctx) error{
 
 func Signup(c *fiber.Ctx) error{
 	type SignupStruct struct{
-		Email string `json:email`
-		Password string `json:password`
-		Name string `json:name`
-		Family string `json:family`
+		Email string `json:"email"`
+		Password string `json:"password"`
+		Name string `json:"name"`
+		Family string `json:"family"`
 	}
 
 	// check json and extract data from it
 
 	var ss SignupStruct
-	if err:= c.BodyParser(&ss).Error; err!=nil{
+	if err:= c.BodyParser(&ss); err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
 	}
 
