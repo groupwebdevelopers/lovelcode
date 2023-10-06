@@ -6,8 +6,7 @@ import (
 )
 
 func Route(app *fiber.App) {
-	
-	apiOnly := app.Group("/", handlers.ApiOnly)
+	apiOnly := app.Group("/api", handlers.ApiOnly)
 	apiV1 := apiOnly.Group("/v1")
 
 	auth := apiV1.Group("/auth")
@@ -16,4 +15,7 @@ func Route(app *fiber.App) {
 
 	apiV1.Get("/", handlers.Home)
 	
+	app.Use(func (c *fiber.Ctx) error{
+		return c.Status(404).JSON(fiber.Map{"error":"page not found"})
+	})
 }
