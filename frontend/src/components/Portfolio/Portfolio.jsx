@@ -16,12 +16,10 @@ export default function Portfolio({ img, title, desc }) {
             {desc}
           </p>
         </div>
-        <div className="w-full h-full flex text-main-gray-text-web xl:font-Ray-Bold xl:text-[14px] border-t mt-4 hover:bg-main-blue-web hover:text-white duration-300 text-xs text-center px-2 py-1 font-Ray-Bold xl:py-4 md:py-2"> 
-            <Link className="w-full flex justify-center items-center xl:gap-2 gap-1" href="#">
-            <i class="bi bi-search"></i>
+            <Link className="justify-center items-center xl:gap-2 gap-1 w-full h-full flex text-main-gray-text-web xl:font-Ray-Bold xl:text-[14px] border-t mt-4 hover:bg-main-blue-web hover:text-white duration-300 text-xs text-center px-2 py-1 font-Ray-Bold xl:py-4 md:py-2" href="#">
+            <i className="bi bi-search"></i>
             <p>مشاهده سایت  {title}</p>
             </Link>
-        </div>
       </div>
     </>
   );

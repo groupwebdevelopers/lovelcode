@@ -13,7 +13,7 @@ export default function Menu() {
             <div>
                 <div className='flex items-center justify-between mb-6'>
                     <span className='flex text-2xl text-main-dark-text-web cursor-pointer' onClick={closeMenu}>
-                        <i class="bi bi-x"></i>
+                        <i className="bi bi-x"></i>
                     </span>
                     <Link to='/' className='text-main-blue-web font-Ray-ExtraBold text-xl'>
                         LovelCode

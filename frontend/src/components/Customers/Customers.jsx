@@ -19,7 +19,7 @@ export default function Customers() {
         </span>
         <div className="flex items-center gap-x-16 xl:gap-x-24 w-full">
           <button className="hidden sm:flex arrow-right h-7 w-10 lg:h-9 lg:w-12 rounded-lg border border-main-blue-web items-center justify-center text-main-blue-web text-lg hover:bg-main-blue-web hover:text-white transition-colors">
-            <i class="bi bi-arrow-right-short"></i>
+            <i className="bi bi-arrow-right-short"></i>
           </button>
           <Swiper
             loop={true}
@@ -167,7 +167,7 @@ export default function Customers() {
             </SwiperSlide>
           </Swiper>
           <button className="hidden sm:flex arrow-left h-7 w-10 lg:h-9 lg:w-12 rounded-lg border border-main-blue-web items-center justify-center text-main-blue-web text-lg hover:bg-main-blue-web hover:text-white transition-colors">
-            <i class="bi bi-arrow-left-short"></i>
+            <i className="bi bi-arrow-left-short"></i>
           </button>
         </div>
       </div>
