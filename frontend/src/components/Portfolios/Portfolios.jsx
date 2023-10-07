@@ -18,7 +18,7 @@ export default function Portfolios() {
   return (
     <div className="overflow-x-hidden mt-[115px]">
       <div className="">
-        <div className="col grid grid-cols-1  xl:grid-cols-12 bg-gradient-to-br from-[#1875FF] to-[#8B18FF] xl:pr-16 py-20 rounded-[55px]">
+        <div className="col container grid grid-cols-1  xl:grid-cols-12 bg-gradient-to-br from-[#1875FF] to-[#8B18FF] xl:pr-16 py-20 rounded-[55px]">
           <div className="r text-white xl:col-span-4  xl:w-[350px]">
             <div className="text-center xl:text-right">
               <h2 className="xl:font-Ray-ExtraBold xl:text-3xl font-Ray-ExtraBold text-2xl ">
