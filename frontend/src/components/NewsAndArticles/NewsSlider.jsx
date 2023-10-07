@@ -48,7 +48,7 @@ const NewsSlider = () => {
   const swiperRef = useRef(null);
   console.log(swiperRef.current);
   return (
-    <div className="w-full auto relative lg:mt-10 mt-4">
+    <div className="container w-full auto relative lg:mt-10 mt-4">
       <button
         onClick={() => swiperRef.current.slidePrev()}
         className="prevEl absolute w-12 h-40 lg:w-16 lg:h-16 top-28 -right-16 lg:-right-24 z-50  bg-white lg:rounded-full rounded-l-full  text-violet-600 opacity-90 "
