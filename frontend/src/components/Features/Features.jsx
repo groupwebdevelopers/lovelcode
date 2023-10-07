@@ -2,7 +2,7 @@ import React from "react";
 
 function FeatureCard({ imageSrc, title }) {
   return (
-    <div className="bg-white md:w-[280px]  md:h-[260px] w-[190px] h-[200px] text-center rounded-2xl">
+    <div className="bg-white md:w-[280px] md:h-[260px] w-[190px] h-[200px] text-center rounded-2xl">
       <img
         src={imageSrc}
         alt=""
@@ -37,13 +37,13 @@ export default function Features() {
         </div>
       </div>
       <div className="allMain text-center">
-        <div className="main xl:grid md:grid-cols-12 mt-10 container md:mr-[70px] xl:mr-[53px] 2xl:mr-[96px]">
-          <div className="right md:col-span-6 md:col-start-1 md:col-end-7">
+        <div className="main xl:grid md:grid-cols-12 mt-10 container ">
+          <div className="right md:col-span-6 md:col-start-1 md:col-end-7 md:mr-[70px] lg:mr-[200px] xl:mr-[53px] 2xl:mr-[96px]">
             <div className="box md:h-[540px] max-w-[580px] h-[500px] bg-[#FFEBD3] rounded-3xl flex justify-center flex-col items-center">
               <div className="img max-w-[300px] h-[250px]">
                 <img src="./images/mainweb/3D/Sec4/5.png" alt="" />
               </div>
-              <div className="box2 bg-white md:w-[450px] md:h-[230px] w-[360px] h-[200px] rounded-3xl flex flex-col items-center gap-6 mt-[20px]">
+              <div className="box2 bg-white w-full md:w-[450px] md:h-[230px] h-[200px] rounded-3xl flex flex-col items-center gap-6 mt-[20px]">
                 <div className="mt-4">
                   <h1 className="font-Ray-Black">
                     درصد رضایت و آمار سایت{" "}
@@ -55,27 +55,27 @@ export default function Features() {
                   <span className="font-ANJOMANFANUM-MEDIUM text-sm">
                     97.6 درصد
                   </span>
-                  <span className="mr-[130px]">نرخ رضایت مشتریان</span>
-                  <hr className="w-[310px]" />
+                  <span className="mt-2 md:mt-0  md:mr-[120px] mr-[50px]">نرخ رضایت مشتریان</span>
+                  <hr className="w-[100%]" />
                 </div>
                 <div className="font-Ray-Bold">
                   <span className="font-ANJOMANFANUM-MEDIUM text-sm">
                     3000+
                   </span>
-                  <span className="mr-[145px]">مشتری از سراسر ایران</span>
-                  <hr className="w-[310px]" />
+                  <span className="mt-2 md:mt-0 md:mr-[145px] mr-[80px]">مشتری از سراسر ایران</span>
+                  <hr className="w-[100%]" />
                 </div>
                 <div className="font-Ray-Bold">
                   <span className="font-ANJOMANFANUM-MEDIUM text-sm">
                     50000+
                   </span>
-                  <span className="mr-[110px]">کاربران فعال محصولات ما</span>
+                  <span className="mt-2 md:mt-0 md:mr-[110px] mr-[50px]">کاربران فعال محصولات ما</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="left md:col-start-7 md:col-end-13 mt-[50px] md:mt-[50px] xl:mt-[0]">
-            <div className="flex flex-wrap gap-5">
+          <div className="left md:col-start-7 md:col-end-13 mt-[50px] md:mt-[50px] xl:mt-[0] ">
+            <div className="flex flex-wrap gap-5 lg:mr-[30px] justify-center items-center text-center ">
               <FeatureCard
                 imageSrc="./images/mainweb/3D/Sec4/1.png"
                 title="بهره مندی از متخصصین"
