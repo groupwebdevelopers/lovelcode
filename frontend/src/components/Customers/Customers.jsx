@@ -27,7 +27,7 @@ export default function Customers() {
             spaceBetween={30}
             navigation={{ nextEl: ".arrow-left", prevEl: ".arrow-right" }}
             autoplay={{
-              delay: 20000,
+              delay: 2000,
               disableOnInteraction: false,
             }}
             pagination={{
