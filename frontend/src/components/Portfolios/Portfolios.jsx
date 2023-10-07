@@ -31,7 +31,7 @@ export default function Portfolios() {
             </div>
             <div className="flex flex-col md:items-start items-center">
               <div>
-                <Link className="hover:bg-main-blue-web duration-300 hover:text-white flex gap-1 items-center mt-14 bg-white text-main-dark-text-web justify-center xl:w-32 xl:rounded-xl px-2 py-1 rounded-md xl:h-12 xl:font-Ray-Bold xl:text-sm">
+                <Link to={'./portfolio'} className="hover:bg-main-blue-web duration-300 hover:text-white flex gap-1 items-center mt-14 bg-white text-main-dark-text-web justify-center xl:w-32 xl:rounded-xl px-2 py-1 rounded-md xl:h-12 xl:font-Ray-Bold xl:text-sm">
                   <p>مشارهده همه</p>
                   <i className="bi bi-arrow-left"></i>
                 </Link>
