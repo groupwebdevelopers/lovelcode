@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 
 export default function Customers() {
   return (
-    <div className="bg-third-gray-text-web">
+    <div className="bg-third-gray-text-web/20 py-14">
       <div className="container flex flex-col items-cente">
         <h4 className="text-lg sm:text-2xl lg:text-[30px] font-Ray-ExtraBold text-main-dark-text-web mb-2.5 text-center">
           انتخاب درست این عزیزان بوده ایم

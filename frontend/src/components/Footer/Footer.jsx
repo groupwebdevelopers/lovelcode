@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <>
-      <div className="bg-third-gray-text-web">
+      <div className="bg-third-gray-text-web/20 relative">
+        <a href="#top" className="absolute -top-3 right-1/2 bg-white w-9 h-9 flex justify-center items-center rounded-full">
+      <i class="bi bi-chevron-up"></i>
+        </a>
         <div className="bg-gradient-to-r from-main-blue-web to-main-violet-web pt-12 pb-5 text-white rounded-t-[50px]">
           <div className="container leading-8">
             <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-y-16 grid-cols-1 md: ">
@@ -95,16 +98,16 @@ export default function Footer() {
                   تمام حقوق مادی و معنوی متعلق به لاول کد می‌باشد.
                 </p>
               </div>
-              <div className="l flex items-center gap-3">
+              <div className="l flex items-center gap-1">
                 <p className="font-Ray-Bold text-sm">همراه ما باشید</p>
                 <img
-                  className="w-10"
-                  src="./images/mainweb/3D/footer/insta48.svg"
+                  className="w-6"
+                  src="./images/mainweb/3D/Sec5/Instagram1.png"
                   alt=""
                 />
                 <img
-                  className="w-10"
-                  src="./images/mainweb/3D/footer/telegram.svg"
+                  className="w-6"
+                  src="/images/mainweb/3D/Sec5/telegram.png"
                   alt=""
                 />
               </div>

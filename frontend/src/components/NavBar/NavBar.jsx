@@ -9,7 +9,7 @@ export default function NavBar() {
         menuContext.menuDisplayHandler(true)
     }
     return (
-        <div className='container flex items-center justify-between pt-4 md:pt-[30px] mb-10 sm:mb-16 lg:mb-24'>
+        <div id='top' className='container flex items-center justify-between pt-4 md:pt-[30px] mb-10 sm:mb-16 lg:mb-24'>
             <div className="flex items-center gap-x-2.5">
                 <Link to='/' className="flex items-center justify-center shadow-normal lg:h-[55px] lg:w-[55px] h-12 w-12 bg-white rounded-xl lg:rounded-2xl">
                     <img src="./images/mainweb/3D/Sec1/path28.svg" className='h-7 lg:h-[31px]' alt="" />
