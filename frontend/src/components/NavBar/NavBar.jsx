@@ -56,7 +56,7 @@ export default function NavBar() {
                 </li>
             </ul>
             <div className="hidden md:flex items-center gap-x-2 lg:gap-x-6">
-                <Link to='/' className='text-main-blue-web px-4 py-2 text-sm lg:text-base'>
+                <Link to='/login' className='text-main-blue-web px-4 py-2 text-sm lg:text-base'>
                     ورود
                 </Link>
                 <Link to='/' className='w-20 h-10 lg:w-24 lg:h-12 flex justify-center items-center lg:rounded-xl rounded-lg text-sm lg:text-base bg-main-blue-web text-white'>
