@@ -27,7 +27,7 @@ export default {
         'second-yellow-web': '#FFEBD3',
         'main-violet-web': '#6328DF',
         'main-light-web': '#fff',
-
+        'gray-normal': '#F5F8FA'
       },
       fontFamily: {
         'Ray-Medium': 'Ray-Medium',
