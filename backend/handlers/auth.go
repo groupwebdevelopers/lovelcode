@@ -14,7 +14,7 @@ import (
 	"lovelcode/models"
 	"lovelcode/database"
 	"lovelcode/utils"
-"fmt"
+
 )
 
 
@@ -109,7 +109,7 @@ func Signup(c *fiber.Ctx) error{
 
 	// hash password
 	ss.Password = hash(ss.Password)
-	fmt.Println(ss.Password, string(ss.Password))
+
 	// check name
 	if err:= IsJustLetter(ss.Name, "-,"); err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":err.Error})
