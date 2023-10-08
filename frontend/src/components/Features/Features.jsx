@@ -43,7 +43,7 @@ export default function Features() {
               <div className="img  w-[250px]  md:w-[350px] lg:w-[400px]  h-[250px] 2xl:w-[420px]  2xl:-mt-[40px]">
                 <img src="./images/mainweb/3D/Sec4/5.png" alt="" />
               </div>
-              <div className="box2 bg-white w-full md:w-[480px]  md:h-[230px] 2xl:h-[260px] 2xl:w-[550px] h-[200px] rounded-3xl flex flex-col items-center gap-6 2xl:gap-8 2xl:mt-[85px] mt-[50px]">
+              <div className="box2 bg-white w-full md:w-[480px]  md:h-[230px] 2xl:h-[260px] 2xl:w-[550px] h-full rounded-3xl flex flex-col items-center gap-6 2xl:gap-8 2xl:mt-[85px] mt-[50px]">
                 <div className="mt-4">
                   <h1 className="font-Ray-ExtraBold text-[22px]">
                     درصد رضایت و آمار سایت{" "}

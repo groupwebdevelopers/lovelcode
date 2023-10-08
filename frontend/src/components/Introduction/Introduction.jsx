@@ -22,18 +22,23 @@ const data = [
     expert: "front",
   },
   {
-    name: "محمدرضا گودرزی",
-    img: "/images/profile/photo_2023-09-28_23-12-16.jpg",
+    name: "علی ندرخانی",
+    img: "/images/profile/Rectangle 4635.png",
     expert: "back",
   },
   {
-    name: "محمدرضا گودرزی",
-    img: "/images/profile/photo_2023-09-28_23-12-16.jpg",
+    name: "امیرحسین طباطبایی",
+    img: "/images/profile/maAvatar.jfif",
     expert: "back",
   },
   {
-    name: "محمدرضا گودرزی",
-    img: "/images/profile/photo_2023-09-28_23-12-16.jpg",
+    name: "محمدامین یعقوبی",
+    img: "/images/profile/Ellipse 197.png",
+    expert: "back",
+  },
+  {
+    name: "علیرضا رحمانی",
+    img: "/images/profile/Rectangle 4636.png",
     expert: "designer",
   },
 ];
@@ -95,7 +100,7 @@ export default function Introduction() {
           {filteredItems.map((item) => {
             return (
               <div className=" flex flex-col items-center col-span-6 lg:col-span-3">
-                <div className="rounded-full lg:w-48 lg:h-48 w-32 h-32 bg-red-400">
+                <div className="rounded-full lg:w-48 lg:h-48 w-32 h-32">
                   <img
                     className="w-full h-full rounded-full object-cover"
                     src={item.img}
