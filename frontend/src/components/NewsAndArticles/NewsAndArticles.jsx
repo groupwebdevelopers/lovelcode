@@ -13,7 +13,7 @@ export default function NewsAndArticles() {
           </span>
         </div>
         <div className="flex h-20 items-center">
-          <button className="flex justify-center items-center w-24 h-10 lg:w-28 lg:h-12 bg-white rounded-xl font-Ray-Light text-sm text-main-dark-text-web lg:mt-6">
+          <button className="flex justify-center items-center w-24 h-10 lg:w-28 lg:h-12 bg-white rounded-xl font-Ray-Light text-sm text-main-dark-text-web lg:mt-6 lg:ml-[4.6rem]">
             <span>رفتن به بلاگ</span>
             <i className="bi bi-arrow-left-short text-lg mt-2"></i>
           </button>
