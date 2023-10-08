@@ -42,7 +42,7 @@ export default function Introduction() {
   const [active, setActive] = useState("front");
   const filteredItems = data.filter((item) => item.expert === active);
   return (
-    <div className="w-full  lg:px-36 py-20">
+    <div className="w-full  lg:px-36 py-20 container">
       <div className="w-full h-auto flex font-Ray-ExtraBold text-3xl justify-center gap-1">
         <span className="text-main-dark-text-web">معرفی اعضای تیم </span>
         <span className="text-main-blue-web">لاول کد </span>
