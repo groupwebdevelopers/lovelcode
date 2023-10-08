@@ -2,7 +2,7 @@ import React from "react";
 
 function FeatureCard({ imageSrc, title }) {
   return (
-    <div className="bg-white 2xl:bg-[#ece7e78e]  md:w-[315px] xl:w-[280px] 2xl:w-[360px] 2xl:h-[310px] md:h-[270px] w-[190px] h-[200px] text-center rounded-2xl ">
+    <div className="bg-white 2xl:bg-[#ece7e78e]  md:w-[315px] xl:w-[280px] 2xl:w-[340px] 2xl:h-[310px] md:h-[270px] w-[190px] h-[200px] text-center rounded-2xl ">
       <img
         src={imageSrc}
         alt=""
