@@ -48,16 +48,16 @@ const NewsSlider = () => {
   const swiperRef = useRef(null);
   console.log(swiperRef.current);
   return (
-    <div className="container w-full auto relative lg:mt-10 mt-4">
+    <div className="container lg:mt-10 mt-4 ">
       <button
         onClick={() => swiperRef.current.slidePrev()}
-        className="prevEl absolute w-12 h-40 lg:w-16 lg:h-16 top-28 -right-16 lg:-right-24 z-50  bg-white lg:rounded-full rounded-l-full  text-violet-600 opacity-90 "
+        className="prevEl absolute w-12 h-40 lg:w-16 lg:h-16 top-60 lg:top-72 right-0 lg:right-4  z-50  bg-white lg:rounded-full rounded-l-full  text-violet-600 opacity-80 "
       >
         <i className="bi bi-chevron-compact-right text-2xl"></i>
       </button>
       <button
         onClick={() => swiperRef.current.slideNext()}
-        className="nextEl absolute w-12 h-40 lg:w-16 lg:h-16 top-28 -left-16 lg:-left-24 z-50  bg-white lg:rounded-full rounded-r-full  text-violet-600 opacity-90  "
+        className="nextEl absolute w-12 h-40 lg:w-16 lg:h-16 top-60 lg:top-72 left-0 lg:left-4  z-50  bg-white lg:rounded-full rounded-r-full  text-violet-600 opacity-80  "
       >
         <i className=" bi bi-chevron-compact-left text-2xl"></i>
       </button>
@@ -68,11 +68,11 @@ const NewsSlider = () => {
           nextEl: ".nextEl",
         }}
         breakpoints={{
-          640: {
-            slidesPerView: 1,
+          430: {
+            slidesPerView: 1.5,
             spaceBetween: 20,
           },
-          768: {
+          640: {
             slidesPerView: 2,
             spaceBetween: 30,
           },
@@ -81,7 +81,7 @@ const NewsSlider = () => {
             spaceBetween: 30,
           },
           1280: {
-            slidesPerView: 3,
+            slidesPerView: 4,
             spaceBetween: 30,
           },
         }}
@@ -91,11 +91,10 @@ const NewsSlider = () => {
           disableOnInteraction: true,
         }}
         modules={[Autoplay, Navigation]}
-        className="w-full h-full"
       >
         {data.map((item) => {
           return (
-            <SwiperSlide className="w-full h-auto  " key={item.id}>
+            <SwiperSlide className="w-full h-auto" key={item.id}>
               <div className="w-auto h-full bg-white rounded-3xl flex flex-col items-center ">
                 <div className="w-auto h-full flex flex-col items-center pt-4 px-4">
                   <img

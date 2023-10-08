@@ -42,7 +42,7 @@ export default function Introduction() {
   const [active, setActive] = useState("front");
   const filteredItems = data.filter((item) => item.expert === active);
   return (
-    <div className="w-full  lg:px-36 py-20 container">
+    <div className="w-full py-36  lg:px-36 md:py-48 lg:py-40 xl:py-48 container">
       <div className="w-full h-auto flex font-Ray-ExtraBold text-3xl justify-center gap-1">
         <span className="text-main-dark-text-web">معرفی اعضای تیم </span>
         <span className="text-main-blue-web">لاول کد </span>
@@ -52,7 +52,7 @@ export default function Introduction() {
       </div>
       <div className=" w-full h-auto lg:mt-16 mt-12">
         <div className="w-full  flex lg:flex-row lg:justify-between flex-col items-center">
-          <div className="lg:w-[30rem] w-[85%] h-12 text-main-dark-text-web cursor-pointer flex justify-between items-center  bg-white rounded-xl">
+          <div className="md:w-[30rem]  h-12 text-main-dark-text-web cursor-pointer flex justify-between items-center  bg-white rounded-xl">
             <span
               onClick={() => setActive("front")}
               className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
