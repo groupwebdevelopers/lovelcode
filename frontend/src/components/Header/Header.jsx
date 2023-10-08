@@ -5,7 +5,7 @@ export default function Header() {
     return (
         <>
             <NavBar />
-            <div className="container flex flex-col items-center">
+            <div className="container flex flex-col items-center mb-5 sm:mb-10 md:mb-20">
                 <h4 className='text-xl sm:text-3xl lg:text-[40px] font-Ray-ExtraBold text-main-dark-text-web mb-2.5 text-center'>
                     آژانــس حرفــه ای دیــــجیتـــــال مــــــارکـــتـیـنـگ
                     <span className='text-main-blue-web inline-block'>
@@ -21,9 +21,6 @@ export default function Header() {
                 </div>
                 <div className="mb-6 sm:mb-8">
                     <img src="/images/mainweb/3D/Sec1/1.png" className='max-h-[320px] sm:max-h-[400px] lg:max-h-[554px]' alt="" />
-                </div>
-                <div className="mb-5 sm:mb-10 md:mb-20">
-                    <img src="/images/mainweb/3D/Sec1/3.png" className='h-16 sm:h-[70px]' alt="" />
                 </div>
             </div>
         </>
