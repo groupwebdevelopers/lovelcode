@@ -28,7 +28,7 @@ export default function SocialNetworks() {
         {socialNetworksData.map((network, id) => (
           <div
             key={id}
-            className={`box bg-${network.backgroundColor} w-[290px] md:w-[350px] rounded-3xl h-[120px] flex mt-[50px]`}
+            className={`box bg-${network.backgroundColor} w-[270px] md:w-[350px] rounded-3xl h-[120px] flex mt-[50px]`}
           >
             <div className="pb max-w-[40%] m-[20px]">
               <h1 className="text-white font-Ray-Bold">{network.title}</h1>
@@ -40,9 +40,13 @@ export default function SocialNetworks() {
               <img
                 src={network.imageSrc}
                 alt=""
-                className="w-[110px] md:w-[150px] md:h-[150px] h-[110px] mr-[0px] xl:mr-[0px] -mt-[30px] md:-mt-[50px]"
+                className="w-[120px] md:w-[150px] md:h-[150px] h-[120px]  -mt-[40px] md:-mt-[40px]"
               />
-              <img src={network.imageSrc} alt="" className="max-w-[50px] max-h-[50px] mt-[30px] -mr-[8px] md:-mr-[0]" />
+              <img
+                src={network.imageSrc}
+                alt=""
+                className="max-w-[50px] max-h-[50px] mt-[30px] -mr-[20px] md:-mr-[0]"
+              />
             </div>
           </div>
         ))}
