@@ -22,18 +22,23 @@ const data = [
     expert: "front",
   },
   {
-    name: "محمدرضا گودرزی",
-    img: "/images/profile/photo_2023-09-28_23-12-16.jpg",
+    name: "علی ندرخانی",
+    img: "/images/profile/Rectangle 4635.png",
     expert: "back",
   },
   {
-    name: "محمدرضا گودرزی",
-    img: "/images/profile/photo_2023-09-28_23-12-16.jpg",
+    name: "امیرحسین طباطبایی",
+    img: "/images/profile/maAvatar.jfif",
     expert: "back",
   },
   {
-    name: "محمدرضا گودرزی",
-    img: "/images/profile/photo_2023-09-28_23-12-16.jpg",
+    name: "محمدامین یعقوبی",
+    img: "/images/profile/Ellipse 197.png",
+    expert: "back",
+  },
+  {
+    name: "علیرضا رحمانی",
+    img: "/images/profile/Rectangle 4636.png",
     expert: "designer",
   },
 ];
@@ -42,7 +47,7 @@ export default function Introduction() {
   const [active, setActive] = useState("front");
   const filteredItems = data.filter((item) => item.expert === active);
   return (
-    <div className="w-full  lg:px-36 py-20">
+    <div className="w-full py-36  lg:px-36 md:py-48 lg:py-40 xl:py-48 container">
       <div className="w-full h-auto flex font-Ray-ExtraBold text-3xl justify-center gap-1">
         <span className="text-main-dark-text-web">معرفی اعضای تیم </span>
         <span className="text-main-blue-web">لاول کد </span>
@@ -52,7 +57,7 @@ export default function Introduction() {
       </div>
       <div className=" w-full h-auto lg:mt-16 mt-12">
         <div className="w-full  flex lg:flex-row lg:justify-between flex-col items-center">
-          <div className="lg:w-[30rem] w-[85%] h-12 text-main-dark-text-web cursor-pointer flex justify-between items-center  bg-white rounded-xl">
+          <div className="md:w-[30rem]  h-12 text-main-dark-text-web cursor-pointer flex justify-between items-center  bg-white rounded-xl">
             <span
               onClick={() => setActive("front")}
               className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
@@ -95,7 +100,7 @@ export default function Introduction() {
           {filteredItems.map((item) => {
             return (
               <div className=" flex flex-col items-center col-span-6 lg:col-span-3">
-                <div className="rounded-full lg:w-48 lg:h-48 w-32 h-32 bg-red-400">
+                <div className="rounded-full lg:w-48 lg:h-48 w-32 h-32">
                   <img
                     className="w-full h-full rounded-full object-cover"
                     src={item.img}
