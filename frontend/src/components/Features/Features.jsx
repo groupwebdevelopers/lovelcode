@@ -2,7 +2,7 @@ import React from "react";
 
 function FeatureCard({ imageSrc, title }) {
   return (
-    <div className="bg-white 2xl:bg-[#d6d6d68e]  md:w-[315px] xl:w-[300px] 2xl:w-[360px] 2xl:h-[310px] md:h-[270px] w-[190px] h-[200px] text-center rounded-2xl ">
+    <div className="bg-white 2xl:bg-[#ece7e78e]  md:w-[315px] xl:w-[300px] 2xl:w-[360px] 2xl:h-[310px] md:h-[270px] w-[190px] h-[200px] text-center rounded-2xl ">
       <img
         src={imageSrc}
         alt=""
@@ -24,10 +24,10 @@ export default function Features() {
             className="w-[40px]"
           />
           <div className="flex flex-col justify-center text-center">
-            <h1 className="text-2xl font-Ray-Black">
+            <h1 className="text-[30px] font-Ray-ExtraBold">
               ویژگی های شرکت <span className="text-main-blue-web">لاول کد</span>
             </h1>
-            <span className="text-main-green-web text-sm">مختص شماست</span>
+            <span className="text-main-green-web text-[18px] font-Ray-Bold">مختص شماست</span>
           </div>
           <img
             src="./images/mainweb/3D/Galaxy 2.png"
@@ -45,7 +45,7 @@ export default function Features() {
               </div>
               <div className="box2 bg-white w-full md:w-[480px]  md:h-[230px] 2xl:h-[260px] 2xl:w-[550px] h-[200px] rounded-3xl flex flex-col items-center gap-6 2xl:gap-8 2xl:mt-[85px] mt-[50px]">
                 <div className="mt-4">
-                  <h1 className="font-Ray-Black">
+                  <h1 className="font-Ray-ExtraBold text-[22px]">
                     درصد رضایت و آمار سایت{" "}
                     <span className="text-main-blue-web">لاول کد </span> از زمان
                     ایجاد آن
@@ -55,21 +55,21 @@ export default function Features() {
                   <span className="font-ANJOMANFANUM-MEDIUM text-sm">
                     97.6 درصد
                   </span>
-                  <span className="mt-2 md:mt-0  md:mr-[120px] mr-[100px] 2xl:mr-[220px]">نرخ رضایت مشتریان</span>
+                  <span className="mt-2 md:mt-0  md:mr-[120px] mr-[100px] 2xl:mr-[220px] font-Ray-Bold">نرخ رضایت مشتریان</span>
                   <hr className="w-[300px] 2xl:w-[400px]" />
                 </div>
                 <div className="font-Ray-Bold">
                   <span className="font-ANJOMANFANUM-MEDIUM text-sm">
                     3000+
                   </span>
-                  <span className="mt-2 md:mt-0 md:mr-[145px] mr-[125px] 2xl:mr-[240px]">مشتری از سراسر ایران</span>
+                  <span className="mt-2 md:mt-0 md:mr-[145px] mr-[125px] 2xl:mr-[240px] font-Ray-Bold">مشتری از سراسر ایران</span>
                   <hr className="w-[300px] 2xl:w-[400px]" />
                 </div>
                 <div className="font-Ray-Bold">
                   <span className="font-ANJOMANFANUM-MEDIUM text-sm">
                     50000+
                   </span>
-                  <span className="mt-2 md:mt-0 md:mr-[110px] mr-[95px] 2xl:mr-[205px]">کاربران فعال محصولات ما</span>
+                  <span className="mt-2 md:mt-0 md:mr-[110px] mr-[95px] 2xl:mr-[205px] font-Ray-Bold">کاربران فعال محصولات ما</span>
                 </div>
               </div>
             </div>

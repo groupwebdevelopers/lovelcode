@@ -31,8 +31,8 @@ export default function SocialNetworks() {
             className={`box bg-${network.backgroundColor} w-[270px] md:w-[350px] rounded-3xl h-[120px] flex mt-[50px]`}
           >
             <div className="pb max-w-[40%] m-[20px]">
-              <h1 className="text-white font-Ray-Bold">{network.title}</h1>
-              <button className="text-black bg-white w-[100px] h-[35px] rounded-xl mt-[5px] text-sm font-Ray-Bold">
+              <h1 className="text-white font-Ray-Bold text-[18px]">{network.title}</h1>
+              <button className="text-black bg-white w-[100px] h-[35px] rounded-xl mt-[5px] text-[14px] font-Ray-Bold">
                 {network.buttonText}
               </button>
             </div>
