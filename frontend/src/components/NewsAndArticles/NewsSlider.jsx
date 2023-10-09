@@ -48,16 +48,16 @@ const NewsSlider = () => {
   const swiperRef = useRef(null);
   console.log(swiperRef.current);
   return (
-    <div className="container lg:mt-10 mt-4 lg:px-24">
+    <div className="container lg:mt-10 mt-4 lg:px-24 2xl:relative">
       <button
         onClick={() => swiperRef.current.slidePrev()}
-        className="prevEl absolute w-12 h-40 lg:w-16 lg:h-16 top-60 lg:top-72 right-0 lg:right-4  z-50  bg-white lg:rounded-full rounded-l-full  text-violet-600 opacity-80 "
+        className="prevEl absolute w-12 h-40 lg:w-16 lg:h-16 top-60 lg:top-72 2xl:top-52 right-0 lg:right-4 2xl:right-0  z-50  bg-white lg:rounded-full rounded-l-full  text-violet-600 opacity-80 "
       >
         <i className="bi bi-chevron-compact-right text-2xl"></i>
       </button>
       <button
         onClick={() => swiperRef.current.slideNext()}
-        className="nextEl absolute w-12 h-40 lg:w-16 lg:h-16 top-60 lg:top-72 left-0 lg:left-4  z-50  bg-white lg:rounded-full rounded-r-full  text-violet-600 opacity-80  "
+        className="nextEl absolute w-12 h-40 lg:w-16 lg:h-16 top-60 lg:top-72 left-0 lg:left-4 2xl:top-52 2xl:left-0  z-50  bg-white lg:rounded-full rounded-r-full  text-violet-600 opacity-80  "
       >
         <i className=" bi bi-chevron-compact-left text-2xl"></i>
       </button>
@@ -77,13 +77,17 @@ const NewsSlider = () => {
             spaceBetween: 30,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 2.5,
             spaceBetween: 30,
           },
           1280: {
-            slidesPerView: 4,
+            slidesPerView: 3,
             spaceBetween: 30,
           },
+          1760:{
+            slidesPerView:4,
+            spaceBetween:30,
+          }
         }}
         loop={true}
         autoplay={{
@@ -100,7 +104,7 @@ const NewsSlider = () => {
                   <img
                     src={item.img}
                     alt={item.title}
-                    className="object-cover "
+                    className="object-cover xl:w-full xl:h-64 xl:rounded-3xl"
                   />
                   <div className="w-full flex flex-col items-start mt-4 text-second-gray-text-web">
                     <h2 className="font-Ray-ExtraBold text-main-dark-text-web h-12 md:h-8">
