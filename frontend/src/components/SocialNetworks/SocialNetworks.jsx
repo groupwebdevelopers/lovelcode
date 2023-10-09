@@ -45,7 +45,7 @@ export default function SocialNetworks() {
               <img
                 src={network.imageSrc}
                 alt=""
-                className="max-w-[50px] max-h-[50px] mt-[30px] -mr-[20px] md:-mr-[0]"
+                className="max-w-[50px] max-h-[50px] mt-[30px] -mr-[20px] md:-mr-[5px]"
               />
             </div>
           </div>

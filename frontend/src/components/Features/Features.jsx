@@ -2,7 +2,7 @@ import React from "react";
 
 function FeatureCard({ imageSrc, title }) {
   return (
-    <div className="bg-white 2xl:bg-[#ece7e78e]  md:w-[315px] xl:w-[280px] 2xl:w-[340px] 2xl:h-[310px] md:h-[270px] w-[190px] h-[200px] text-center rounded-2xl ">
+    <div className="bg-white md:w-[315px] xl:w-[280px] 2xl:w-[340px] 2xl:h-[310px] md:h-[270px] w-[190px] h-[200px] text-center rounded-2xl ">
       <img
         src={imageSrc}
         alt=""
@@ -43,7 +43,7 @@ export default function Features() {
               <div className="img  w-[250px]  md:w-[350px] lg:w-[400px]  h-[250px] 2xl:w-[420px]  2xl:-mt-[40px]">
                 <img src="./images/mainweb/3D/Sec4/5.png" alt="" />
               </div>
-              <div className="box2 bg-white w-full md:w-[480px]  md:h-[230px] 2xl:h-[260px] 2xl:w-[550px] h-full rounded-3xl flex flex-col items-center gap-6 2xl:gap-8 2xl:mt-[85px] mt-[50px]">
+              <div className="box2 bg-white w-full md:w-[480px]  md:h-[230px] 2xl:h-[260px] 2xl:w-[610px] h-full rounded-3xl flex flex-col items-center gap-6 2xl:gap-8 2xl:mt-[85px] mt-[50px]">
                 <div className="mt-4">
                   <h1 className="font-Ray-ExtraBold text-[22px]">
                     درصد رضایت و آمار سایت{" "}
@@ -52,7 +52,7 @@ export default function Features() {
                   </h1>
                 </div>
                 <div className="font-Ray-Bold">
-                  <span className="font-ANJOMANFANUM-MEDIUM text-sm">
+                  <span className="font-ANJOMANFANUM-MEDIUM text-sm"> 
                     97.6 درصد
                   </span>
                   <span className="mt-2 md:mt-0  md:mr-[120px] mr-[100px] 2xl:mr-[220px] font-Ray-Bold">نرخ رضایت مشتریان</span>
