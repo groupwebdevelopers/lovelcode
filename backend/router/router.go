@@ -15,7 +15,11 @@ func Route(app *fiber.App) {
 
 	apiV1.Get("/", handlers.Home)
 	
+	app.Static("*", "../frontend/dist")
+
 	app.Use(func (c *fiber.Ctx) error{
 		return c.Status(404).JSON(fiber.Map{"error":"page not found"})
 	})
+
+
 }
