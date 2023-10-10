@@ -9,10 +9,11 @@ export default function Menu() {
         menuContext.menuDisplayHandler(false)
     }
     return (
-        <div className={`flex flex-col justify-between fixed w-64 sm:w-72 top-0 bottom-0 bg-white shadow-normal z-50 p-6 transition-all ${menuContext.menuDisplay ? 'right-0': '-right-64 sm:-right-72'}`}>
+        <div className={`flex flex-col justify-between fixed w-64 sm:w-72 top-0 bottom-0 bg-white shadow-normal z-50 p-6 transition-all ${menuContext.menuDisplay ? 'right-0' : '-right-64 sm:-right-72'}`}>
             <div>
                 <div className='flex items-center justify-between mb-6'>
-                    <Link to='/' className='text-main-blue-web font-Ray-ExtraBold text-xl'>
+                    <Link to='/' className='text-main-blue-web font-Ray-ExtraBold text-xl flex items-center gap-2'>
+                        <img src="./images/mainweb/3D/Sec1/path28.svg" className='h-6' alt="" />
                         LovelCode
                     </Link>
                     <span className='flex text-2xl text-main-dark-text-web cursor-pointer' onClick={closeMenu}>
