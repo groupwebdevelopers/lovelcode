@@ -1,5 +1,9 @@
 package models
 
+import (
+	"time"
+)
+
 // when AdminPermisions is "" means it not get from database
 // for normal user AdminPermisions is "0"
 type User struct {
@@ -12,4 +16,6 @@ type User struct {
 	AdminPermisions string `gorm:"not null"`
 	IsDeleted bool `gorm:"not null"`
 	IsBanned bool
+	Token string
+	TokenExp time.Time
 }
