@@ -25,6 +25,15 @@ func AuthRequired(c *fiber.Ctx) error{
 		return c.Status(401).JSON(fiber.Map{"error":"token invalid"})
 	}
 
+	if err:=database.DB.First(&user, &user).Error:err!=nil{
+		utils.ServerError(c, err)
+	}
+
+	// check banned
+	if user.IsBanned == true{
+		return c.Status(403).JSON(fiber.Map{"error":"you are banned!"})
+	}
+
 	c.Locals("user", user)
 	return c.Next()
 }

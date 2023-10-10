@@ -11,5 +11,5 @@ type User struct {
 	Password string `gomr:"not null`
 	AdminPermisions string `gorm:"not null"`
 	IsDeleted bool `gorm:"not null"`
-
+	IsBanned bool
 }
