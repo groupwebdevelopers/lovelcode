@@ -2,10 +2,7 @@ package handlers
 
 import (
 	"time"	
-	"net/mail"
 	"crypto/sha256"
-	"strings"
-	"errors"
 	"encoding/base64"
 
 	"github.com/gofiber/fiber/v2"
@@ -35,12 +32,12 @@ func Signin(c *fiber.Ctx) error{
 
 	if ss.Email != ""{
 		// check email
-		if err := checkEmail(ss.Email); err!=nil{
+		if err := utils.CheckEmail(ss.Email); err!=nil{
 			return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
 		}
 		}else {
 			// check username
-			if err:= IsJustLetter(ss.Username, "-._"); err!=nil{
+			if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
 				return c.Status(400).JSON(fiber.Map{"error":err.Error})
 				}	
 			}
@@ -67,7 +64,7 @@ func Signin(c *fiber.Ctx) error{
 				}
 				
 				// create token
-				token, err := utils.CreateToken(user, tokenExpHours)
+				token, err := utils.CreateJWTToken(user, tokenExpHours)
 				if err!=nil{
 					return utils.ServerError(c, err)
 				}
@@ -100,7 +97,7 @@ func Signup(c *fiber.Ctx) error{
 	}
 
 	// check email
-	if err := checkEmail(ss.Email); err!=nil{
+	if err := utils.CheckEmail(ss.Email); err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
 	}
 
@@ -113,15 +110,15 @@ func Signup(c *fiber.Ctx) error{
 	ss.Password = hash(ss.Password)
 
 	// check name
-	if err:= IsJustLetter(ss.Name, "-,"); err!=nil{
+	if err:= utils.IsJustLetter(ss.Name, "-,"); err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":err.Error})
 	}
 	// check family
-	if err:= IsJustLetter(ss.Family, "-,"); err!=nil{
+	if err:= utils.IsJustLetter(ss.Family, "-,"); err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":err.Error})
 	}
 	// check username
-	if err:= IsJustLetter(ss.Username, "-._"); err!=nil{
+	if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
 		return c.Status(400).JSON(fiber.Map{"error":err.Error})
 	}
 
@@ -135,8 +132,14 @@ func Signup(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
+	// create token
+	
+	token, err := utils.CreateJWTToken(user, tokenExpHours)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+		
 	// create user
-
 	user.Email = ss.Email
 	user.Password = ss.Password
 	user.Name = ss.Name
@@ -145,17 +148,13 @@ func Signup(c *fiber.Ctx) error{
 	user.AdminPermisions = ""
 	user.IsDeleted = false
 	user.IsBanned = false
+	user.Token = token
+	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours)*time.Hour)
 
 	if err:= database.DB.Create(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
-	// create token
-
-	token, err := utils.CreateToken(user, tokenExpHours)
-	if err!=nil{
-		return utils.ServerError(c, err)
-	}
 
 	// set token into cookie
 	c.Cookie(&fiber.Cookie{
@@ -171,24 +170,5 @@ func hash(s string) string{
 	h:= sha256.New()
 	h.Write([]byte(s))
 	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
-}
-
-func checkEmail(e string) error{
-	_, err := mail.ParseAddress(e)
-	return err
-}
-
-func IsJustLetter(s string, allows string) error{
-
-	valid := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	for _, c := range allows{
-		valid += string(c)
-	}
-	for _, c := range s{
-		if !strings.Contains(valid, string(c)){
-			return errors.New("invalid character: "+string(c))
-		}
-	}
-	return nil
 }
 

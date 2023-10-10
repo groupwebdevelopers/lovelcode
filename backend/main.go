@@ -10,11 +10,13 @@ import (
 
 	"lovelcode/router"
 	"lovelcode/database"
-
+	"lovelcode/utils"
 )
 
 
 func main(){
+
+	utils.Setup()
 
 	// engine := html.New("../frontend", ".html")
 	
