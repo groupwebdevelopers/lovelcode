@@ -27,24 +27,24 @@ func Signin(c *fiber.Ctx) error{
 
 	var ss SigninStruct
 	if err:= c.BodyParser(&ss); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
 	if ss.Email != ""{
 		// check email
 		if err := utils.CheckEmail(ss.Email); err!=nil{
-			return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
+			return utils.JSONReponse(c, 400,fiber.Map{"error":"invalid email"})
 		}
 		}else {
 			// check username
 			if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
-				return c.Status(400).JSON(fiber.Map{"error":err.Error})
+				return utils.JSONReponse(c, 400,fiber.Map{"error":err.Error})
 				}	
 			}
 			
 			// check password len
 			if len(ss.Password) < 8{
-				return c.Status(400).JSON(fiber.Map{"error": "small password (<8)"})
+				return utils.JSONReponse(c, 400, fiber.Map{"error": "small password (<8)"})
 			}
 			
 			// hash password
@@ -53,14 +53,14 @@ func Signin(c *fiber.Ctx) error{
 			// check user already exist
 			var user models.User
 			if err:= database.DB.First(&user, "email=? or username=?", ss.Email, ss.Username).Error; err==gorm.ErrRecordNotFound{
-				return c.Status(400).JSON(fiber.Map{"error":"user not found"})
+				return utils.JSONReponse(c, 400, fiber.Map{"error":"user not found"})
 				}else if err!=nil{
 					return utils.ServerError(c, err)
 				}
 				
 				// check baned
 				if user.IsBanned == true{
-					return c.Status(403).JSON(fiber.Map{"error":"you are banned!"})
+					return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
 				}
 				
 				// create token
@@ -75,7 +75,7 @@ func Signin(c *fiber.Ctx) error{
 					Value: token,
 					Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
 				})
-				return c.Status(200).JSON(fiber.Map{"msg": "you signin"})
+				return utils.JSONResponse(c, 200, fiber.Map{"msg": "you signin"})
 				
 			}
 
@@ -93,17 +93,17 @@ func Signup(c *fiber.Ctx) error{
 
 	var ss SignupStruct
 	if err:= c.BodyParser(&ss); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
 	// check email
 	if err := utils.CheckEmail(ss.Email); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid email"})
 	}
 
 	// check password len
 	if len(ss.Password) < 8{
-		return c.Status(400).JSON(fiber.Map{"error": "small password (<8)"})
+		return utils.JSONReponse(c, 400, fiber.Map{"error": "small password (<8)"})
 	}
 
 	// hash password
@@ -111,15 +111,15 @@ func Signup(c *fiber.Ctx) error{
 
 	// check name
 	if err:= utils.IsJustLetter(ss.Name, "-,"); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":err.Error})
+		return utils.JSONReponse(c, 400, fiber.Map{"error":err.Error})
 	}
 	// check family
 	if err:= utils.IsJustLetter(ss.Family, "-,"); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":err.Error})
+		return utils.JSONReponse(c, 400, fiber.Map{"error":err.Error})
 	}
 	// check username
 	if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":err.Error})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
 	}
 
 	// check user already exist
@@ -127,7 +127,7 @@ func Signup(c *fiber.Ctx) error{
 	var user models.User
 	query := models.User{Email: ss.Email}
 	if err:= database.DB.First(&user, &query).Error; err==nil{
-		return c.Status(400).JSON(fiber.Map{"error":"user already exist"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"user already exist"})
 	}else if err!=gorm.ErrRecordNotFound{
 		return utils.ServerError(c, err)
 	}
@@ -162,7 +162,7 @@ func Signup(c *fiber.Ctx) error{
 		Value: token,
 		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
 	})
-	return c.Status(200).JSON(fiber.Map{"msg": "user created"})
+	return utils.JSONResponse(c, 200, fiber.Map{"msg": "user created"})
 
 }
 

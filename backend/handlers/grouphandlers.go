@@ -22,11 +22,11 @@ func ApiOnly(c *fiber.Ctx) error{
 func AuthRequired(c *fiber.Ctx) error{
 	token := c.Cookies("token", "")
 	if token==""{
-		return c.Status(401).JSON(fiber.Map{"error":"authentication required"})
+		return utls.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
 	}
 	user, err := utils.VerifyJWTToken(token)
 	if err!=nil{
-		return c.Status(401).JSON(fiber.Map{"error":"token invalid"})
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
 	}
 	// var user models.User = models.User{Token: token}
 	if err:=database.DB.First(&user, &user).Error;err!=nil{
@@ -35,12 +35,12 @@ func AuthRequired(c *fiber.Ctx) error{
 
 	// check banned
 	if user.IsBanned == true{
-		return c.Status(403).JSON(fiber.Map{"error":"you are banned!"})
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
 	}
 
 	// check token
 	if token != user.Token && user.TokenExp.Unix() < time.Now().Unix(){
-		return c.Status(401).JSON(fiber.Map{"error":"authentication required"})
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
 	}
 
 	c.Locals("user", user)
