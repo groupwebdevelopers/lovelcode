@@ -17,7 +17,8 @@ func CreateToken(user models.User, tokenExpHours uint8) (string, error){
 
 
 	// create token
-	secret := os.Getenv("secret") + "se"
+	// var secret = []byte( os.Getenv("secret") + "se")
+	var secret = []byte("testestte")
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA,
 		jwt.MapClaims{
 				"exp" : time.Now().Add(time.Duration(tokenExpHours) * time.Hour).Unix(),

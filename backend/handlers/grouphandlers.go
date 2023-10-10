@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"lovelcode/utils"
+	"lovelcode/database"
 )
 
 func ApiOnly(c *fiber.Ctx) error{
@@ -25,7 +26,7 @@ func AuthRequired(c *fiber.Ctx) error{
 		return c.Status(401).JSON(fiber.Map{"error":"token invalid"})
 	}
 
-	if err:=database.DB.First(&user, &user).Error:err!=nil{
+	if err:=database.DB.First(&user, &user).Error;err!=nil{
 		utils.ServerError(c, err)
 	}
 
