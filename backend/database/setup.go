@@ -17,7 +17,7 @@ func Setup() error{
 		return err
 	}
 	DB = db
-	db.AutoMigrate(&models.User{}, &models.SettingsDB{})
+	db.AutoMigrate(&models.User{}, &models.SettingsDB{}, &models.ProjectDoingRequest{})
 
 	err = SetupSettings()
 
