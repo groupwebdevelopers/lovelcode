@@ -18,5 +18,7 @@ func Setup() error{
 	DB = db
 	db.AutoMigrate(&models.User{})
 
-	return nil
+	err = SetupSettings()
+
+	return err
 }
