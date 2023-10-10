@@ -17,7 +17,7 @@ func Setup(){
 }
 
 
-func CreateJWTToken(user models.User, tokenExpHours uint8) (string, error){
+func CreateJWTToken(user models.User, tokenExpHours uint16) (string, error){
 
 
 

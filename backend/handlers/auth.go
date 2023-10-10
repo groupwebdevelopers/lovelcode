@@ -4,6 +4,8 @@ import (
 	"time"	
 	"crypto/sha256"
 	"encoding/base64"
+	"strconv"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -14,13 +16,16 @@ import (
 )
 
 
-const tokenExpHours uint8 = 72
-
 func Signin(c *fiber.Ctx) error{
 	type SigninStruct struct{
 		Email string `json:"email"`
 		Username string `json:"username"`
 		Password string `json:"password"`
+	}
+
+	tokenExpHours, errr := getTokenExpHours()
+	if errr!=nil{
+		return utils.ServerError(c, errr)
 	}
 
 	// check json and extract data from it
@@ -31,53 +36,58 @@ func Signin(c *fiber.Ctx) error{
 	}
 
 	if ss.Email != ""{
-		// check email
+	// check email
 		if err := utils.CheckEmail(ss.Email); err!=nil{
-			return utils.JSONReponse(c, 400,fiber.Map{"error":"invalid email"})
+			return utils.JSONResponse(c, 400,fiber.Map{"error":"invalid email"})
 		}
-		}else {
-			// check username
-			if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
-				return utils.JSONReponse(c, 400,fiber.Map{"error":err.Error})
-				}	
-			}
-			
-			// check password len
-			if len(ss.Password) < 8{
-				return utils.JSONReponse(c, 400, fiber.Map{"error": "small password (<8)"})
-			}
-			
-			// hash password
-			ss.Password = hash(ss.Password)
-			
-			// check user already exist
-			var user models.User
-			if err:= database.DB.First(&user, "email=? or username=?", ss.Email, ss.Username).Error; err==gorm.ErrRecordNotFound{
-				return utils.JSONReponse(c, 400, fiber.Map{"error":"user not found"})
-				}else if err!=nil{
-					return utils.ServerError(c, err)
-				}
+	}else {
+		// check username
+		if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
+			return utils.JSONResponse(c, 400,fiber.Map{"error":err.Error})
+		}	
+	}
+	
+	// check password len
+	if len(ss.Password) < 8{
+		return utils.JSONResponse(c, 400, fiber.Map{"error": "small password (<8)"})
+	}
+	
+	// hash password
+	ss.Password = hash(ss.Password)
+	
+	// check user already exist
+	var user models.User
+	if err:= database.DB.First(&user, "email=? or username=?", ss.Email, ss.Username).Error; err==gorm.ErrRecordNotFound{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"user not found"})
+	}else if err!=nil{
+		return utils.ServerError(c, err)
+	}
+	
+	// check baned
+	if user.IsBanned == true{
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
+	}
+	
+	// create token
+	token, err := utils.CreateJWTToken(user, tokenExpHours)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+
+	// update database token
+	if err:= database.DB.Updates(&user).Error; err!=nil{
+		return utils.ServerError(c, err)
+	}
+		
+	// set token to cookie
+	c.Cookie(&fiber.Cookie{
+		Name: "token",
+		Value: token,
+		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
+	})
+	return utils.JSONResponse(c, 200, fiber.Map{"msg": "you signin"})
 				
-				// check baned
-				if user.IsBanned == true{
-					return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
-				}
-				
-				// create token
-				token, err := utils.CreateJWTToken(user, tokenExpHours)
-				if err!=nil{
-					return utils.ServerError(c, err)
-				}
-				
-				// set token to cookie
-				c.Cookie(&fiber.Cookie{
-					Name: "token",
-					Value: token,
-					Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
-				})
-				return utils.JSONResponse(c, 200, fiber.Map{"msg": "you signin"})
-				
-			}
+}
 
 
 func Signup(c *fiber.Ctx) error{
@@ -87,6 +97,11 @@ func Signup(c *fiber.Ctx) error{
 		Name string `json:"name"`
 		Family string `json:"family"`
 		Username string `json:"username"`
+	}
+
+	tokenExpHours, errr := getTokenExpHours()
+	if errr!=nil{
+		return utils.ServerError(c, errr)
 	}
 
 	// check json and extract data from it
@@ -103,7 +118,7 @@ func Signup(c *fiber.Ctx) error{
 
 	// check password len
 	if len(ss.Password) < 8{
-		return utils.JSONReponse(c, 400, fiber.Map{"error": "small password (<8)"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error": "small password (<8)"})
 	}
 
 	// hash password
@@ -111,11 +126,11 @@ func Signup(c *fiber.Ctx) error{
 
 	// check name
 	if err:= utils.IsJustLetter(ss.Name, "-,"); err!=nil{
-		return utils.JSONReponse(c, 400, fiber.Map{"error":err.Error})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
 	}
 	// check family
 	if err:= utils.IsJustLetter(ss.Family, "-,"); err!=nil{
-		return utils.JSONReponse(c, 400, fiber.Map{"error":err.Error})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
 	}
 	// check username
 	if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
@@ -172,3 +187,13 @@ func hash(s string) string{
 	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
 }
 
+func getTokenExpHours() (uint16, error){
+	if i, err := strconv.Atoi(database.Settings["tokenExpHours"]);err!=nil{
+		return 0, errors.New(err.Error() + "\nin database tokenExpHours setted to invalid intiger")
+	}else{
+		if i > int(^uint16(0)){
+			return 0, errors.New("in database tokenExpHours value is too big")
+		}
+		return uint16(i), nil
+	}
+}

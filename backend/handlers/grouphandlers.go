@@ -22,7 +22,7 @@ func ApiOnly(c *fiber.Ctx) error{
 func AuthRequired(c *fiber.Ctx) error{
 	token := c.Cookies("token", "")
 	if token==""{
-		return utls.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
 	}
 	user, err := utils.VerifyJWTToken(token)
 	if err!=nil{
