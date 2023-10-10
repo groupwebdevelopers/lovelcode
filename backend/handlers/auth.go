@@ -2,11 +2,10 @@ package handlers
 
 import (
 	"time"	
-	"net/mail"
 	"crypto/sha256"
-	"strings"
-	"errors"
 	"encoding/base64"
+	"strconv"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -14,11 +13,8 @@ import (
 	"lovelcode/models"
 	"lovelcode/database"
 	"lovelcode/utils"
-
 )
 
-
-const tokenExpHours uint8 = 72
 
 func Signin(c *fiber.Ctx) error{
 	type SigninStruct struct{
@@ -27,57 +23,70 @@ func Signin(c *fiber.Ctx) error{
 		Password string `json:"password"`
 	}
 
+	tokenExpHours, errr := getTokenExpHours()
+	if errr!=nil{
+		return utils.ServerError(c, errr)
+	}
+
 	// check json and extract data from it
 
 	var ss SigninStruct
 	if err:= c.BodyParser(&ss); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
 	if ss.Email != ""{
-		
-		// check email
-		if err := checkEmail(ss.Email); err!=nil{
-			return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
+	// check email
+		if err := utils.CheckEmail(ss.Email); err!=nil{
+			return utils.JSONResponse(c, 400,fiber.Map{"error":"invalid email"})
 		}
 	}else {
-	// check username
-		if err:= IsJustLetter(ss.Username, "-._"); err!=nil{
-			return c.Status(400).JSON(fiber.Map{"error":err.Error})
+		// check username
+		if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
+			return utils.JSONResponse(c, 400,fiber.Map{"error":err.Error})
 		}	
 	}
-		
+	
 	// check password len
 	if len(ss.Password) < 8{
-		return c.Status(400).JSON(fiber.Map{"error": "small password (<8)"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error": "small password (<8)"})
 	}
-
+	
 	// hash password
 	ss.Password = hash(ss.Password)
-
+	
 	// check user already exist
 	var user models.User
-	
 	if err:= database.DB.First(&user, "email=? or username=?", ss.Email, ss.Username).Error; err==gorm.ErrRecordNotFound{
-		return c.Status(400).JSON(fiber.Map{"error":"user not found"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"user not found"})
 	}else if err!=nil{
 		return utils.ServerError(c, err)
 	}
-
+	
+	// check baned
+	if user.IsBanned == true{
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
+	}
+	
 	// create token
-	token, err := utils.CreateToken(user, tokenExpHours)
+	token, err := utils.CreateJWTToken(user, tokenExpHours)
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
 
+	// update database token
+	if err:= database.DB.Updates(&user).Error; err!=nil{
+		return utils.ServerError(c, err)
+	}
+		
 	// set token to cookie
 	c.Cookie(&fiber.Cookie{
 		Name: "token",
 		Value: token,
 		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
 	})
-	return c.Status(200).JSON(fiber.Map{"msg": "you signin"})
-
+	return utils.JSONResponse(c, 200, fiber.Map{"msg": "you signin"})
+				
 }
 
 
@@ -90,37 +99,42 @@ func Signup(c *fiber.Ctx) error{
 		Username string `json:"username"`
 	}
 
+	tokenExpHours, errr := getTokenExpHours()
+	if errr!=nil{
+		return utils.ServerError(c, errr)
+	}
+
 	// check json and extract data from it
 
 	var ss SignupStruct
 	if err:= c.BodyParser(&ss); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":"invalid json"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
 	// check email
-	if err := checkEmail(ss.Email); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":"invalid email"})
+	if err := utils.CheckEmail(ss.Email); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid email"})
 	}
 
 	// check password len
 	if len(ss.Password) < 8{
-		return c.Status(400).JSON(fiber.Map{"error": "small password (<8)"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error": "small password (<8)"})
 	}
 
 	// hash password
 	ss.Password = hash(ss.Password)
 
 	// check name
-	if err:= IsJustLetter(ss.Name, "-,"); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":err.Error})
+	if err:= utils.IsJustLetter(ss.Name, "-,"); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
 	}
 	// check family
-	if err:= IsJustLetter(ss.Family, "-,"); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":err.Error})
+	if err:= utils.IsJustLetter(ss.Family, "-,"); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
 	}
 	// check username
-	if err:= IsJustLetter(ss.Username, "-._"); err!=nil{
-		return c.Status(400).JSON(fiber.Map{"error":err.Error})
+	if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
 	}
 
 	// check user already exist
@@ -128,13 +142,19 @@ func Signup(c *fiber.Ctx) error{
 	var user models.User
 	query := models.User{Email: ss.Email}
 	if err:= database.DB.First(&user, &query).Error; err==nil{
-		return c.Status(400).JSON(fiber.Map{"error":"user already exist"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"user already exist"})
 	}else if err!=gorm.ErrRecordNotFound{
 		return utils.ServerError(c, err)
 	}
 
+	// create token
+	
+	token, err := utils.CreateJWTToken(user, tokenExpHours)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+		
 	// create user
-
 	user.Email = ss.Email
 	user.Password = ss.Password
 	user.Name = ss.Name
@@ -142,17 +162,14 @@ func Signup(c *fiber.Ctx) error{
 	user.Username = ss.Username
 	user.AdminPermisions = ""
 	user.IsDeleted = false
+	user.IsBanned = false
+	user.Token = token
+	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours)*time.Hour)
 
 	if err:= database.DB.Create(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
-	// create token
-
-	token, err := utils.CreateToken(user, tokenExpHours)
-	if err!=nil{
-		return utils.ServerError(c, err)
-	}
 
 	// set token into cookie
 	c.Cookie(&fiber.Cookie{
@@ -160,7 +177,7 @@ func Signup(c *fiber.Ctx) error{
 		Value: token,
 		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
 	})
-	return c.Status(200).JSON(fiber.Map{"msg": "user created"})
+	return utils.JSONResponse(c, 200, fiber.Map{"msg": "user created"})
 
 }
 
@@ -170,22 +187,13 @@ func hash(s string) string{
 	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
 }
 
-func checkEmail(e string) error{
-	_, err := mail.ParseAddress(e)
-	return err
-}
-
-func IsJustLetter(s string, allows string) error{
-
-	valid := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	for _, c := range allows{
-		valid += string(c)
-	}
-	for _, c := range s{
-		if !strings.Contains(valid, string(c)){
-			return errors.New("invalid character: "+string(c))
+func getTokenExpHours() (uint16, error){
+	if i, err := strconv.Atoi(database.Settings["tokenExpHours"]);err!=nil{
+		return 0, errors.New(err.Error() + "\nin database tokenExpHours setted to invalid intiger")
+	}else{
+		if i > int(^uint16(0)){
+			return 0, errors.New("in database tokenExpHours value is too big")
 		}
+		return uint16(i), nil
 	}
-	return nil
 }
-

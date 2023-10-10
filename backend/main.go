@@ -10,11 +10,13 @@ import (
 
 	"lovelcode/router"
 	"lovelcode/database"
-
+	"lovelcode/utils"
 )
 
 
 func main(){
+
+	utils.Setup()
 
 	// engine := html.New("../frontend", ".html")
 	
@@ -34,7 +36,6 @@ func main(){
 		log.Fatal("can't connect to database. err:", err)
 	}
 	//settings.Setup()
-	app.Static("/", "../frontend/dist")
 	
 	router.Route(app)
 	log.Fatal(app.Listen(":8000"))

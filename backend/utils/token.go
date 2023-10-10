@@ -5,20 +5,26 @@ import (
 	"os"
 	"time"
 	"errors"
+	"math/rand"
 
 	"github.com/golang-jwt/jwt"
 
 	"lovelcode/models"
 )
 
+func Setup(){
+	rand.Seed(time.Now().UnixNano())
+}
 
-func CreateToken(user models.User, tokenExpHours uint8) (string, error){
+
+func CreateJWTToken(user models.User, tokenExpHours uint16) (string, error){
 
 
 
 	// create token
-	secret := os.Getenv("secret") + "se"
-	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA,
+	// var secret = []byte( os.Getenv("secret") + "se")
+	var secret = []byte("testestte")
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 				"exp" : time.Now().Add(time.Duration(tokenExpHours) * time.Hour).Unix(),
 				"iss": "localhost", // todo:must changed
@@ -33,9 +39,19 @@ func CreateToken(user models.User, tokenExpHours uint8) (string, error){
 
 }
 
+
+func CreateToken() string{
+	chars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	result:= ""
+	for i:=0;i<256;i++{
+		result +=string(chars[ rand.Intn(len(chars))])
+	}
+	return result
+}
+
 // todo: send token with expared time
 // verify token
-func VerifyToken(tokenString string) (models.User, error){
+func VerifyJWTToken(tokenString string) (models.User, error){
 	secret := os.Getenv("secret") + "se"
 
 	
