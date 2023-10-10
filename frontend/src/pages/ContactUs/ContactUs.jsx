@@ -6,6 +6,12 @@ export default function ContactUs() {
   return (
     <div>
       <NavBar />
+      <div className="w-full container px-8 flex gap-3 items-center text-main-dark-text-web font-Ray-Bold text-xs md:text-sm">
+      <i class="bi bi-geo-alt"></i>
+      <span>خانه </span>
+      <i class="bi bi-chevron-left"></i>
+      <span>تماس با ما</span>
+      </div>
       <div className="container w-full flex flex-col items-center">
         <h1 className="text-main-dark-text-web font-Ray-ExtraBold text-xl md:text-2xl lg:text-3xl">
           با پر کردن فرم زیر با ما در تماس باش
@@ -45,7 +51,7 @@ export default function ContactUs() {
         </form>
       </div>
       <div className="container p-2 px-4  mt-14">
-        <ul className="w-full flex justify-between md:px-[5rem] lg:px-[8rem] px-3 py-10 rounded-3xl bg-white flex-grow flex-wrap gap-y-4 gap-x-4">
+        <ul className="w-full flex justify-between md:px-[5rem] lg:px-[8rem] px-5 py-10 rounded-3xl bg-white flex-grow flex-wrap gap-y-4 gap-x-4">
           <li className=" flex flex-col items-start">
             <div className="font-Ray-Bold text-main-blue-web text-lg flex gap-2">
               <i class="bi bi-stopwatch"></i>
@@ -76,7 +82,7 @@ export default function ContactUs() {
               <i class="bi bi-geo-alt"></i>
               <span>آدرس شرکت</span>
             </div>
-            <span className="font-Ray-Bold text-sm mt-1">-------</span>
+            <span className="font-Ray-Bold text-sm mt-1">---------------------</span>
           </li>
         </ul>
       </div>
