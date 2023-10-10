@@ -8,7 +8,7 @@ type SettingsDB struct{
 
 var Settings map[string]string
 
-func (s *SettingsDB) SetupSettings() error{
+func SetupSettings() error{
 	var st []SettingsDB
 	if err:=DB.Find(&st).Error; err!=nil{
 		return err
