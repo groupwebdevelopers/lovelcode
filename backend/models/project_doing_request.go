@@ -11,5 +11,6 @@ type ProjectDoingRequest struct{
 	Title string
 	Description string
 	SuggestedPrice uint
-
+	TimeCreated time.Time
+	TimeModified time.Time
 }
