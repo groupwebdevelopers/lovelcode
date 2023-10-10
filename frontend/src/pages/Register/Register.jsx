@@ -1,16 +1,19 @@
 import React from 'react'
 
-export default function Login() {
+export default function Register() {
     return (
         <div className='min-h-screen w-full flex items-center justify-center sm:my-12'>
             <div className="flex flex-col w-full sm:w-96 bg-white sm:rounded-3xl p-10">
                 <div className='w-full flex flex-col items-center gap-4 mb-6 sm:mb-12'>
                     <img src="/images/mainweb/3D/Sec1/path28.svg" alt="" />
-                    <p className='text-xl font-Ray-ExtraBold text-main-blue-web'>ورود به لاول کد</p>
+                    <p className='text-xl font-Ray-ExtraBold text-main-blue-web'>ثبت نام در لاول کد</p>
                 </div>
                 <div className='flex flex-col gap-y-5 mb-6'>
                     <div>
-                        <input type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='نشانی ایمیل' />
+                        <input type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='نام کاربری و یا ایمیل' />
+                    </div>
+                    <div>
+                        <input type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='شماره تلفن' />
                     </div>
                     <div className='relative'>
                         <input type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='رمز عبور' />
@@ -20,23 +23,15 @@ export default function Login() {
                 <div className='flex gap-2 text-main-gray-text-web mb-6'>
                     <input type="checkbox" name="" id="" />
                     <span className='text-xs'>
-                        مرا به خاطر بسپار
+                        ثبت نام در سایت به منزله پذیرش قوانین و مقررات است.
                     </span>
                 </div>
                 <div className='bg-main-blue-web h-10 sm:h-12 rounded-xl flex justify-center items-center text-white text-xs sm:text-sm gap-2 mb-7'>
-                    وارد شوید
+                    ارسال کد به شماره
                     <i class="text-lg bi bi-arrow-left-short"></i>
                 </div>
-                <div className='grid grid-cols-2 gap-2 sm:gap-6 h-10 sm:h-12 mb-6 sm:mb-9'>
-                    <div className='bg-gray-normal rounded-xl text-xs flex justify-center items-center text-main-gray-text-web font-Ray-Bold'>
-                        ارسال کد یک بار مصرف
-                    </div>
-                    <div className='bg-gray-normal rounded-xl text-xs flex justify-center items-center text-main-gray-text-web font-Ray-Bold'>
-                        فراموشی رمز عبور
-                    </div>
-                </div>
                 <span className='text-sm font-Ray-Bold text-main-dark-text-web text-center mb-5'>
-                    هنوز حساب کاربری نساخته اید؟ <a href="" className='text-main-blue-web'>ایجاد حساب کاربری</a>
+                    از قبل وارد شده اید؟<a href="" className='text-main-blue-web'>ورود به حساب کاربری</a>
                 </span>
                 <div className='flex items-center justify-between mb-5'>
                     <div className='h-px w-full grow bg-main-dark-text-web'></div>
