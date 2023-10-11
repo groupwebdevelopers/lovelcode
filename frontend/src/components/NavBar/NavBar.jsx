@@ -50,7 +50,7 @@ export default function NavBar() {
                     </NavLink>
                 </li>
                 <li className='hover:text-main-blue-web transition-colors'>
-                    <NavLink to='/g' className={({ isActive }) => isActive ? "text-main-blue-web relative before:content-[''] before:absolute before:top-0 before:right-0 before:h-0.5 before:w-0.5 before:bg-main-blue-web" : ''}>
+                    <NavLink to='/contact-us' className={({ isActive }) => isActive ? "text-main-blue-web relative before:content-[''] before:absolute before:top-0 before:right-0 before:h-0.5 before:w-0.5 before:bg-main-blue-web" : ''}>
                         تماس با ما
                     </NavLink>
                 </li>
@@ -59,7 +59,7 @@ export default function NavBar() {
                 <Link to='/login' className='text-main-blue-web px-4 py-2 text-sm lg:text-base'>
                     ورود
                 </Link>
-                <Link to='/' className='w-20 h-10 lg:w-24 lg:h-12 flex justify-center items-center lg:rounded-xl rounded-lg text-sm lg:text-base bg-main-blue-web text-white'>
+                <Link to='/register' className='w-20 h-10 lg:w-24 lg:h-12 flex justify-center items-center lg:rounded-xl rounded-lg text-sm lg:text-base bg-main-blue-web text-white'>
                     ثبت نام
                 </Link>
             </div>
