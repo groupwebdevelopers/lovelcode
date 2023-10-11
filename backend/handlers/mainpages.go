@@ -1,7 +1,13 @@
 package handlers
 
 import (
+	"time"
+	
 	"github.com/gofiber/fiber/v2"
+	
+	"lovelcode/utils"
+	"lovelcode/database"
+	"lovelcode/models"
 )
 
 // GET
@@ -24,16 +30,16 @@ func CreateProjectDoingRequest(c *fiber.Ctx) error{
 	}
 
 	if pdr.Title == "" || pdr.Description == ""{
-		return utls.JSONResponse(c, 400, fiber.Map{"error":"empty title or description"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"empty title or description"})
 	}
 
 	var pd models.ProjectDoingRequest
 	pd.Title = pdr.Title
 	pd.Description = pdr.Description
-	pd.SuggestedPrice = pdr.SuggestedPrice
+	pd.SuggestedPrice = uint(pdr.SuggestedPrice)
 	pd.TimeCreated = time.Now()
 	pd.TimeModified = time.Now()
-	pd.User = c.Locals(user)
+	pd.User = c.Locals("user").(models.User)
 
 	if err:= database.DB.Create(&pd).Error; err!=nil{
 		return utils.ServerError(c, err)
