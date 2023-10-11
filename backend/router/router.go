@@ -16,6 +16,9 @@ func Route(app *fiber.App) {
 	
 	authReq := apiV1.Group("/", handlers.AuthRequired)
 	authReq.Post("/pdr/create", handlers.CreateProjectDoingRequest)
+	authReq.Get("/pdr/get/:id", handlers.GetProjectDoingRequest)
+	authReq.Get("/pdr/get-all", handlers.GetAllProjectDoingRequests)
+	authReq.Post("/pdr/edit/:id", handlers.EditProjectDoingRequest)
 	
 	app.Static("/", "../frontend/dist")
 	app.Static("*", "../frontend/dist/index.html")

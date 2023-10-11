@@ -2,6 +2,9 @@ package models
 
 import (
 	"time"
+	"errors"
+
+	"lovelcode/utils"
 )
 
 type ProjectDoingRequest struct{

@@ -13,6 +13,7 @@ import (
 	"lovelcode/models"
 	"lovelcode/database"
 	"lovelcode/utils"
+	utilstoken "lovelcode/utils/token"
 )
 
 
@@ -69,7 +70,7 @@ func Signin(c *fiber.Ctx) error{
 	}
 	
 	// create token
-	token, err := utils.CreateJWTToken(user, tokenExpHours)
+	token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
@@ -149,7 +150,7 @@ func Signup(c *fiber.Ctx) error{
 
 	// create token
 	
-	token, err := utils.CreateJWTToken(user, tokenExpHours)
+	token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}

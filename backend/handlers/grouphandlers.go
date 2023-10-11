@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"lovelcode/utils"
+	utilstoken "lovelcode/utils/token"
 	"lovelcode/database"
 )
 
@@ -24,7 +25,7 @@ func AuthRequired(c *fiber.Ctx) error{
 	if token==""{
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
 	}
-	user, err := utils.VerifyJWTToken(token)
+	user, err := utilstoken.VerifyJWTToken(token)
 	if err!=nil{
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
 	}
