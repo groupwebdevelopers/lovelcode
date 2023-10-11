@@ -22,20 +22,19 @@ export default function Portfolio() {
             برای آشنایی شما و هم قرار گرفتن توی لیست افتخارات تیم <span className="text-main-blue-web">لاول کد</span></p>
           </p>
         </div>
-
         <div className="select hidden font-Ray-Bold lg:flex my-12 bg-white w-fit  rounded-xl items-center text-xs lg:text-base">
-          <span className="bg-main-blue-web px-[22px] py-[14px] rounded-xl text-white">
+          <a href="#" className="bg-main-blue-web px-[22px] py-[14px] rounded-xl text-white">
             همه
-          </span>
-          <span className="px-[22px] py-[14px] rounded-xl">سایت فروشگاهی</span>
-          <span className="px-[22px] py-[14px] rounded-xl">سایت آموزشی</span>
-          <span className="px-[22px] py-[14px] rounded-xl">سایت شرکتی</span>
-          <span className="px-[22px] py-[14px] rounded-xl">سایت شخصی</span>
-          <span className="px-[22px] py-[14px] rounded-xl">
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت فروشگاهی</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت آموزشی</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت شرکتی</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت شخصی</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
             دیجیتال مارکتینگ
-          </span>
-          <span className="px-[22px] py-[14px] rounded-xl">برندینگ</span>
-          <span className="px-[22px] py-[14px] rounded-xl">سایت خبری</span>
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">برندینگ</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت خبری</a>
         </div>
 
         <div className="lg:hidden">

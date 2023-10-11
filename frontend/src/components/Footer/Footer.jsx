@@ -46,11 +46,11 @@ export default function Footer() {
                   <h2 className="font-Ray-ExtraBold text-[22px]">
                     خدمات اصلی ما
                   </h2>
-                  <ul className="list-disc lg:mr-4 font-Ray-Bold">
-                    <li>طراحی سایت</li>
-                    <li>سئو و بهینه سازی سایت</li>
-                    <li>پشتیبانی و نگهداری سایت</li>
-                    <li>طراحی Ui/Ux</li>
+                  <ul className="list-disc lg:mr-4 font-Ray-Bold flex flex-col gap-2">
+                    <a href="#"><li>طراحی سایت</li></a>
+                    <a href="#"><li>سئو و بهینه سازی سایت</li></a>
+                    <a href="#"><li>پشتیبانی و نگهداری سایت</li></a>
+                    <a href="#"><li>طراحی Ui/Ux</li></a>
                   </ul>
                 </div>
               </div>
@@ -59,11 +59,11 @@ export default function Footer() {
                   <h2 className=" font-Ray-ExtraBold text-[22px]">
                     خدمات اصلی ما
                   </h2>
-                  <ul className="list-disc lg:mr-4 font-Ray-Bold">
-                    <li>طراحی سایت</li>
-                    <li>سئو و بهینه سازی سایت</li>
-                    <li>پشتیبانی و نگهداری سایت</li>
-                    <li>طراحی Ui/Ux</li>
+                  <ul className="list-disc lg:mr-4 font-Ray-Bold flex flex-col gap-2">
+                    <a href="#"><li>طراحی سایت</li></a>
+                    <a href="#"><li>سئو و بهینه سازی سایت</li></a>
+                    <a href="#"><li>پشتیبانی و نگهداری سایت</li></a>
+                    <a href="#"><li>طراحی Ui/Ux</li></a>
                   </ul>
                 </div>
               </div>
