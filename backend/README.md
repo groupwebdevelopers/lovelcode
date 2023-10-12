@@ -4,8 +4,8 @@
 GET /api/v1/home
 
 # auth
-POST /api/v1/auth/signup
-POST /api/v1/auth/signin
+POST /api/v1/signup (json with email, password, username, name, family)
+POST /api/v1/signin (json with email, username, password) (one of email and username is required)
 
 # Project Doing Request
 POST /pdr/create (auth required) (json with title, description, suggestedPrice)
