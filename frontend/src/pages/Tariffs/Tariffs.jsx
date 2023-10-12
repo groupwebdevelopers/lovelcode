@@ -1,13 +1,9 @@
-import React from 'react'
-import NavBar from '../../components/NavBar/NavBar'
-import DesignPlan from '../../components/DesignPlan/DesignPlan'
-
-
-
+import React from "react";
+import NavBar from "../../components/NavBar/NavBar";
+import DesignPlan from "../../components/DesignPlan/DesignPlan";
 
 export default function Tariffs() {
-
-    const boxses = [
+  const boxses = [
     {
       id: 1,
       color: "bg-main-violet-web",
@@ -180,35 +176,55 @@ export default function Tariffs() {
       ],
     },
   ];
-    return (
-        <div>
-            <NavBar />
-            <div className='container bredcromp'>
-                
-            </div>
-            <div className='container'>
-                <div className='title text-center'>
-                    <div className=' text-main-dark-text-web'>
-                    <h1 className='font-Ray-ExtraBold text-[30px]'>قیمت طراحی سایت و فروشگاه اینترنتی</h1>
-                    </div>
-                    <div className='mt-2'>
-                        <p className='font-Ray-Bold text-xl text-main-green-web'>تعرفه و امکانات بسته‌های مختلف پرتال را مقایسه کن و با توجه به نیازهای خودت یکی رو انتخاب کن. </p>
-                    </div>
-                </div>
-                <div className="select hidden font-Ray-Bold lg:flex my-12 bg-white w-fit  rounded-xl items-center text-xs lg:text-base">
-          <a href="#" className="bg-main-blue-web px-[22px] py-[14px] rounded-xl text-white">
+  return (
+    <div>
+      <NavBar />
+      <div className="container bredcromp"></div>
+      <div className="container">
+        <div className="title text-center">
+          <div className=" text-main-dark-text-web">
+            <h1 className="font-Ray-ExtraBold text-[30px]">
+              قیمت طراحی سایت و فروشگاه اینترنتی
+            </h1>
+          </div>
+          <div className="mt-2">
+            <p className="font-Ray-Bold text-xl text-main-green-web">
+              تعرفه و امکانات بسته‌های مختلف پرتال را مقایسه کن و با توجه به
+              نیازهای خودت یکی رو انتخاب کن.{" "}
+            </p>
+          </div>
+        </div>
+        <div className="select hidden font-Ray-Bold lg:flex my-12 bg-white w-fit  rounded-xl items-center text-xs lg:text-base">
+          <a
+            href="#"
+            className="bg-main-blue-web px-[22px] py-[14px] rounded-xl text-white"
+          >
             همه
           </a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت فروشگاهی</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت آموزشی</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت شرکتی</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت شخصی</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت فروشگاهی
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت آموزشی
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت شرکتی
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت شخصی
+          </a>
           <a href="#" className="px-[22px] py-[14px] rounded-xl">
             دیجیتال مارکتینگ
           </a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">برندینگ</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت خبری</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">ui/ux</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            برندینگ
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت خبری
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            ui/ux
+          </a>
         </div>
 
         <div className="lg:hidden">
@@ -237,7 +253,88 @@ export default function Tariffs() {
             </div>
           ))}
         </div>
-            </div>
+        <div className="hazine text-center mt-[100px] text-main-dark-text-web">
+          <h2 className="text-4xl font-Ray-ExtraBold">
+            هزینه طراحی سایت{" "}
+            <span className="font-ANJOMANFANUM-MEDIUM">1402</span>
+          </h2>
+          <p className="font-Ray-Bold text-xl text-main-green-web mt-2">
+            زمان کمی داریی؟ کارشناسان ما ایجان که بهت مشاوره بدن تا همین امروز
+            پروژه طراحی سایت خودت رو شروع کنی.
+          </p>
+          <h3 className="font-Ray-ExtraBold text-2xl mt-6">
+            الان با ما تماس بگیر :
+          </h3>
+          <div className="flex justify-center gap-[10px] font-ANJOMANFANUM-SEMIBOLD text-2xl mt-2">
+            <h3 className="">09112121212</h3>
+            <i class="bi bi-telephone"></i>
+          </div>
+          <h4 className="font-Ray-Bold text-xl mt-6">
+            یا فرم دریافت تماس را پر کن:
+          </h4>
+          <a className="flex justify-center" href="#">
+            <button className="font-Ray-Bold text-sm bg-main-blue-web text-main-light-web px-8 py-3 rounded-xl mt-[10px] flex items-center justify-center gap-2">
+              <p>دریافت تماس و مشاوره</p>
+              <i class="bi bi-arrow-left"></i>
+            </button>
+          </a>
         </div>
-    )
+        <div className="tab mb-8 mt-24 container">
+          <table className="w-full font-Ray-ExtraBold text-lg">
+            <thead>
+              <tr className="flex justify-between items-center bg-[#e4e4e4]/40 px-9 py-7 rounded-t-[30px]">
+                <td className="w-56">امکانات / پلن‌ها</td>
+                <div className="flex justify-between w-full">
+                  <td className="px-11 py-3 text-white bg-main-green-web rounded-xl text-base">
+                    پلن طراحی پایه
+                  </td>
+                  <td className="px-11 py-3 text-white bg-main-red-web rounded-xl text-base">
+                    پلن طراحی پایه
+                  </td>
+                  <td className="px-11 py-3 text-white bg-main-yellow-web rounded-xl text-base">
+                    پلن طراحی پایه
+                  </td>
+                  <td className="px-11 py-3 text-white bg-main-violet-web rounded-xl text-base">
+                    پلن طراحی پایه
+                  </td>
+                </div>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="flex justify-between items-center bg-white px-9 py-7">
+                <td className="w-56">طراحی تم اختصاصی برند</td>
+                <div className="flex justify-between w-full">
+                  <td className=" px-11 py-3 text-main-red-web text-3xl flex justify-center items-center">
+                    <i class="bi bi-x"></i>
+                  </td>
+                  <td className=" px-11 py-3 text-main-red-web text-3xl flex justify-center items-center">
+                    <i class="bi bi-x"></i>
+                  </td>
+                  <td className=" px-11 py-3 text-main-green-web text-3xl flex justify-center items-center">
+                    <i class="bi bi-check-lg"></i>
+                  </td>
+                  <td className=" px-11 py-3 text-main-green-web text-3xl flex justify-center items-center">
+                    <i class="bi bi-check-lg"></i>
+                  </td>
+                </div>
+              </tr>
+              <tr className="flex justify-between items-center bg-[#e4e4e4]/40 px-9 py-7">
+                <td className="w-56">زمان تحویل (روز کاری)</td>
+                <div className="flex justify-between w-full">
+                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center"><span className="font-ANJOMANFANUM-MEDIUM">5</span> روز</td>
+                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center"><span className="font-ANJOMANFANUM-MEDIUM">9</span> روز</td>
+                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center">
+                  <span className="font-ANJOMANFANUM-MEDIUM">12</span> روز
+                  </td>
+                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center">
+                  <span className="font-ANJOMANFANUM-MEDIUM">17</span> روز
+                  </td>
+                </div>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }
