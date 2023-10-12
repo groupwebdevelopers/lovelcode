@@ -7,7 +7,7 @@ import (
 // when AdminPermisions is "" means it not get from database
 // for normal user AdminPermisions is "0"
 type User struct {
-	ID uint32 `gorm:"primaryKey"`
+	ID uint64 `gorm:"primaryKey"`
 	Name string `gorm:"not null"`
 	Family string 
 	Username string `gorm:"not null,unique"`

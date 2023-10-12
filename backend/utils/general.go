@@ -7,13 +7,13 @@ import (
 
 )
 
-func GetIDFromParams(c *fiber.Ctx) uint32{
+func GetIDFromParams(c *fiber.Ctx) uint64{
 	sid := c.Params("id", "")
 	if sid==""{
 		return 0
 	}
 	id, _ := strconv.Atoi(sid)
-	return uint32(id)
+	return uint64(id) // todo: id is int
 }
 // todo: add &models.User
 // 0 means not access and 1 means access

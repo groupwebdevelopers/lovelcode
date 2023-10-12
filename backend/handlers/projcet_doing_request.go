@@ -42,7 +42,7 @@ func CreateProjectDoingRequest(c *fiber.Ctx) error{
 // GET, auth required
 func GetAllProjectDoingRequests(c *fiber.Ctx) error{
 	var pdrs []models.ProjectDoingRequest
-	query := models.ProjectDoingRequest{User: c.Locals("user").(models.User)}
+	query := models.ProjectDoingRequest{UserID: c.Locals("user").(models.User).ID}
 	if err:= database.DB.Find(&pdrs, &query).Error; err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"you don't have any request"})
