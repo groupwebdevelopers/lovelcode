@@ -16,13 +16,13 @@ var Settings map[string]string
 func Setup() error{
 	var err error
 	var db *gorm.DB
-	if os.Getenv("deploy") == "true"{
-		dsn := "host=database user=root password=2CEezrHZLl3SP5VnNhu4kdto dbname=lovelcode port=5432 sslmode=disable TimeZone=Asia/Tehran"
-		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-		
-	}else{
+	if os.Getenv("dev") == "true"{
 		dsn := "mohammadamin:M@85mmohammadamin@tcp(127.0.0.1:3306)/lovelcode?charset=utf8mb4&parseTime=True&loc=Local"
 		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		
+	}else{
+		dsn := "host=database user=root password=2CEezrHZLl3SP5VnNhu4kdto dbname=lovelcode port=5432 sslmode=disable TimeZone=Asia/Tehran"
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	}
 	

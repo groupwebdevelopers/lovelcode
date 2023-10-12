@@ -29,7 +29,9 @@ func Route(app *fiber.App) {
 		return c.Status(404).JSON(fiber.Map{"error":"page not found"})
 	})
 
-
+	app.Use(func (c *fiber.Ctx) error{
+		return c.SendStatus(404)
+	})
 	
 
 }

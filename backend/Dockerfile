@@ -1,7 +1,7 @@
 FROM golang:1.21-alpine as build
 
 ENV HTTPS_PROXY = "fodev.org:8118"
-
+ENV deploy = true
 WORKDIR /app
 
 COPY . .
