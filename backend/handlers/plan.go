@@ -25,7 +25,7 @@ func CreatePlan(c *fiber.Ctx) error{
 	
 	// create plan and fill it
 	var plan models.Plan
-	plan.FillWithCEPlan(pf.Plan)
+	plan.FillWithCEPlan(pl)
 	plan.TimeCreated = time.Now()
 	plan.TimeModified = time.Now()
 
@@ -38,8 +38,8 @@ func CreatePlan(c *fiber.Ctx) error{
 // POST, Auth Required, /:id
 // get list of features
 func CreateFeatures(c *fiber.Ctx) error{
-	id := utils.GetIDFramParams(c)
-	var ft models.CEFeatures
+	id := utils.GetIDFromParams(c)
+	var ft []models.CEFeature
 		if err:= c.BodyParser(&ft); err!=nil{
 			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 		}
@@ -56,7 +56,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 		features[i].FillWithCEFeature(ft[i])
 		features[i].TimeCreated = time.Now()
 		features[i].TimeModified = time.Now()
-		features[i].PlanID = id
+		features[i].PlanID = uint64(id)
 	}
 
 	
