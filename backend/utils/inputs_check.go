@@ -15,6 +15,10 @@ func CheckEmail(e string) error{
 // valid character is english characters
 func IsJustLetter(s string, allows... string) error{
 
+	if s == "" || s == " "{
+		return errors.New("empty field")
+	}
+
 	valid := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	for _, c := range allows[0]{
 		valid += string(c)
@@ -31,6 +35,10 @@ func IsJustLetter(s string, allows... string) error{
 // invalid characters is \/
 func IsNotInvalidCharacter(s string, allows... string) error{
 
+	if s == "" || s == " "{
+		return errors.New("empty field")
+	}
+	
 	invalid := "\\/"
 	for _, c := range allows[0]{
 		invalid += string(c)

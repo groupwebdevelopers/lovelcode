@@ -2,14 +2,18 @@ package models
 
 import (
 	"time"
+	"errors"
+
 )
 
 type Plan struct{
 	ID uint64 `gorm:"primaryKey"`
 	Name string `gorm:"not null"`
 	Price uint32 `gorm:"not null"`
-	// Features string `gorm:"not null"`
 	ImagePath string
+
+	TimeCreated time.Time `gorm:"not null"`
+	TimeModified time.Time `gorm:"not null"`
 }
 
 type Feature struct{
@@ -20,6 +24,9 @@ type Feature struct{
 	Description string
 	Price uint32
 	IsHave bool `gorm:"not null"` // the plan is have this feature
+
+	TimeCreated time.Time `gorm:"not null"`
+	TimeModified time.Time `gorm:"not null"`
 }
 
 // create and edit feature
@@ -34,5 +41,43 @@ type CEFeature struct{
 type CEPlan struct{
 	Name string `json:"name"`
 	Price uint32 `json:"price"`
-	// image must sent
+	
+}
+
+type CEPlanAndFeatures struct{
+	Plan CEPlan `json:"plan"`
+	Features []CEFeature `json:"features`
+}
+
+func (f *CEFeature) Check() error{
+	if f.Name == ""{
+		return errors.New("empty name")
+	}
+	if f.PlanID == 0{
+		return errors.New("invalid planID")
+	}
+	return nil
+}
+
+func (f *Feature) FillWithCEFeature(ce CEFeature){
+	f.PlanID = ce.PlanID
+	f.Name = ce.Name
+	f.Description = ce.Description
+	f.Price = ce.Price
+	f.IsHave = ce.IsHave
+} 
+
+func (p *CEPlan) Check() error{
+	if p.Name == ""{
+		return errors.New("empty name")
+	}
+	if p.Price == 0{
+		return errors.New("invalid price")
+	}
+	return nil
+}
+
+func (p *Plan) FillWithCEPlan(ce CEPlan) {
+	p.Name = ce.Name
+	p.Price = ce.Price
 }
