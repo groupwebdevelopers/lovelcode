@@ -38,6 +38,6 @@ func main(){
 	//settings.Setup()
 	
 	router.Route(app)
-	log.Fatal(app.Listen(":8000"))
+	log.Fatal(app.Listen(":3000"))
 	
 }

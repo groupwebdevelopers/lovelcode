@@ -2,8 +2,9 @@ package database
 
 import (
 	"gorm.io/gorm"
-	"gorm.io/driver/mysql"
-	
+	// "gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+
 	"lovelcode/models"
 )
 
@@ -11,8 +12,11 @@ var DB *gorm.DB
 var Settings map[string]string
 
 func Setup() error{
-	dsn := "mohammadamin:M@85mmohammadamin@tcp(127.0.0.1:3306)/lovelcode?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	// dsn := "mohammadamin:M@85mmohammadamin@tcp(127.0.0.1:3306)/lovelcode?charset=utf8mb4&parseTime=True&loc=Local"
+	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	
+	dsn := "host=database user=root password=2CEezrHZLl3SP5VnNhu4kdto dbname=lovelcode port=5432 sslmode=disable TimeZone=Asia/Tehran"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err!=nil{
 		return err
 	}
