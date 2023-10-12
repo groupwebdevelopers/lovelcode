@@ -35,6 +35,7 @@ export default function Portfolio() {
           </a>
           <a href="#" className="px-[22px] py-[14px] rounded-xl">برندینگ</a>
           <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت خبری</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">ui/ux</a>
         </div>
 
         <div className="lg:hidden">
