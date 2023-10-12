@@ -45,7 +45,7 @@ export default function NavBar() {
                     </NavLink>
                 </li>
                 <li className='hover:text-main-blue-web transition-colors'>
-                    <NavLink to='/f' className={({ isActive }) => isActive ? "text-main-blue-web relative before:content-[''] before:absolute before:top-0 before:right-0 before:h-0.5 before:w-0.5 before:bg-main-blue-web" : ''}>
+                    <NavLink to='/about-us' className={({ isActive }) => isActive ? "text-main-blue-web relative before:content-[''] before:absolute before:top-0 before:right-0 before:h-0.5 before:w-0.5 before:bg-main-blue-web" : ''}>
                         درباره ما
                     </NavLink>
                 </li>
