@@ -22,7 +22,7 @@ export default function DesignPlan({color,vector,title,price,list}) {
             <h3 className="font-Ray-Black text-main-dark-text-web">
               {title}
             </h3>
-            <h3 className="font-ANJOMANFANUM-ULTRABOLD text-main-red-web">
+            <h3 className="font-ANJOMANFANUM-ULTRABOLD text-main-green-web">
               {price}
             </h3>
           </div>
