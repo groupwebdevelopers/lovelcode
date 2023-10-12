@@ -186,12 +186,13 @@ func Signup(c *fiber.Ctx) error{
 func BanUser(c *fiber.Ctx) error{
 	// get id from url
 	id := utils.GetIDFromParams(c)
+	user := c.Locals("user").(models.User)
 	if id ==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
 	// check user have permision for ban user
-	ap := utils.CheckAdminPermision(user, "banuser")
+	ap := utils.CheckAdminPermision(user.AdminPermisions, "banuser")
 	if ap == 0 || ap == 2{
 		if ap == 2{
 			hban(user)
@@ -219,8 +220,11 @@ func BanUser(c *fiber.Ctx) error{
 		}
 		utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly banned"})
 	}
+	if ap == 3{
+		return utils.ServerError(c, errors.New("the sent permision to function not found"))
+	}
 
-
+	return utils.ServerError(c, errors.New("can't do this (ap="+string(ap)+")"))
 }
 
 
@@ -239,4 +243,9 @@ func getTokenExpHours() (uint16, error){
 		}
 		return uint16(i), nil
 	}
+}
+
+func hban(user models.User) {
+	user.IsBanned = true
+	database.DB.Updates(&user)
 }

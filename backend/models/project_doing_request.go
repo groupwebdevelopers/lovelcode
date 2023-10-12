@@ -34,7 +34,7 @@ func (pdr *ProjectDoingRequest) FillWithCEPDR(ce CEPDR){
 }
 
 func (c CEPDR) Check() error{
-	if err:=utils.IsJustLetter(c.Title, "-!$%&*()_+= .,?");err!=nil{
+	if err:=utils.IsNotInvalidCharacter(c.Title);err!=nil{
 		return err
 	}
 	if c.Description == ""{
