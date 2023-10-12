@@ -51,7 +51,7 @@ const AboutUs = () => {
     <div>
       <NavBar />
       <div className="all about-us container">
-        <div className="breadcrumb xl:-mt-[55px]">
+        <div className="breadcrumb lg:-mt-[55px]">
           <div className="w-full flex gap-1 items-center text-main-dark-text-web font-Ray-Bold text-xs md:text-sm">
             <i className="bi bi-geo-alt text-xs"></i>
             <Link to={"/"}>
