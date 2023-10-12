@@ -37,7 +37,7 @@ export default function Menu() {
                         </NavLink>
                     </li>
                     <li className='flex hover:text-main-blue-web transition-colors'>
-                        <NavLink to='/d' className={({ isActive }) => isActive ? "bg-main-blue-web text-white" : ''}>
+                        <NavLink to='/blog' className={({ isActive }) => isActive ? "bg-main-blue-web text-white" : ''}>
                             وبلاگ
                         </NavLink>
                     </li>
