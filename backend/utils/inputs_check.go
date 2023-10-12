@@ -12,14 +12,31 @@ func CheckEmail(e string) error{
 	return err
 }
 
-func IsJustLetter(s string, allows string) error{
+// valid character is english characters
+func IsJustLetter(s string, allows... string) error{
 
 	valid := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	for _, c := range allows{
+	for _, c := range allows[0]{
 		valid += string(c)
 	}
 	for _, c := range s{
 		if !strings.Contains(valid, string(c)){
+			return errors.New("invalid character: "+string(c))
+		}
+	}
+	return nil
+}
+
+// support persion character
+// invalid characters is \/
+func IsNotInvalidCharacter(s string, allows... string) error{
+
+	invalid := "\\/"
+	for _, c := range allows[0]{
+		invalid += string(c)
+	}
+	for _, c := range s{
+		if !strings.Contains(invalid, string(c)){
 			return errors.New("invalid character: "+string(c))
 		}
 	}
