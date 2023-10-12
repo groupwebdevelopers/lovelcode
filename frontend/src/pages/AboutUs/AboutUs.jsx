@@ -118,7 +118,7 @@ const AboutUs = () => {
           </div>
 
           <div className="paragraph2 flex flex-col gap-2">
-            <span className="text-main-green-web md:text-[16px] font-Ray-Bold mt-[20px] md:mt-[0px] text-[16px]">
+            <span className="text-main-green-web md:text-[16px] font-Ray-Bold mt-[20px] md:-mt-[20px] xl:mt-[0] text-[16px]">
               قصه اینجوری شد که
             </span>
             <h1 className="font-Ray-ExtraBold md:text-[30px] text-[27px] ">
