@@ -182,6 +182,48 @@ func Signup(c *fiber.Ctx) error{
 
 }
 
+// POST, Auth Required, Admin Required, /:id
+func BanUser(c *fiber.Ctx) error{
+	// get id from url
+	id := utils.GetIDFromParams(c)
+	if id ==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+
+	// check user have permision for ban user
+	ap := utils.CheckAdminPermision(user, "banuser")
+	if ap == 0 || ap == 2{
+		if ap == 2{
+			hban(user)
+		}
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"you don't access to do this"})
+	}
+	// user have permisoin and should ban target user
+	if ap == 1{
+		var targetUser models.User
+		if err:= database.DB.First(&targetUser, &models.User{ID: id}).Error;err!=nil{
+			if err== gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 404, fiber.Map{"error":"user not found"})
+			}else{
+				return utils.ServerError(c, err)
+			}
+		}
+		targetUser.IsBanned = true
+		if err:=database.DB.Updates(&targetUser).Error; err!=nil {
+			// todo: use update
+			if err==gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 404, fiber.Map{"error":"user not found"})
+			}else{
+				return utils.ServerError(c, err)
+			}
+		}
+		utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly banned"})
+	}
+
+
+}
+
+
 func hash(s string) string{
 	h:= sha256.New()
 	h.Write([]byte(s))
