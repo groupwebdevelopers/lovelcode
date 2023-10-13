@@ -1,7 +1,14 @@
 import React from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import DesignPlan from "../../components/DesignPlan/DesignPlan";
-
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@nextui-org/react";
 export default function Tariffs() {
   const boxses = [
     {
@@ -279,59 +286,31 @@ export default function Tariffs() {
             </button>
           </a>
         </div>
-        <div className="tab mb-8 mt-24 container">
-          <table className="w-full font-Ray-ExtraBold text-lg">
-            <thead>
-              <tr className="flex justify-between items-center bg-[#e4e4e4]/40 px-9 py-7 rounded-t-[30px]">
-                <td className="w-56">امکانات / پلن‌ها</td>
-                <div className="flex justify-between w-full">
-                  <td className="px-11 py-3 text-white bg-main-green-web rounded-xl text-base">
+        <div className="mt-32 mb-36">
+          <table className="w-full">
+            <thead className="">
+              <tr className="grid grid-cols-12 items-center">
+                <div className="col-span-3">
+                  <th className="font-Ray-ExtraBlack text-[10px]">
+                    امکانات / پلن‌ها
+                  </th>
+                </div>
+                <div className="col-span-9 flex justify-center gap-1">
+                  <th className="font-Ray-ExtraBold text-[6px] bg-main-green-web text-white rounded-xl px-2 py-1">
                     پلن طراحی پایه
-                  </td>
-                  <td className="px-11 py-3 text-white bg-main-red-web rounded-xl text-base">
+                  </th>
+                  <th className="font-Ray-ExtraBold text-[6px] bg-main-red-web text-white rounded-xl px-2 py-1">
                     پلن طراحی پایه
-                  </td>
-                  <td className="px-11 py-3 text-white bg-main-yellow-web rounded-xl text-base">
+                  </th>
+                  <th className="font-Ray-ExtraBold text-[6px] bg-main-yellow-web text-white rounded-xl px-2 py-1">
                     پلن طراحی پایه
-                  </td>
-                  <td className="px-11 py-3 text-white bg-main-violet-web rounded-xl text-base">
+                  </th>
+                  <th className="font-Ray-ExtraBold text-[6px] bg-main-violet-web text-white rounded-xl px-2 py-1">
                     پلن طراحی پایه
-                  </td>
+                  </th>
                 </div>
               </tr>
             </thead>
-            <tbody>
-              <tr className="flex justify-between items-center bg-white px-9 py-7">
-                <td className="w-56">طراحی تم اختصاصی برند</td>
-                <div className="flex justify-between w-full">
-                  <td className=" px-11 py-3 text-main-red-web text-3xl flex justify-center items-center">
-                    <i class="bi bi-x"></i>
-                  </td>
-                  <td className=" px-11 py-3 text-main-red-web text-3xl flex justify-center items-center">
-                    <i class="bi bi-x"></i>
-                  </td>
-                  <td className=" px-11 py-3 text-main-green-web text-3xl flex justify-center items-center">
-                    <i class="bi bi-check-lg"></i>
-                  </td>
-                  <td className=" px-11 py-3 text-main-green-web text-3xl flex justify-center items-center">
-                    <i class="bi bi-check-lg"></i>
-                  </td>
-                </div>
-              </tr>
-              <tr className="flex justify-between items-center bg-[#e4e4e4]/40 px-9 py-7">
-                <td className="w-56">زمان تحویل (روز کاری)</td>
-                <div className="flex justify-between w-full">
-                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center"><span className="font-ANJOMANFANUM-MEDIUM">5</span> روز</td>
-                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center"><span className="font-ANJOMANFANUM-MEDIUM">9</span> روز</td>
-                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center">
-                  <span className="font-ANJOMANFANUM-MEDIUM">12</span> روز
-                  </td>
-                  <td className=" px-11 py-3 font-Ray-ExtraBold flex justify-center items-center">
-                  <span className="font-ANJOMANFANUM-MEDIUM">17</span> روز
-                  </td>
-                </div>
-              </tr>
-            </tbody>
           </table>
         </div>
       </div>
