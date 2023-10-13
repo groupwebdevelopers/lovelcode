@@ -272,7 +272,7 @@ export default function Tariffs() {
           <h3 className="font-Ray-ExtraBold text-2xl mt-6">
             الان با ما تماس بگیر :
           </h3>
-          <div className="flex justify-center gap-[10px] font-ANJOMANFANUM-SEMIBOLD text-2xl mt-2">
+          <div className="flex justify-center gap-[8px] font-ANJOMANFANUM-SEMIBOLD text-2xl mt-2">
             <h3 className="">09112121212</h3>
             <i class="bi bi-telephone"></i>
           </div>
@@ -280,7 +280,7 @@ export default function Tariffs() {
             یا فرم دریافت تماس را پر کن:
           </h4>
           <a className="flex justify-center" href="#">
-            <button className="font-Ray-Bold text-sm bg-main-blue-web text-main-light-web px-8 py-3 rounded-xl mt-[10px] flex items-center justify-center gap-2">
+            <button className="font-Ray-Bold text-sm bg-main-blue-web text-main-light-web px-8 py-3 rounded-xl mt-[8px] flex items-center justify-center gap-2">
               <p>دریافت تماس و مشاوره</p>
               <i class="bi bi-arrow-left"></i>
             </button>
@@ -290,22 +290,22 @@ export default function Tariffs() {
           <table className="w-full">
             <thead className="">
               <tr className="grid grid-cols-12 items-center">
-                <div className="col-span-3">
-                  <th className="font-Ray-ExtraBlack text-[10px]">
+                <div className="col-span-2">
+                  <th className="font-Ray-ExtraBlack  text-[10px] sm:text-base lg:text-lg">
                     امکانات / پلن‌ها
                   </th>
                 </div>
-                <div className="col-span-9 flex justify-center gap-1">
-                  <th className="font-Ray-ExtraBold text-[6px] bg-main-green-web text-white rounded-xl px-2 py-1">
+                <div className="col-span-10 flex justify-evenly gap-1 lg:gap-5">
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-green-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
                     پلن طراحی پایه
                   </th>
-                  <th className="font-Ray-ExtraBold text-[6px] bg-main-red-web text-white rounded-xl px-2 py-1">
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-red-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
                     پلن طراحی پایه
                   </th>
-                  <th className="font-Ray-ExtraBold text-[6px] bg-main-yellow-web text-white rounded-xl px-2 py-1">
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-yellow-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
                     پلن طراحی پایه
                   </th>
-                  <th className="font-Ray-ExtraBold text-[6px] bg-main-violet-web text-white rounded-xl px-2 py-1">
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-violet-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
                     پلن طراحی پایه
                   </th>
                 </div>
