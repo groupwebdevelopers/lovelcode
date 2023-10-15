@@ -12,6 +12,17 @@ import (
 )
 
 func CreatePlan(c *fiber.Ctx) error{
+
+	user:= c.Locals("user").(models.User)
+	adminCode := utils.CheckAdminPermision(user.AdminPermisions, "createPlan")
+	if adminCode != 1{
+		if adminCode == 2{
+			hban(user)
+		}
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
+	}
+
+	
 	// plan and features
 	var pl models.CEPlan
 	if err:= c.BodyParser(&pl); err!=nil{
@@ -38,6 +49,16 @@ func CreatePlan(c *fiber.Ctx) error{
 // POST, Auth Required, /:id
 // get list of features
 func CreateFeatures(c *fiber.Ctx) error{
+
+	user:= c.Locals("user").(models.User)
+	adminCode := utils.CheckAdminPermision(user.AdminPermisions, "createFeature")
+	if adminCode != 1{
+		if adminCode == 2{
+			hban(user)
+		}
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
+	}
+	
 	id := utils.GetIDFromParams(c)
 	var ft []models.CEFeature
 		if err:= c.BodyParser(&ft); err!=nil{

@@ -34,6 +34,15 @@ func Setup() error{
 
 	err = SetupSettings()
 
+	// create Owner
+	// db.Create(models.User{
+	// 	Name: "Owner",
+	// 	Family: "Owner",
+	// 	Username: "1000000",
+	// 	Email: "theowner@localhost.lh",
+
+	// })
+
 	return err
 }
 
@@ -46,7 +55,11 @@ func SetupSettings() error{
 	
 	Settings = make(map[string]string)
 	for _, s := range st{
-		Settings[s.Key] = s.Value
+		if s.Value != ""{
+			Settings[s.Key] = s.Value
+		}else {
+			Settings[s.Key] = "72"
+		}
 	}
 
 	return nil

@@ -38,7 +38,7 @@ func IsNotInvalidCharacter(s string, allows... string) error{
 	if s == "" || s == " "{
 		return errors.New("empty field")
 	}
-	
+
 	invalid := "\\/"
 	for _, c := range allows[0]{
 		invalid += string(c)
@@ -50,4 +50,3 @@ func IsNotInvalidCharacter(s string, allows... string) error{
 	}
 	return nil
 }
-
