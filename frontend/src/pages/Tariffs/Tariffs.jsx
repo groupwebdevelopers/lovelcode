@@ -1,13 +1,16 @@
-import React from 'react'
-import NavBar from '../../components/NavBar/NavBar'
-import DesignPlan from '../../components/DesignPlan/DesignPlan'
-
-
-
-
+import React from "react";
+import NavBar from "../../components/NavBar/NavBar";
+import DesignPlan from "../../components/DesignPlan/DesignPlan";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@nextui-org/react";
 export default function Tariffs() {
-
-    const boxses = [
+  const boxses = [
     {
       id: 1,
       color: "bg-main-violet-web",
@@ -180,35 +183,55 @@ export default function Tariffs() {
       ],
     },
   ];
-    return (
-        <div>
-            <NavBar />
-            <div className='container bredcromp'>
-                
-            </div>
-            <div className='container'>
-                <div className='title text-center'>
-                    <div className=' text-main-dark-text-web'>
-                    <h1 className='font-Ray-ExtraBold text-[30px]'>قیمت طراحی سایت و فروشگاه اینترنتی</h1>
-                    </div>
-                    <div className='mt-2'>
-                        <p className='font-Ray-Bold text-xl text-main-green-web'>تعرفه و امکانات بسته‌های مختلف پرتال را مقایسه کن و با توجه به نیازهای خودت یکی رو انتخاب کن. </p>
-                    </div>
-                </div>
-                <div className="select hidden font-Ray-Bold lg:flex my-12 bg-white w-fit  rounded-xl items-center text-xs lg:text-base">
-          <a href="#" className="bg-main-blue-web px-[22px] py-[14px] rounded-xl text-white">
+  return (
+    <div>
+      <NavBar />
+      <div className="container bredcromp"></div>
+      <div className="container">
+        <div className="title text-center">
+          <div className=" text-main-dark-text-web">
+            <h1 className="font-Ray-ExtraBold text-[30px]">
+              قیمت طراحی سایت و فروشگاه اینترنتی
+            </h1>
+          </div>
+          <div className="mt-2">
+            <p className="font-Ray-Bold text-xl text-main-green-web">
+              تعرفه و امکانات بسته‌های مختلف پرتال را مقایسه کن و با توجه به
+              نیازهای خودت یکی رو انتخاب کن.{" "}
+            </p>
+          </div>
+        </div>
+        <div className="select hidden font-Ray-Bold lg:flex my-12 bg-white w-fit  rounded-xl items-center text-xs lg:text-base">
+          <a
+            href="#"
+            className="bg-main-blue-web px-[22px] py-[14px] rounded-xl text-white"
+          >
             همه
           </a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت فروشگاهی</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت آموزشی</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت شرکتی</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت شخصی</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت فروشگاهی
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت آموزشی
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت شرکتی
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت شخصی
+          </a>
           <a href="#" className="px-[22px] py-[14px] rounded-xl">
             دیجیتال مارکتینگ
           </a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">برندینگ</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">سایت خبری</a>
-          <a href="#" className="px-[22px] py-[14px] rounded-xl">ui/ux</a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            برندینگ
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            سایت خبری
+          </a>
+          <a href="#" className="px-[22px] py-[14px] rounded-xl">
+            ui/ux
+          </a>
         </div>
 
         <div className="lg:hidden">
@@ -237,7 +260,60 @@ export default function Tariffs() {
             </div>
           ))}
         </div>
-            </div>
+        <div className="hazine text-center mt-[100px] text-main-dark-text-web">
+          <h2 className="text-4xl font-Ray-ExtraBold">
+            هزینه طراحی سایت{" "}
+            <span className="font-ANJOMANFANUM-MEDIUM">1402</span>
+          </h2>
+          <p className="font-Ray-Bold text-xl text-main-green-web mt-2">
+            زمان کمی داریی؟ کارشناسان ما ایجان که بهت مشاوره بدن تا همین امروز
+            پروژه طراحی سایت خودت رو شروع کنی.
+          </p>
+          <h3 className="font-Ray-ExtraBold text-2xl mt-6">
+            الان با ما تماس بگیر :
+          </h3>
+          <div className="flex justify-center gap-[8px] font-ANJOMANFANUM-SEMIBOLD text-2xl mt-2">
+            <h3 className="">09112121212</h3>
+            <i class="bi bi-telephone"></i>
+          </div>
+          <h4 className="font-Ray-Bold text-xl mt-6">
+            یا فرم دریافت تماس را پر کن:
+          </h4>
+          <a className="flex justify-center" href="#">
+            <button className="font-Ray-Bold text-sm bg-main-blue-web text-main-light-web px-8 py-3 rounded-xl mt-[8px] flex items-center justify-center gap-2">
+              <p>دریافت تماس و مشاوره</p>
+              <i class="bi bi-arrow-left"></i>
+            </button>
+          </a>
         </div>
-    )
+        <div className="mt-32 mb-36">
+          <table className="w-full">
+            <thead className="">
+              <tr className="grid grid-cols-12 items-center">
+                <div className="col-span-2">
+                  <th className="font-Ray-ExtraBlack  text-[10px] sm:text-base lg:text-lg">
+                    امکانات / پلن‌ها
+                  </th>
+                </div>
+                <div className="col-span-10 flex justify-evenly gap-1 lg:gap-5">
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-green-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
+                    پلن طراحی پایه
+                  </th>
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-red-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
+                    پلن طراحی پایه
+                  </th>
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-yellow-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
+                    پلن طراحی پایه
+                  </th>
+                  <th className="font-Ray-ExtraBold text-[8px] bg-main-violet-web text-white rounded-xl px-2 py-1 lg:px-11 lg:py-3 sm:text-base">
+                    پلن طراحی پایه
+                  </th>
+                </div>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -1,6 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Login() {
+const [email , setEmail] = useState('')
+const emailChangHandler = (e)=>{
+    setEmail(e.target.value)
+}
+const [password , setPassword] = useState('')
+const passwordChangHandler = (e)=>{
+    setPassword(e.target.value)
+}
+    useEffect(()=>{
+        
+    },[])
     return (
         <div className='min-h-screen w-full flex items-center justify-center sm:my-12'>
             <div className="flex flex-col w-full sm:w-96 bg-white sm:rounded-3xl p-10">
@@ -10,10 +21,10 @@ export default function Login() {
                 </div>
                 <div className='flex flex-col gap-y-5 mb-6'>
                     <div>
-                        <input type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='نشانی ایمیل' />
+                        <input value={email} onChange={emailChangHandler} type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='نشانی ایمیل' />
                     </div>
                     <div className='relative'>
-                        <input type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='رمز عبور' />
+                        <input value={password} onChange={passwordChangHandler} type="text" className='bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5' placeholder='رمز عبور' />
                         <i class="absolute top-0 bottom-0 left-4 flex items-center opacity-60 cursor-pointer bi bi-eye"></i>
                     </div>
                 </div>

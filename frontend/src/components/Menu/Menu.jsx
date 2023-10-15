@@ -32,7 +32,7 @@ export default function Menu() {
                         </NavLink>
                     </li>
                     <li className='flex hover:text-main-blue-web transition-colors'>
-                        <NavLink to='/s' className={({ isActive }) => isActive ? "bg-main-blue-web text-white" : ''}>
+                        <NavLink to='/tariffs' className={({ isActive }) => isActive ? "bg-main-blue-web text-white" : ''}>
                             تعرفه طراحی سایت
                         </NavLink>
                     </li>
