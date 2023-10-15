@@ -47,3 +47,17 @@ func AuthRequired(c *fiber.Ctx) error{
 	c.Locals("user", user)
 	return c.Next()
 }
+
+func AdminRequired(c *fiber.Ctx) error{
+	// check user have permision
+	user:= c.Locals("user").(models.User)
+	field := strings.Split(c.OriginalURL, "/")[1]
+	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
+	if adminCode != 1{
+		if adminCode == 2{
+			hban(user)
+		}
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
+	}
+	return c.Next()
+}
