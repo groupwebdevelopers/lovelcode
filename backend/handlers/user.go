@@ -39,7 +39,7 @@ func Signin(c *fiber.Ctx) error{
 
 	// check SignupUser fields	
 	if err:= ss.Check(); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 
 	// hash password
@@ -47,7 +47,7 @@ func Signin(c *fiber.Ctx) error{
 	
 	// check user already exist
 	var user models.User
-	if err:= database.DB.First(&user, "(email=? or number=?) and password=?", ss.Email, ss.Number, ss.Password).Error; err==gorm.ErrRecordNotFound{
+	if err:= database.DB.First(&user, "email=? and password=?", ss.Email, ss.Password).Error; err==gorm.ErrRecordNotFound{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"user not found"})
 	}else if err!=nil{
 		return utils.ServerError(c, err)
@@ -59,11 +59,13 @@ func Signin(c *fiber.Ctx) error{
 	}
 	
 	// create token
-	token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
-	if err!=nil{
-		return utils.ServerError(c, err)
-	}
-
+	// token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
+	// if err!=nil{
+		// return utils.ServerError(c, err)
+	// }
+	token := utilstoken.CreateToken()
+	user.Token = token
+	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours) * time.Hour)
 	// update database token
 	if err:= database.DB.Updates(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -98,7 +100,7 @@ func Signup(c *fiber.Ctx) error{
 
 	// check SignupUser fields	
 	if err:= ss.Check(); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	
 	// hash password
@@ -115,17 +117,18 @@ func Signup(c *fiber.Ctx) error{
 
 	// create token
 	
-	token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
-	if err!=nil{
-		return utils.ServerError(c, err)
-	}
+	// token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
+	// if err!=nil{
+		// return utils.ServerError(c, err)
+	// }
+	token := utilstoken.CreateToken()
 		
 	// create user
 	user.Email = ss.Email
 	user.Password = ss.Password
 	user.Name = ss.Name
 	user.Family = ss.Family
-	user.Number = ss.Number
+	// user.Number = ss.Number
 	user.AdminPermisions = ""
 	user.IsDeleted = false
 	user.IsBanned = false

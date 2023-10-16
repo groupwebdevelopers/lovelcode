@@ -10,14 +10,21 @@ func Route(app *fiber.App) {
 	apiV1 := apiOnly.Group("/v1")
 	apiV1.Get("/", handlers.Home)
 
-	fileUploadAuthReq := app.Group("/api/v1", handlers.AuthRequired)
-
-	authReq := apiV1.Group("/", handlers.AuthRequired)
-	adminReq := authReq.Group("/", handlers.AdminRequired)
+	fileUploadAuthReq := app.Group("/api/v1/upload", handlers.AuthRequired)
 	
-	// auth := apiV1.Group("/auth")
+	// auth not required
+	
 	apiV1.Post("/signin", handlers.Signin)
 	apiV1.Post("/signup", handlers.Signup)
+	
+	// auth required
+	authReq := apiV1.Group("/", handlers.AuthRequired)
+	
+	
+	// admin required
+	adminReq := authReq.Group("/", handlers.AdminRequired)
+	
+	// user
 	adminReq.Post("/user/ban/:id", handlers.BanUser)
 	
 	// Project Doing Request

@@ -58,7 +58,7 @@ func GetAllProjectDoingRequests(c *fiber.Ctx) error{
 func GetProjectDoingRequest(c *fiber.Ctx) error{
 	id := utils.GetIntFromParams(c, "id")
 	var pdr models.ProjectDoingRequest
-	query := models.ProjectDoingRequest{ID: uint64(id)}
+	query := models.ProjectDoingRequest{ID: id}
 	if err:= database.DB.First(&pdr, &query).Error; err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"the Project Doing Request with sent id not found"})
@@ -84,7 +84,7 @@ func EditProjectDoingRequest(c *fiber.Ctx) error {
 	}
 
 	var pd models.ProjectDoingRequest
-	query := models.ProjectDoingRequest{ID: uint64(id)}
+	query := models.ProjectDoingRequest{ID: id}
 	if err:=database.DB.First(&pd, &query).Error;err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"the Project Doing Request with sent id not found"})

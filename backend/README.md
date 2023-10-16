@@ -4,10 +4,10 @@
 GET /api/v1/home
 
 # auth
-POST /api/v1/signup (json with email, password, username, name, family)
+POST /api/v1/signup (json with email, password, number, name, family)
     password lenght bigger than 8
     email example test@test.com
-    uesrname 
+    number int
     name must letter without !@#$%^&*()_+-
 POST /api/v1/signin (json with email, username, password) (one of email and username is required)
 

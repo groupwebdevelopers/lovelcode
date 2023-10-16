@@ -27,7 +27,7 @@ func CreatePlan(c *fiber.Ctx) error{
 
 	// check plan validation
 	if err:=pl.Check(); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	
 	// create plan and fill it
@@ -68,7 +68,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 	// check features validation
 	for _, f := range ft{
 		if err:= f.Check();err!=nil{
-			return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+			return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 		}
 	}
 
@@ -157,7 +157,7 @@ func EditPlan(c *fiber.Ctx) error{
 
 	// check plan validation
 	if err:=pl.Check(); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	} 
 
 	// fill the plan
@@ -203,7 +203,7 @@ func EditFeature(c *fiber.Ctx) error{
 
 	// check feature validation
 	if err:= ft.Check();err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	
 

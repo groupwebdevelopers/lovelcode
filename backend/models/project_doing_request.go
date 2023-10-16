@@ -4,10 +4,13 @@ import (
 	"time"
 	"errors"
 
+	"gorm.io/gorm"
+
 	"lovelcode/utils"
 )
 
 type ProjectDoingRequest struct{
+	gorm.Model
 	ID uint64 `gorm:"primaryKey"`
 	UserID uint64 `gorm:"not null"`
 	User User `gorm:"not null"`

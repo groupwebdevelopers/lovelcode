@@ -3,11 +3,12 @@ package handlers
 import (
 	"time"
 	"strings"
-
+"fmt"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"lovelcode/utils"
-	utilstoken "lovelcode/utils/token"
+	// utilstoken "lovelcode/utils/token"
 	"lovelcode/database"
 	"lovelcode/models"
 )
@@ -26,13 +27,18 @@ func AuthRequired(c *fiber.Ctx) error{
 	if token==""{
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
 	}
-	user, err := utilstoken.VerifyJWTToken(token)
-	if err!=nil{
-		return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
-	}
+	fmt.Println("this done")
+	var user models.User
+	// user, err := utilstoken.VerifyJWTToken(token)
+	// if err!=nil{
+		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
+	// }
 	// var user models.User = models.User{Token: token}
-	if err:=database.DB.First(&user, &user).Error;err!=nil{
-		utils.ServerError(c, err)
+	if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+		}
+		return utils.ServerError(c, err)
 	}
 
 	// check banned
@@ -41,7 +47,7 @@ func AuthRequired(c *fiber.Ctx) error{
 	}
 
 	// check token
-	if token != user.Token && user.TokenExp.Unix() < time.Now().Unix(){
+	if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
 	}
 
@@ -52,7 +58,7 @@ func AuthRequired(c *fiber.Ctx) error{
 func AdminRequired(c *fiber.Ctx) error{
 	// check user have permision
 	user:= c.Locals("user").(models.User)
-	field := strings.Split(c.OriginalURL(), "/")[1]
+	field := strings.Split(c.OriginalURL(), "/")[3]
 	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
 	if adminCode != 1{
 		if adminCode == 2{
