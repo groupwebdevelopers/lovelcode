@@ -150,7 +150,7 @@ func Signup(c *fiber.Ctx) error{
 // POST, Auth Required, Admin Required, /:id
 func BanUser(c *fiber.Ctx) error{
 	// get id from url
-	id := utils.GetIDFromParams(c)
+	id := utils.GetIntFromParams(c, "id")
 	user := c.Locals("user").(models.User)
 	if id ==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
@@ -204,7 +204,7 @@ func GetUsersPaged(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
 	}
 
-	page := utils.GetIDFromParams(c)
+	page := utils.GetIntFromParams(c, "id")
 	var users []models.User
 	if err:=database.DB.Limit(10).Offset(int(page*10)).Find(&users).Error;err!=nil{
 		if err == gorm.ErrRecordNotFound{

@@ -5,6 +5,7 @@ import (
 	"time"
 	"fmt"
 	"strings"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -134,7 +135,7 @@ func UploadPlanImage(c *fiber.Ctx) error{
 // PUT, Auth Required, Admin Required, /:planId
 func EditPlan(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c)
+	id := utils.GetIntFromParams(c, "planId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the planId didn't send"})
 	}
@@ -142,7 +143,7 @@ func EditPlan(c *fiber.Ctx) error{
 	// check plan is exist
 	var plan models.Plan
 	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Error; err!=nil{
-		if err==gorm.ErrRecordnotFound{
+		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
 		}
 		return utils.ServerError(c, err)
@@ -222,23 +223,111 @@ func GetAllPlans(c *fiber.Ctx) error{
 	var plans []models.Plan
 	if err:= database.DB.Find(&plans).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
-			return JSONResponse(c, 404, fiber.Map{"error":"no plan found"})
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no plan found"})
 		}
-		return uitls.ServerError(c, err)
+		return utils.ServerError(c, err)
 	}
 
 	return utils.JSONResponse(c, 200, fiber.Map{"data":plans})
 }
 
 func GetPlan(c *fiber.Ctx) error{
+	
+	id := utils.GetIntFromParams(c, "planId")
+	if id == 0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+	
 	var plan models.Plan
 	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
-			return utils.JSONRespone(c, 404, fiber.Map{"error":"plan not found"})
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
 	return utils.JSONResponse(c, 200, fiber.Map{"data":plan})
 	
+}
+
+func GetFeature(c *fiber.Ctx) error{
+
+	id := utils.GetIntFromParams(c, "planId")
+	if id == 0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+	var feature models.Feature
+	if err:= database.DB.First(&feature, &models.Feature{ID: id}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":feature})
+}
+
+func GetAllFeatures(c *fiber.Ctx) error{
+	var features []models.Feature
+
+	if err:= database.DB.Find(&features).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no feature found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":features})
+
+}
+
+func GetAllPlansAndFeatures(c *fiber.Ctx) error{
+	var plans []models.Plan
+	var features []models.Feature
+	if err:= database.DB.Find(&plans).Find(&features).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":fiber.Map{"features":features, "plans":plans}})
+
+}
+
+func DeletePlan(c *fiber.Ctx) error{
+	id := utils.GetIntFromParams(c, "planId")
+	if id==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+
+	var plan models.Plan
+	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Delete(&plan).Delete(&models.Feature{}, &models.Feature{PlanID: id}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	err := os.Remove(fmt.Sprintf(".%s", plan.ImagePath))
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
+}
+
+
+func DeleteFeature(c *fiber.Ctx) error{
+	id := utils.GetIntFromParams(c, "featureId")
+	if id==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+
+	if err:= database.DB.Delete(&models.Feature{}, &models.Feature{ID: id}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"feature not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
 }

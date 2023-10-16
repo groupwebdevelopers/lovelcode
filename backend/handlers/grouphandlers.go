@@ -2,13 +2,14 @@ package handlers
 
 import (
 	"time"
-
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 
 	"lovelcode/utils"
 	utilstoken "lovelcode/utils/token"
 	"lovelcode/database"
+	"lovelcode/models"
 )
 
 func ApiOnly(c *fiber.Ctx) error{
@@ -51,7 +52,7 @@ func AuthRequired(c *fiber.Ctx) error{
 func AdminRequired(c *fiber.Ctx) error{
 	// check user have permision
 	user:= c.Locals("user").(models.User)
-	field := strings.Split(c.OriginalURL, "/")[1]
+	field := strings.Split(c.OriginalURL(), "/")[1]
 	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
 	if adminCode != 1{
 		if adminCode == 2{

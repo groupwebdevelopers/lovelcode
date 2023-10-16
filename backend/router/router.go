@@ -33,7 +33,7 @@ func Route(app *fiber.App) {
 	fileUploadAuthReq.Post("/plan/upload-image/:planId", handlers.UploadPlanImage)
 	adminReq.Put("/plan/edit", handlers.EditPlan)
 	adminReq.Put("/plan/edit-feature/:featureId", handlers.EditFeature)
-	fileUploadAuthReq.Put("/plan/edit-image/:planId")
+	fileUploadAuthReq.Put("/plan/edit-image/:planId", handlers.UploadPlanImage)
 	adminReq.Get("/plan/get-all-plans", handlers.GetAllPlans)
 	adminReq.Get("/plan/get-plan/:planId", handlers.GetPlan)
 	adminReq.Get("/plan/get-all-features/:planId", handlers.GetAllFeatures)
