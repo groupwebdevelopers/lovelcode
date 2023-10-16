@@ -31,9 +31,9 @@ type Feature struct{
 
 // create and edit feature
 type CEFeature struct{
-	PlanID uint64 `json:"planID"`
+	// PlanID uint64 `json:"planID"`
 	Name string `json:"name"`
-	Description string `json:"description"`
+	// Description string `json:"description"`
 	Price uint32 `json:"price"`
 	IsHave bool `json:"isHave"`
 }
@@ -53,16 +53,16 @@ func (f *CEFeature) Check() error{
 	if f.Name == ""{
 		return errors.New("empty name")
 	}
-	if f.PlanID == 0{
-		return errors.New("invalid planID")
-	}
+	// if f.PlanID == 0{
+	// 	return errors.New("invalid planID")
+	// }
 	return nil
 }
 
 func (f *Feature) FillWithCEFeature(ce CEFeature){
-	f.PlanID = ce.PlanID
+	// f.PlanID = ce.PlanID
 	f.Name = ce.Name
-	f.Description = ce.Description
+	// f.Description = ce.Description
 	f.Price = ce.Price
 	f.IsHave = ce.IsHave
 } 

@@ -3,7 +3,7 @@ package handlers
 import (
 	"time"
 	"strings"
-"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -27,7 +27,7 @@ func AuthRequired(c *fiber.Ctx) error{
 	if token==""{
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
 	}
-	fmt.Println("this done")
+
 	var user models.User
 	// user, err := utilstoken.VerifyJWTToken(token)
 	// if err!=nil{

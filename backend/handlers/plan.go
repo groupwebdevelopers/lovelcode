@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	
+	"errors"	
 	"time"
 	"fmt"
 	"strings"
@@ -48,7 +48,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 
 	id := utils.GetIntFromParams(c, "planId")
 	if id==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"the planId didn't send"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the planId is invalid"})
 	}
 	
 	// check plan is exist
@@ -57,12 +57,14 @@ func CreateFeatures(c *fiber.Ctx) error{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Plan not found"})
 		}
+		return utils.ServerError(c, err)
 	}
 	
 	
 	// get features from body
 	var ft []models.CEFeature
 		if err:= c.BodyParser(&ft); err!=nil{
+			fmt.Println(err)
 			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 		}
 	// check features validation
@@ -174,9 +176,9 @@ func EditPlan(c *fiber.Ctx) error{
 
 func EditFeature(c *fiber.Ctx) error{
 	// get id from params
-	id := utils.GetIntFromParams(c, "planId")
+	id := utils.GetIntFromParams(c, "featureId")
 	if id==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"the planId didn't send"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the featureId is invalid"})
 	}
 	
 	// check feature is exist
@@ -195,7 +197,7 @@ func EditFeature(c *fiber.Ctx) error{
 	
 	// check plan is exist
 	var plan models.Plan
-	if err:=database.DB.First(&plan, &models.Plan{ID: ft.PlanID}).Error;err!=nil{
+	if err:=database.DB.First(&plan, &models.Plan{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Plan not found"})
 		}
@@ -210,7 +212,7 @@ func EditFeature(c *fiber.Ctx) error{
 	// fill the feature
 	feature.FillWithCEFeature(ft)
 	feature.TimeModified = time.Now()
-
+	feature.PlanID = id
 	
 	if err:= database.DB.Updates(&feature).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -252,7 +254,7 @@ func GetPlan(c *fiber.Ctx) error{
 
 func GetFeature(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "planId")
+	id := utils.GetIntFromParams(c, "featureId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -301,17 +303,28 @@ func DeletePlan(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
+	if err:= database.DB.Delete(&models.Feature{}, &models.Feature{PlanID: id}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"feature not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
 	var plan models.Plan
-	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Delete(&plan).Delete(&models.Feature{}, &models.Feature{PlanID: id}).Error; err!=nil{
+	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Delete(&plan).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
 		}
 		return utils.ServerError(c, err)
 	}
-
-	err := os.Remove(fmt.Sprintf(".%s", plan.ImagePath))
-	if err!=nil{
-		return utils.ServerError(c, err)
+	if strings.Contains(plan.ImagePath, "*"){
+		return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
+	}
+	if plan.ImagePath != ""{
+		err := os.Remove(fmt.Sprintf(".%s", plan.ImagePath))
+		if err!=nil{
+			return utils.ServerError(c, err)
+		}
 	}
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
 }
