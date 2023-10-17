@@ -38,6 +38,10 @@ func main(){
 	//settings.Setup()
 	
 	router.Route(app)
-	log.Fatal(app.Listen(":3000"))
+	err := app.Listen(":3000")
+	if err!=nil{
+		log.Println(err)
+		log.Fatal(app.Listen(":3131"))
+	}
 	
 }
