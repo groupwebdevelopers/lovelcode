@@ -18,7 +18,7 @@ type User struct {
 	AdminPermisions string `gorm:"not null"`
 	IsDeleted bool `gorm:"not null"`
 	IsBanned bool `gorm:"not null"`
-	Token string `gorm:"unique,size:128"`
+	Token string `gorm:"unique,size:64"`
 	TokenExp time.Time
 }
 

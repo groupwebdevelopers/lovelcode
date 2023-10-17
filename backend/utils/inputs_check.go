@@ -39,7 +39,7 @@ func IsNotInvalidCharacter(s string, disallows... string) error{
 		return errors.New("empty field")
 	}
 
-	invalid := "\\/"
+	invalid := "\\/;'\""
 
 	invalid += disallows[0]
 

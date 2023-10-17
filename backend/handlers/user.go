@@ -33,7 +33,7 @@ func Signin(c *fiber.Ctx) error{
 
 	var ss models.SigninUser
 	if err:= c.BodyParser(&ss); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"}, err.Error())
 	}
 
 
@@ -63,7 +63,7 @@ func Signin(c *fiber.Ctx) error{
 	// if err!=nil{
 		// return utils.ServerError(c, err)
 	// }
-	token := utilstoken.CreateToken()
+	token := utilstoken.CreateRandomToken()
 	user.Token = token
 	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours) * time.Hour)
 	// update database token
@@ -121,7 +121,7 @@ func Signup(c *fiber.Ctx) error{
 	// if err!=nil{
 		// return utils.ServerError(c, err)
 	// }
-	token := utilstoken.CreateToken()
+	token := utilstoken.CreateRandomToken()
 		
 	// create user
 	user.Email = ss.Email
