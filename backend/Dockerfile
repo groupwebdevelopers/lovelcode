@@ -8,7 +8,7 @@ COPY . .
 
 RUN go mod tidy && \
     GOOS=linux GOARCH=amd64 go build -o main && \
-    chmod +x ./main
+    chmod +x ./main && export deploy=true
 
 FROM alpine:latest
 
