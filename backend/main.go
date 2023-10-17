@@ -25,7 +25,7 @@ func main(){
 	// })
 	// todo: must edited in production
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:8000",
+		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 

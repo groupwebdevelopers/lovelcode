@@ -18,47 +18,36 @@ import (
 
 
 func Signin(c *fiber.Ctx) error{
-	type SigninStruct struct{
-		Email string `json:"email"`
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
+	
 
-	tokenExpHours, errr := getTokenExpHours()
-	if errr!=nil{
-		return utils.ServerError(c, errr)
-	}
+	// tokenExpHours, errr := getTokenExpHours()
+	// tokenExpHours := 72
+	var tokenExpHours uint16= 72
+
+
+	// if errr!=nil{
+		// return utils.ServerError(c, errr)
+	// }
 
 	// check json and extract data from it
 
-	var ss SigninStruct
+	var ss models.SigninUser
 	if err:= c.BodyParser(&ss); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"}, err.Error())
 	}
 
-	if ss.Email != ""{
-	// check email
-		if err := utils.CheckEmail(ss.Email); err!=nil{
-			return utils.JSONResponse(c, 400,fiber.Map{"error":"invalid email"})
-		}
-	}else {
-		// check username
-		if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
-			return utils.JSONResponse(c, 400,fiber.Map{"error":err.Error})
-		}	
+
+	// check SignupUser fields	
+	if err:= ss.Check(); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	
-	// check password len
-	if len(ss.Password) < 8{
-		return utils.JSONResponse(c, 400, fiber.Map{"error": "small password (<8)"})
-	}
-	
+
 	// hash password
 	ss.Password = hash(ss.Password)
 	
 	// check user already exist
 	var user models.User
-	if err:= database.DB.First(&user, "email=? or username=?", ss.Email, ss.Username).Error; err==gorm.ErrRecordNotFound{
+	if err:= database.DB.First(&user, "email=? and password=?", ss.Email, ss.Password).Error; err==gorm.ErrRecordNotFound{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"user not found"})
 	}else if err!=nil{
 		return utils.ServerError(c, err)
@@ -70,11 +59,13 @@ func Signin(c *fiber.Ctx) error{
 	}
 	
 	// create token
-	token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
-	if err!=nil{
-		return utils.ServerError(c, err)
-	}
-
+	// token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
+	// if err!=nil{
+		// return utils.ServerError(c, err)
+	// }
+	token := utilstoken.CreateRandomToken()
+	user.Token = token
+	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours) * time.Hour)
 	// update database token
 	if err:= database.DB.Updates(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -92,54 +83,30 @@ func Signin(c *fiber.Ctx) error{
 
 
 func Signup(c *fiber.Ctx) error{
-	type SignupStruct struct{
-		Email string `json:"email"`
-		Password string `json:"password"`
-		Name string `json:"name"`
-		Family string `json:"family"`
-		Username string `json:"username"`
-	}
+	
 
-	tokenExpHours, errr := getTokenExpHours()
-	if errr!=nil{
-		return utils.ServerError(c, errr)
-	}
+	// tokenExpHours, errr := getTokenExpHours()
+	var tokenExpHours uint16= 72
+	// if errr!=nil{
+		// return utils.ServerError(c, errr)
+	// }
 
 	// check json and extract data from it
 
-	var ss SignupStruct
+	var ss models.SignupUser
 	if err:= c.BodyParser(&ss); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
-	// check email
-	if err := utils.CheckEmail(ss.Email); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid email"})
+	// check SignupUser fields	
+	if err:= ss.Check(); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-
-	// check password len
-	if len(ss.Password) < 8{
-		return utils.JSONResponse(c, 400, fiber.Map{"error": "small password (<8)"})
-	}
-
+	
 	// hash password
 	ss.Password = hash(ss.Password)
-
-	// check name
-	if err:= utils.IsJustLetter(ss.Name, "-,"); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
-	}
-	// check family
-	if err:= utils.IsJustLetter(ss.Family, "-,"); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
-	}
-	// check username
-	if err:= utils.IsJustLetter(ss.Username, "-._"); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error})
-	}
-
+	
 	// check user already exist
-
 	var user models.User
 	query := models.User{Email: ss.Email}
 	if err:= database.DB.First(&user, &query).Error; err==nil{
@@ -150,17 +117,18 @@ func Signup(c *fiber.Ctx) error{
 
 	// create token
 	
-	token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
-	if err!=nil{
-		return utils.ServerError(c, err)
-	}
+	// token, err := utilstoken.CreateJWTToken(user, tokenExpHours)
+	// if err!=nil{
+		// return utils.ServerError(c, err)
+	// }
+	token := utilstoken.CreateRandomToken()
 		
 	// create user
 	user.Email = ss.Email
 	user.Password = ss.Password
 	user.Name = ss.Name
 	user.Family = ss.Family
-	user.Username = ss.Username
+	// user.Number = ss.Number
 	user.AdminPermisions = ""
 	user.IsDeleted = false
 	user.IsBanned = false
@@ -185,7 +153,7 @@ func Signup(c *fiber.Ctx) error{
 // POST, Auth Required, Admin Required, /:id
 func BanUser(c *fiber.Ctx) error{
 	// get id from url
-	id := utils.GetIDFromParams(c)
+	id := utils.GetIntFromParams(c, "id")
 	user := c.Locals("user").(models.User)
 	if id ==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
@@ -225,6 +193,31 @@ func BanUser(c *fiber.Ctx) error{
 	}
 
 	return utils.ServerError(c, errors.New("can't do this (ap="+string(ap)+")"))
+}
+
+
+// GET, auth required, admin required, /:page
+func GetUsersPaged(c *fiber.Ctx) error{
+	user:= c.Locals("user").(models.User)
+	adminCode := utils.CheckAdminPermision(user.AdminPermisions, "seeUsers")
+	if adminCode != 1{
+		if adminCode == 2{
+			hban(user)
+		}
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
+	}
+
+	page := utils.GetIntFromParams(c, "id")
+	var users []models.User
+	if err:=database.DB.Limit(10).Offset(int(page*10)).Find(&users).Error;err!=nil{
+		if err == gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"not found"})
+		}else{
+			return utils.ServerError(c, err)
+		}
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"users":users})
 }
 
 
