@@ -20,19 +20,19 @@ func Route(app *fiber.App) {
 	// auth required
 	authReq := apiV1.Group("/", handlers.AuthRequired)
 	
+	// Project Doing Request
+	authReq.Post("/pdr/create", handlers.CreateProjectDoingRequest)
+	authReq.Get("/pdr/get/:id", handlers.GetProjectDoingRequest)
+	authReq.Get("/pdr/get-all", handlers.GetAllProjectDoingRequests)
+	authReq.Put("/pdr/edit/:id", handlers.EditProjectDoingRequest)
+	authReq.Delete("/pdr/delete/:id", handlers.DeleteProjectDoingRequest)
+	
 	
 	// admin required
-	adminReq := authReq.Group("/", handlers.AdminRequired)
+	adminReq := authReq.Group("/admin", handlers.AdminRequired)
 	
 	// user
 	adminReq.Post("/user/ban/:id", handlers.BanUser)
-	
-	// Project Doing Request
-	adminReq.Post("/pdr/create", handlers.CreateProjectDoingRequest)
-	adminReq.Get("/pdr/get/:id", handlers.GetProjectDoingRequest)
-	adminReq.Get("/pdr/get-all", handlers.GetAllProjectDoingRequests)
-	adminReq.Put("/pdr/edit/:id", handlers.EditProjectDoingRequest)
-	adminReq.Delete("/pdr/delete/:id", handlers.DeleteProjectDoingRequest)
 	
 	// Plan
 	adminReq.Post("/plan/create", handlers.CreatePlan)
@@ -53,7 +53,7 @@ func Route(app *fiber.App) {
 	
 	// apt not found
 	apiOnly.Use(func (c *fiber.Ctx) error{
-		return c.Status(404).JSON(fiber.Map{"error":"page not found"})
+		return c.Status(404).JSON(fiber.Map{"error":"page not found","routes":app.GetRoutes()})
 	})
 	
 	// Static

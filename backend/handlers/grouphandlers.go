@@ -58,7 +58,11 @@ func AuthRequired(c *fiber.Ctx) error{
 func AdminRequired(c *fiber.Ctx) error{
 	// check user have permision
 	user:= c.Locals("user").(models.User)
-	field := strings.Split(c.OriginalURL(), "/")[3]
+	splited := strings.Split(c.OriginalURL(), "/")
+	if len(splited) < 5{
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
+	}
+	field := splited[4]
 	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
 	if adminCode != 1{
 		if adminCode == 2{
