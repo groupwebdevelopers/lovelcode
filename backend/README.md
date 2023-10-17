@@ -12,18 +12,17 @@ POST /api/v1/signup (json with email, password, number, name, family)
 POST /api/v1/signin (json with email, username, password) (one of email and username is required)
 
 # Project Doing Request
-POST /pdr/create (auth required) (json with title, description, suggestedPrice)
+POST /pdr/create (auth required)        json(title, description, suggestedPrice)
 GET /pdr/get/:id (auth required)
 GET /pdr/get-all (auth required)
-POST /pdr/edit/:id (auth required) (json with title, description, suggestedPrice)
+POST /pdr/edit/:id (auth required)      json(title, description, suggestedPrice)
 
 # Plan
-POST /plan/create
-POST /plan/create-features/:planId
-POST /plan/upload-image/:planId
-PUT /plan/edit/:planId
-PUT	/plan/edit-feature/:featureId
-PUT	/plan/edit-image/:planId
+POST /plan/create                       json(name, price)
+POST /plan/create-features/:planId      json(name, price, isHave)
+POST /plan/upload-plan-image/:planId
+PUT /plan/edit/:planId                  json(name, price)
+PUT	/plan/edit-feature/:featureId       json(name, price, isHave)
 GET	/plan/get-all-plans
 GET	/plan/get-plan/:planId
 GET	/plan/get-all-features/:planId
