@@ -33,7 +33,7 @@ func main(){
 	// _ = database.DB
 	
 	if err:=database.Setup(); err!=nil{
-		log.Println("can't connect to database. err:", err)
+		log.fatal("can't connect to database. err:", err)
 	}
 	//settings.Setup()
 	
