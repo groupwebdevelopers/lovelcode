@@ -10,7 +10,7 @@ func ServerError(c *fiber.Ctx, err error, errmsg ...string) error{
 	log.Println("###################################")
 	log.Println("status:", 500, ", URL:", c.OriginalURL())
 	log.Println(err)
-	log.Println(errmsg[0])
+	log.Println(errmsg)
 	log.Println("###################################")
 	return c.Status(500).JSON(fiber.Map{"error": "server error\ntry later"})
 }

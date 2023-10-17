@@ -9,8 +9,8 @@ func Route(app *fiber.App) {
 	apiOnly := app.Group("/api", handlers.ApiOnly)
 	apiV1 := apiOnly.Group("/v1")
 	apiV1.Get("/", handlers.Home)
-
-	fileUploadAuthReq := app.Group("/api/v1/upload", handlers.AuthRequired)
+	
+	// fileUploadAuthReq := app.Group("/api/v1/upload", handlers.AuthRequired)
 	
 	// auth not required
 	
@@ -37,7 +37,6 @@ func Route(app *fiber.App) {
 	// Plan
 	adminReq.Post("/plan/create", handlers.CreatePlan)
 	adminReq.Post("/plan/create-features/:planId", handlers.CreateFeatures)
-	fileUploadAuthReq.Post("/plan/upload-plan-image/:planId", handlers.UploadPlanImage)
 	adminReq.Put("/plan/edit/:planId", handlers.EditPlan)
 	adminReq.Put("/plan/edit-feature/:featureId", handlers.EditFeature)
 	adminReq.Get("/plan/get-all-plans", handlers.GetAllPlans)
@@ -48,11 +47,15 @@ func Route(app *fiber.App) {
 	adminReq.Delete("/plan/delete-plan/:planId", handlers.DeletePlan) // todo:image must deleted
 	adminReq.Delete("/plan/delete-feature/:featureId", handlers.DeleteFeature)
 	
+	fileUploadAdminReq := app.Group("/upload", handlers.UploadAdminImage)
+	fileUploadAdminReq.Post("/upload-plan-image/:planId", handlers.UploadPlanImage)
+	
+	
 	// apt not found
 	apiOnly.Use(func (c *fiber.Ctx) error{
 		return c.Status(404).JSON(fiber.Map{"error":"page not found"})
 	})
-
+	
 	// Static
 	app.Static("/", "../frontend/dist")
 	app.Static("*", "../frontend/dist/index.html")

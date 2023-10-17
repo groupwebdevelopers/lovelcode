@@ -21,7 +21,7 @@ DELETE /pdr/delete/:id  (admin required)
 # Plan
 POST /plan/create                       json(name, price)
 POST /plan/create-features/:planId      json(name, price, isHave)
-POST /plan/upload-plan-image/:planId
+POST /upload/upload-plan-image/:planId
 PUT /plan/edit/:planId                  json(name, price)
 PUT	/plan/edit-feature/:featureId       json(name, price, isHave)
 GET	/plan/get-all-plans

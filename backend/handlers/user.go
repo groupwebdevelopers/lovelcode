@@ -64,6 +64,7 @@ func Signin(c *fiber.Ctx) error{
 		// return utils.ServerError(c, err)
 	// }
 	token := utilstoken.CreateRandomToken()
+	token = hash(token)
 	user.Token = token
 	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours) * time.Hour)
 	// update database token
@@ -122,7 +123,7 @@ func Signup(c *fiber.Ctx) error{
 		// return utils.ServerError(c, err)
 	// }
 	token := utilstoken.CreateRandomToken()
-		
+	token = hash(token)
 	// create user
 	user.Email = ss.Email
 	user.Password = ss.Password

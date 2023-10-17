@@ -110,7 +110,7 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	}
 	
 
-	file, err := c.FormFile("image")
+	file, err := c.FormFile("i")
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
@@ -127,7 +127,7 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	
 	imageURL := fmt.Sprintf("/images/%s", image)
 
-	if err = database.DB.Where(&models.Plan{ID: id}).Update("image_url", imageURL).Error; err!=nil{
+	if err = database.DB.Model(&models.Plan{}).Where(&models.Plan{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
