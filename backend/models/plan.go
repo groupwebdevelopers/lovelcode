@@ -3,7 +3,8 @@ package models
 import (
 	"time"
 	"errors"
-
+	
+	"lovelcode/utils"
 )
 
 type Plan struct{
@@ -44,14 +45,12 @@ type CEPlan struct{
 	
 }
 
-type CEPlanAndFeatures struct{
-	Plan CEPlan `json:"plan"`
-	Features []CEFeature `json:"features`
-}
-
 func (f *CEFeature) Check() error{
-	if f.Name == ""{
-		return errors.New("empty name")
+	if err:=utils.IsNotInvalidCharacter(f.Name); err!=nil{
+		return errors.New("invalid feature name:"+err.Error())
+	}
+	if f.Price < 0{
+		return errors.New("invalid price")
 	}
 	// if f.PlanID == 0{
 	// 	return errors.New("invalid planID")
@@ -68,10 +67,10 @@ func (f *Feature) FillWithCEFeature(ce CEFeature){
 } 
 
 func (p *CEPlan) Check() error{
-	if p.Name == ""{
-		return errors.New("empty name")
+	if err:=utils.IsNotInvalidCharacter(p.Name); err!=nil{
+		return errors.New("invalid plan name:"+err.Error())
 	}
-	if p.Price == 0{
+	if p.Price <= 0{
 		return errors.New("invalid price")
 	}
 	return nil

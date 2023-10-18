@@ -38,10 +38,10 @@ func (pdr *ProjectDoingRequest) FillWithCEPDR(ce CEPDR){
 
 func (c CEPDR) Check() error{
 	if err:=utils.IsNotInvalidCharacter(c.Title);err!=nil{
-		return err
+		return errors.New("invalid title"+err.Error())
 	}
-	if c.Description == ""{
-		return errors.New("empty desciption")
+	if err:= utils.IsNotInvalidCharacter(c.Description); err!=nil{
+		return errors.New("invalid desciption:"+err.Error())
 	}
 	if c. SuggestedPrice < 0{
 		return errors.New("negetive suggested price")

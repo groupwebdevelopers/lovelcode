@@ -29,6 +29,8 @@ func CheckAdminPermision(permisions string, p string) uint8{
 		return (permisions[0]-'0')
 	case "plan":
 		return (permisions[10]-'0')
+	case "upload":
+		return (permisions[10]-'0')
 	}
 
 	return 3

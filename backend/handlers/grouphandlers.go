@@ -3,7 +3,7 @@ package handlers
 import (
 	"time"
 	"strings"
-
+"fmt"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -58,13 +58,60 @@ func AuthRequired(c *fiber.Ctx) error{
 func AdminRequired(c *fiber.Ctx) error{
 	// check user have permision
 	user:= c.Locals("user").(models.User)
-	field := strings.Split(c.OriginalURL(), "/")[3]
+	splited := strings.Split(c.OriginalURL(), "/")
+	if len(splited) < 5{
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
+	}
+	field := splited[4]
 	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
 	if adminCode != 1{
 		if adminCode == 2{
 			hban(user)
 		}
-		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"}, string(field))
 	}
 	return c.Next()
 }
+
+func UploadAdminImage(c *fiber.Ctx) error{
+	ct, err := c.GetReqHeaders()["Content-Type"]
+	fmt.Println(ct, err)
+	token := c.Cookies("token", "")
+	if token==""{
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+	}
+	
+	// user, err := utilstoken.VerifyJWTToken(token)
+	// if err!=nil{
+		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
+		// }
+	var user models.User
+		if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
+			if err==gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+			}
+			return utils.ServerError(c, err)
+		}
+		
+		// check banned
+		if user.IsBanned == true{
+			return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
+		}
+		
+		// check token
+		if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
+			return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+		}
+		
+		c.Locals("user", user)
+		user= c.Locals("user").(models.User)
+		
+		adminCode := utils.CheckAdminPermision(user.AdminPermisions, "upload")
+		if adminCode != 1{
+			if adminCode == 2{
+				hban(user)
+			}
+			return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
+		}
+		return c.Next()
+	}

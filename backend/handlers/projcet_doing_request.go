@@ -23,7 +23,7 @@ func CreateProjectDoingRequest(c *fiber.Ctx) error{
 	}
 
 	if err:= pdr.Check();err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 
 	var pd models.ProjectDoingRequest
@@ -80,7 +80,7 @@ func EditProjectDoingRequest(c *fiber.Ctx) error {
 	}
 
 	if err:=pdr.Check();err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 
 	var pd models.ProjectDoingRequest
