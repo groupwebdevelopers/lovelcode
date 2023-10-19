@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -14,8 +16,22 @@ import (
 	"lovelcode/utils"
 )
 
-// POST, auth required, admin required
+// POST, auth required, admin required /:userId
 func CreateMember(c *fiber.Ctx) error{
+
+	id := utils.GetIntFromParams(c, "userId")
+	if id==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the uesrId didn't send"})
+	}
+
+	// check user is exist
+	var user models.User
+	if err:=database.DB.First(&user, &models.User{ID: id}).Error;err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"User not found"})
+		}
+	}
+
 
 	var mb models.IMember
 	if err:= c.BodyParser(&mb); err!=nil{
@@ -30,6 +46,7 @@ func CreateMember(c *fiber.Ctx) error{
 	// create member and fill it
 	var member models.Member
 	member.FillWithIMember(mb)
+	member.UserID = id
 	member.TimeCreated = time.Now()
 	member.TimeModified = time.Now()
 
@@ -120,4 +137,81 @@ func EditMember(c *fiber.Ctx) error{
 	}
 
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfully modified"})
+}
+
+
+func GetAllMembers(c *fiber.Ctx) error{
+	var members []models.Member
+	if err:= database.DB.Find(&members).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no member found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	ids := make([]uint64, len(members))
+	for i, m := range members{
+		ids[i] = m.UserID
+	}
+	var users []models.User
+	if err:= database.DB.Find(&users, ids).Error;err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no member! found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	omembers := make([]models.OMember, len(members))
+	for i, m := range members{
+		omembers[i].FillWithMember(m)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"members":members, "users":users})
+}
+
+func GetMember(c *fiber.Ctx) error{
+	
+	id := utils.GetIntFromParams(c, "memberId")
+	if id == 0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+	
+	var member models.Member
+	if err:= database.DB.First(&member, &models.Member{ID: id}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"member not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	var omember models.OMember
+	omember.FillWithMember(member)
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":omember})
+	
+}
+
+func DeleteMember(c *fiber.Ctx) error{
+	id := utils.GetIntFromParams(c, "memberId")
+	if id==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+
+	var member models.Member
+	if err:= database.DB.First(&member, &models.Member{ID: id}).Delete(&member).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"member not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+	if strings.Contains(member.ImagePath, "*"){
+		return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
+	}
+	if member.ImagePath != ""{
+		err := os.Remove(fmt.Sprintf(".%s", member.ImagePath))
+		if err!=nil{
+			return utils.ServerError(c, err)
+		}
+	}
+	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
 }

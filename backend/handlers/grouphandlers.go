@@ -16,7 +16,7 @@ import (
 func ApiOnly(c *fiber.Ctx) error{
 	
 	ct, ok := c.GetReqHeaders()["Content-Type"]
-	if ct=="application/json" && ok==true{
+	if ct=="application/json" && ok{
 		return c.Next()
 	}
 	return c.Status(400).JSON(fiber.Map{"error":"Content-Type must be application/json"})
@@ -42,7 +42,7 @@ func AuthRequired(c *fiber.Ctx) error{
 	}
 
 	// check banned
-	if user.IsBanned == true{
+	if user.IsBanned{
 		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
 	}
 
@@ -73,7 +73,7 @@ func AdminRequired(c *fiber.Ctx) error{
 	return c.Next()
 }
 
-func UploadAdminImage(c *fiber.Ctx) error{
+func AdminUploadImage(c *fiber.Ctx) error{
 	ct, err := c.GetReqHeaders()["Content-Type"]
 	fmt.Println(ct, err)
 	token := c.Cookies("token", "")
@@ -94,7 +94,7 @@ func UploadAdminImage(c *fiber.Ctx) error{
 		}
 		
 		// check banned
-		if user.IsBanned == true{
+		if user.IsBanned{
 			return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
 		}
 		
@@ -105,8 +105,13 @@ func UploadAdminImage(c *fiber.Ctx) error{
 		
 		c.Locals("user", user)
 		user= c.Locals("user").(models.User)
-		
-		adminCode := utils.CheckAdminPermision(user.AdminPermisions, "upload")
+
+		splited := strings.Split(c.OriginalURL(), "/")
+		if len(splited) < 4{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
+		}
+		field := splited[3];fmt.Println(field)
+		adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
 		if adminCode != 1{
 			if adminCode == 2{
 				hban(user)

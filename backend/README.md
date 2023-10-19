@@ -22,16 +22,23 @@ GET /pdr/get-all        (admin required)
 PUT /pdr/edit/:id       (admin required)    json(title, description, suggestedPrice(optional))
 DELETE /pdr/delete/:id  (admin required)
 
-# Plan filter f value
+# Plan filter
+GET	/plan/get-all-plans
+GET	/plan/get-plan/:planId
+GET	/plan/get-all-features/:planId
+GET	/plan/get-feature/:featureId
+GET /plan/get-all-plans-and-features
 POST /admin/plan/create                       json(name, price)
 POST /admin/plan/create-features/:planId      json(name, price, isHave)
-POST /admin/upload/upload-plan-image/:planId  (Content-Type: multipart/form-data) (with FormData js object) (without base url)
+POST /admin/upload/plan/image/:planId  (Content-Type: multipart/form-data) (with FormData js object) (without base url)
 PUT /admin/plan/edit/:planId                  json(name, price)
 PUT	/admin/plan/edit-feature/:featureId       json(name, price, isHave)
-GET	/admin/plan/get-all-plans
-GET	/admin/plan/get-plan/:planId
-GET	/admin/plan/get-all-features/:planId
-GET	/admin/plan/get-feature/:featureId
-GET /admin/plan/get-all-plans-and-features
 DELETE /admin/plan/delete-plan/:planId
 DELETE /admin/plan/delete-feature/:featureId
+
+# Member
+GET /member/get-all
+GET /member/get/:memberId
+POST /admin/member/create
+Put /admin/member/edit/:memberId
+Delete /admin/member/delete/:memberId

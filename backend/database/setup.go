@@ -37,6 +37,7 @@ func Setup() error{
 		&models.ProjectDoingRequest{},
 		&models.Plan{},
 		&models.Feature{},
+		&models.Member{},
 	)
 
 	if err!=nil{

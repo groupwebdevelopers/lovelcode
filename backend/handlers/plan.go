@@ -230,7 +230,7 @@ func GetAllPlans(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	var oplans []models.OPlan
+	oplans := make([]models.OPlan, len(plans))
 	for i, pl := range plans{
 		oplans[i].FillWithPlan(pl)
 	}
@@ -290,7 +290,7 @@ func GetAllFeatures(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	var ofeatures []models.OFeature
+	ofeatures := make([]models.OFeature, len(features))
 	for i, f := range features{
 		ofeatures[i].FillWithFeature(f)
 	}
@@ -310,12 +310,12 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	}
 
 	
-	var oplans []models.OPlan
+	oplans := make([]models.OPlan, len(plans))
 	for i, pl := range plans{
 		oplans[i].FillWithPlan(pl)
 	}
 
-	var ofeatures []models.OFeature
+	ofeatures := make([]models.OFeature, len(features))
 	for i, f := range features{
 		ofeatures[i].FillWithFeature(f)
 	}

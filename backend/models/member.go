@@ -29,7 +29,7 @@ type OMember struct{
 	JobTitle string
 	WorkExp int
 	Contact string
-	OUser OUser
+	ImagePath string
 }
 
 func (m *Member) FillWithIMember(im IMember) {
@@ -42,8 +42,7 @@ func (o *OMember) FillWithMember(m Member) {
 	o.JobTitle = m.JobTitle
 	o.WorkExp = m.WorkExp
 	o.Contact = m.Contact
-	o.OUser.FillWithUser(m.User)
-
+	o.ImagePath = m.ImagePath
 }
 
 func (im *IMember) Check() error{
