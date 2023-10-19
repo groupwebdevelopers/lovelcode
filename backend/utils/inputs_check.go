@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"errors"
 	"net/mail"
 	"strings"
-	"errors"
 )
 
 
@@ -32,22 +32,24 @@ func IsJustLetter(s string, allows... string) error{
 }
 
 // support persion character
-// invalid characters is \/
-func IsNotInvalidCharacter(s string, allows... string) error{
-
+// invalid characters is \;'""
+func IsNotInvalidCharacter(s string, disallows... string) error{
+	
 	if s == "" || s == " "{
 		return errors.New("empty field")
 	}
 	
-	invalid := "\\/"
-	for _, c := range allows[0]{
-		invalid += string(c)
+	invalid := "\\;'\""
+	
+	if len(disallows) > 0{
+		invalid += disallows[0]
 	}
+	
 	for _, c := range s{
-		if !strings.Contains(invalid, string(c)){
+		if strings.Contains(invalid, string(c)){
 			return errors.New("invalid character: "+string(c))
 		}
 	}
+
 	return nil
 }
-

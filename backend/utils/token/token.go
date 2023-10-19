@@ -22,8 +22,8 @@ func CreateJWTToken(user models.User, tokenExpHours uint16) (string, error){
 
 
 	// create token
-	// var secret = []byte( os.Getenv("secret") + "se")
-	var secret = []byte("testestte")
+	var secret = []byte( os.Getenv("secret") + "se")
+	// var secret = []byte("testestte")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 				"exp" : time.Now().Add(time.Duration(tokenExpHours) * time.Hour).Unix(),
@@ -37,16 +37,6 @@ func CreateJWTToken(user models.User, tokenExpHours uint16) (string, error){
 	return stoken, err
 
 
-}
-
-
-func CreateToken() string{
-	chars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	result:= ""
-	for i:=0;i<256;i++{
-		result +=string(chars[ rand.Intn(len(chars))])
-	}
-	return result
 }
 
 // todo: send token with expared time
@@ -77,4 +67,13 @@ func VerifyJWTToken(tokenString string) (models.User, error){
 	}
 	return models.User{}, errors.New("invalid token")
 
+}
+
+func CreateRandomToken() string{
+	chars := "abcdefghijklmanopqrstuvwxryzABCDEFhGHIJKLMNOPQRSTUVWXYZ-_=)(*&^%$#@!1234567890-=-[]|}{dvdvk:/.,.,/})"
+	result := ""
+	for i:=0;i<64;i++{
+		result += string(chars[rand.Intn(len(chars))])
+	}
+	return result
 }

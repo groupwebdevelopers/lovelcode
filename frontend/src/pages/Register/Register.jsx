@@ -44,7 +44,6 @@ export default function Register() {
   };
 
   // use efect
-  useEffect(() => {}, []);
   return (
     <div className="min-h-screen w-full flex items-center justify-center sm:my-12">
       <div className="flex flex-col w-full sm:w-96 bg-white sm:rounded-3xl p-10">

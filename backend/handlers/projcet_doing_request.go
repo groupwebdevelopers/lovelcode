@@ -23,7 +23,7 @@ func CreateProjectDoingRequest(c *fiber.Ctx) error{
 	}
 
 	if err:= pdr.Check();err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 
 	var pd models.ProjectDoingRequest
@@ -56,9 +56,9 @@ func GetAllProjectDoingRequests(c *fiber.Ctx) error{
 
 // GET, auth required, /:id
 func GetProjectDoingRequest(c *fiber.Ctx) error{
-	id := utils.GetIDFromParams(c)
+	id := utils.GetIntFromParams(c, "id")
 	var pdr models.ProjectDoingRequest
-	query := models.ProjectDoingRequest{ID: uint64(id)}
+	query := models.ProjectDoingRequest{ID: id}
 	if err:= database.DB.First(&pdr, &query).Error; err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"the Project Doing Request with sent id not found"})
@@ -72,7 +72,7 @@ func GetProjectDoingRequest(c *fiber.Ctx) error{
 
 // POST, auth required, /:id
 func EditProjectDoingRequest(c *fiber.Ctx) error {
-	id := utils.GetIDFromParams(c)
+	id := utils.GetIntFromParams(c, "id")
 
 	var pdr models.CEPDR
 	if err:= c.BodyParser(&pdr); err!=nil{
@@ -80,11 +80,11 @@ func EditProjectDoingRequest(c *fiber.Ctx) error {
 	}
 
 	if err:=pdr.Check();err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 
 	var pd models.ProjectDoingRequest
-	query := models.ProjectDoingRequest{ID: uint64(id)}
+	query := models.ProjectDoingRequest{ID: id}
 	if err:=database.DB.First(&pd, &query).Error;err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"the Project Doing Request with sent id not found"})
@@ -101,4 +101,20 @@ func EditProjectDoingRequest(c *fiber.Ctx) error {
 	}
 
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly modified"})
+}
+
+func DeleteProjectDoingRequest(c *fiber.Ctx) error{
+	id := utils.GetIntFromParams(c, "id")
+	if id==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+
+	if err:= database.DB.Delete(&models.ProjectDoingRequest{}, id).Error;err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"the id not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
 }

@@ -2,19 +2,19 @@ package utils
 
 import (
 	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 
 )
 
-func GetIDFromParams(c *fiber.Ctx) uint64{
-	sid := c.Params("id", "")
+func GetIntFromParams(c *fiber.Ctx, name string) uint64{
+	sid := c.Params(name, "")
 	if sid==""{
 		return 0
 	}
 	id, _ := strconv.Atoi(sid)
 	return uint64(id) // todo: id is int
 }
+
 // todo: add &models.User
 // 0 means not access and 1 means access
 // 2 means hacker trap and should report and ban user
@@ -27,6 +27,10 @@ func CheckAdminPermision(permisions string, p string) uint8{
 	switch p{
 	case "writeArticle":
 		return (permisions[0]-'0')
+	case "plan":
+		return (permisions[10]-'0')
+	case "member":
+		return (permisions[11]-'0')
 	}
 
 	return 3

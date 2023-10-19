@@ -2,6 +2,7 @@ package database
 
 import (
 	"os"
+	"runtime"
 
 	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
@@ -16,7 +17,7 @@ var Settings map[string]string
 func Setup() error{
 	var err error
 	var db *gorm.DB
-	if os.Getenv("dev") == "true"{
+	if os.Getenv("dev") == "true" || runtime.GOOS == "windows"{
 		dsn := "mohammadamin:M@85mmohammadamin@tcp(127.0.0.1:3306)/lovelcode?charset=utf8mb4&parseTime=True&loc=Local"
 		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		
@@ -30,9 +31,29 @@ func Setup() error{
 		return err
 	}
 	DB = db
-	db.AutoMigrate(&models.User{}, &models.SettingsDB{}, &models.ProjectDoingRequest{})
+	err = db.AutoMigrate(
+		&models.User{},
+		&models.SettingsDB{},
+		&models.ProjectDoingRequest{},
+		&models.Plan{},
+		&models.Feature{},
+		&models.Member{},
+	)
+
+	if err!=nil{
+		return err
+	}
 
 	err = SetupSettings()
+
+	// create Owner
+	// db.Create(models.User{
+	// 	Name: "Owner",
+	// 	Family: "Owner",
+	// 	Username: "1000000",
+	// 	Email: "theowner@localhost.lh",
+
+	// })
 
 	return err
 }
@@ -46,7 +67,11 @@ func SetupSettings() error{
 	
 	Settings = make(map[string]string)
 	for _, s := range st{
-		Settings[s.Key] = s.Value
+		if s.Value != ""{
+			Settings[s.Key] = s.Value
+		}else {
+			Settings[s.Key] = "72"
+		}
 	}
 
 	return nil

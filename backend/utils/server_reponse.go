@@ -10,14 +10,15 @@ func ServerError(c *fiber.Ctx, err error, errmsg ...string) error{
 	log.Println("###################################")
 	log.Println("status:", 500, ", URL:", c.OriginalURL())
 	log.Println(err)
-	log.Println(errmsg[0])
+	log.Println(errmsg)
 	log.Println("###################################")
-	return c.Status(500).JSON(fiber.Map{"error": "server error\ntry later"})
+	return c.JSON(fiber.Map{"status":500, "error": "server error\ntry later"})
 }
 
-func JSONResponse(c *fiber.Ctx, status int, mp fiber.Map) error{
+func JSONResponse(c *fiber.Ctx, status int, mp fiber.Map, lg... string) error{
 	log.Println("----------")
-	log.Println("status:", status, ", URL:", c.OriginalURL(), "\nJSON:", mp)
+	log.Println("status:", status, ", URL:", c.OriginalURL(), "\nJSON:", mp, "\n", lg)
 	log.Println("----------")
-	return c.Status(status).JSON(mp)
+	mp["status"] = status
+	return c.JSON(mp)
 }
