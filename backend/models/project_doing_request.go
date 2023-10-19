@@ -25,7 +25,7 @@ type ProjectDoingRequest struct{
 type CEPDR struct{
 	Title string `json:"title"`
 	Description string `json:"description"`
-	SuggestedPrice int `json:"suggestedPrice`
+	SuggestedPrice int `json:"suggestedPrice"`
 }
 
 func (pdr *ProjectDoingRequest) FillWithCEPDR(ce CEPDR){
