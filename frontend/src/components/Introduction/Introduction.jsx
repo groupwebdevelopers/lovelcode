@@ -1,51 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const data = [
-  {
-    name: "محمدرضا گودرزی",
-    img: "/images/profile/photo_2023-09-28_23-12-16.jpg",
-    expert: "front",
-  },
-  {
-    name: "مهدی دلاور",
-    img: "/images/profile/IMG_20200820_103224-gradient-2020_11_06_13_04_28.jpg.jpg",
-    expert: "front",
-  },
-  {
-    name: "علیرضا رضایی",
-    img: "/images/profile/photo_2023-09-28_23-12-50.jpg",
-    expert: "front",
-  },
-  {
-    name: " عزیزالله پاینده ",
-    img: "/images/profile/photo_2023-09-30_14-45-03.jpg",
-    expert: "front",
-  },
-  {
-    name: "علی ندرخانی",
-    img: "/images/profile/Rectangle 4635.png",
-    expert: "back",
-  },
-  {
-    name: "امیرحسین طباطبایی",
-    img: "/images/profile/maAvatar.jfif",
-    expert: "back",
-  },
-  {
-    name: "محمدامین یعقوبی",
-    img: "/images/profile/Ellipse 197.png",
-    expert: "back",
-  },
-  {
-    name: "علیرضا رحمانی",
-    img: "/images/profile/Rectangle 4636.png",
-    expert: "designer",
-  },
-];
 
 export default function Introduction() {
-  const [active, setActive] = useState("front");
-  const filteredItems = data.filter((item) => item.expert === active);
+  const [users, setUsers] = useState([]);
+  const [members, setMembers] = useState([]);
+  useEffect(() => {
+    fetch("https://thlearn.iran.liara.run/api/v1/member/get-all")
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        setUsers(res.users);
+        setMembers(res.members);
+      });
+  }, []);
+  const [active, setActive] = useState("frontend");
+  const filteredItems = members.filter((item) => item.jobTitle === active);
   return (
     <div className="w-full py-36  lg:px-28 md:py-48 lg:py-40 xl:py-48 container">
       <div className="w-full h-auto flex font-Ray-ExtraBold text-3xl justify-center gap-1">
@@ -59,9 +29,9 @@ export default function Introduction() {
         <div className="w-full  flex lg:flex-row lg:justify-between flex-col items-center">
           <div className="md:w-[30rem]  h-12 text-main-dark-text-web cursor-pointer flex justify-between items-center  bg-white rounded-xl">
             <span
-              onClick={() => setActive("front")}
+              onClick={() => setActive("frontend")}
               className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
-                active === "front"
+                active === "frontend"
                   ? "bg-blue-500 text-white"
                   : "bg-white text-main-dark-text-web"
               }`}
@@ -69,9 +39,9 @@ export default function Introduction() {
               برنامه نویسیان فرانت اند
             </span>
             <span
-              onClick={() => setActive("back")}
+              onClick={() => setActive("backend")}
               className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
-                active === "back"
+                active === "backend"
                   ? "bg-blue-500 text-white"
                   : "bg-white text-main-dark-text-web"
               }`}
@@ -79,9 +49,9 @@ export default function Introduction() {
               برنامه نویسان بک اند
             </span>
             <span
-              onClick={() => setActive("designer")}
+              onClick={() => setActive("ui/ux")}
               className={`h-full px-4 font-Ray-Light lg:text-base text-[10px] md:text-sm  rounded-xl flex items-center transition-all duration-300 ${
-                active === "designer"
+                active === "ui/ux"
                   ? "bg-blue-500 text-white"
                   : "bg-white text-main-dark-text-web"
               }`}
@@ -98,29 +68,33 @@ export default function Introduction() {
         </div>
         <div className=" w-full px-5 md:px-0 h-auto grid grid-cols-12 mt-14 gap-y-10 lg:gap-12 pb-10 justify-center lg:flex lg:justify-center">
           {filteredItems.map((item) => {
+            const usersInMember = users.filter(
+              (user) => user.ID === item.userID
+            );
+            console.log(usersInMember[0].name);
             return (
               <div className=" flex flex-col items-center col-span-6 lg:col-span-3">
                 <div className="rounded-full lg:w-48 lg:h-48 w-32 h-32">
                   <img
                     className="w-full h-full rounded-full object-cover"
-                    src={item.img}
+                    src={item.imagePath}
                     alt="profile"
                   />
                 </div>
                 <span className="font-Ray-ExtraBold text-main-dark-text-web mt-3">
-                  {item.name}
+                  {usersInMember[0].name}
                 </span>
-                <span className="font-Ray-Light text-main-gray-text-web">
-                  5 سال سابقه کار
+                <span className="font-Ray-bold text-main-gray-text-web text-xs pb-2">
+                  {item.workExp} سال سابقه کار
                 </span>
                 <div className="flex">
                   <img
-                    className="w-6 h-6 "
+                    className="w-6 h-6 cursor-pointer "
                     src="/images/mainweb/3D/Sec5/Instagram1.png"
                     alt="instagram"
                   />
                   <img
-                    className="w-6 h-6 "
+                    className="w-6 h-6  cursor-pointer"
                     src="/images/mainweb/3D/Sec5/telegram.png"
                     alt="telegram"
                   />
@@ -130,11 +104,11 @@ export default function Introduction() {
           })}
         </div>
         <div className="lg:hidden flex w-full justify-center">
-            <button className="w-44 h-12 bg-white cursor-pointer flex font-Ray-Light text-xs lg:text-base justify-center items-center gap-2 rounded-xl hover:bg-main-blue-web hover:text-white transition-all duration-300">
-              <span>مشاهده همه اعضای تیم</span>
-              <i className="bi bi-arrow-left-short text-lg mt-2"></i>
-            </button>
-          </div>
+          <button className="w-44 h-12 bg-white cursor-pointer flex font-Ray-Light text-xs lg:text-base justify-center items-center gap-2 rounded-xl hover:bg-main-blue-web hover:text-white transition-all duration-300">
+            <span>مشاهده همه اعضای تیم</span>
+            <i className="bi bi-arrow-left-short text-lg mt-2"></i>
+          </button>
+        </div>
       </div>
     </div>
   );
