@@ -26,10 +26,10 @@ type IMember struct{
 }
 
 type OMember struct{
-	JobTitle string
-	WorkExp int
-	Contact string
-	ImagePath string
+	JobTitle string `json:"jobTitle"`
+	WorkExp int `json:"workExp"`
+	Contact string `json:"contact"`
+	ImagePath string `json:"imagePath"`
 }
 
 func (m *Member) FillWithIMember(im IMember) {

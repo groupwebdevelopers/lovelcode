@@ -38,10 +38,10 @@ type SignupUser struct{
 }
 
 type OUser struct{
-	ID uint64
-	Name string
-	Family string
-	Email string	
+	ID uint64 `json:"ID"`
+	Name string `json:"name"`
+	Family string `json:"family"`
+	Email string `json:"email"`
 }
 
 func (u *SignupUser) Check() error{

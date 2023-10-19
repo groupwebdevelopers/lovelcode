@@ -11,8 +11,8 @@ type Plan struct{
 	ID uint64 `gorm:"primaryKey"`
 	Name string `gorm:"not null"`
 	Price uint32 `gorm:"not null"`
-	ImagePath string
-
+	ImagePath string `gorm:"size:200"`
+	Type string
 	TimeCreated time.Time `gorm:"not null"`
 	TimeModified time.Time `gorm:"not null"`
 }
@@ -42,30 +42,33 @@ type IFeature struct{
 type IPlan struct{
 	Name string `json:"name"`
 	Price uint32 `json:"price"`
-	
+	Type string `json:"type"`
 }
 
 type OPlan struct{
-	Name string
-	Price uint32
-	ImagePath string
+	Name string `json:"name"`
+	Price uint32 `json:"price"`
+	ImagePath string `json:"imagePath"`
+	Type string `json:"type"`
 }
 
 type OFeature struct{
-	PlanID uint64
-	Name string
-	Value string
-	Price uint32
-	IsHave bool
+	PlanID uint64 `json:"planID"`
+	Name string `json:"name"`
+	Value string `json:"value"`
+	Price uint32 `json:"price"`
+	IsHave bool `json:"isHave"`
 }
 
 func (f *IFeature) Check() error{
 	if err:=utils.IsNotInvalidCharacter(f.Name); err!=nil{
 		return errors.New("invalid feature name:"+err.Error())
 	}
+	if f.Value != ""{
 	if err:=utils.IsNotInvalidCharacter(f.Value); err!=nil{
 		return errors.New("invalid feature value:"+err.Error())
 	}
+}
 	if f.Price < 0{
 		return errors.New("invalid price")
 	}
@@ -87,6 +90,9 @@ func (p *IPlan) Check() error{
 	if err:=utils.IsNotInvalidCharacter(p.Name); err!=nil{
 		return errors.New("invalid plan name:"+err.Error())
 	}
+	if err:=utils.IsNotInvalidCharacter(p.Type); err!=nil{
+		return errors.New("invalid plan type:"+err.Error())
+	}
 	if p.Price <= 0{
 		return errors.New("invalid price")
 	}
@@ -96,12 +102,14 @@ func (p *IPlan) Check() error{
 func (p *Plan) FillWithIPlan(ce IPlan) {
 	p.Name = ce.Name
 	p.Price = ce.Price
+	p.Type = ce.Type
 }
 
 func (o *OPlan) FillWithPlan(p Plan){
 	o.Name = p.Name
 	o.Price = p.Price
 	o.ImagePath = p.ImagePath
+	o.Type = p.Type
 }
 
 func (o *OFeature) FillWithFeature(f Feature){
