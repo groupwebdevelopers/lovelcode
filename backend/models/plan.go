@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 	"errors"
-	
+
 	"lovelcode/utils"
 )
 
@@ -35,7 +35,7 @@ type CEFeature struct{
 	// PlanID uint64 `json:"planID"`
 	Name string `json:"name"`
 	// Description string `json:"description"`
-	Price uint32 `json:"price"`
+	Price int `json:"price"`
 	IsHave bool `json:"isHave"`
 }
 
@@ -62,7 +62,7 @@ func (f *Feature) FillWithCEFeature(ce CEFeature){
 	// f.PlanID = ce.PlanID
 	f.Name = ce.Name
 	// f.Description = ce.Description
-	f.Price = ce.Price
+	f.Price = uint32(ce.Price)
 	f.IsHave = ce.IsHave
 } 
 

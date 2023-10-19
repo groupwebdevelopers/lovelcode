@@ -76,7 +76,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 
 	// create features and fill its
 	features := make([]models.Feature, len(ft))
-	for i, _ := range features{
+	for i:= range features{
 		features[i].FillWithCEFeature(ft[i])
 		features[i].TimeCreated = time.Now()
 		features[i].TimeModified = time.Now()
