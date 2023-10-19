@@ -23,9 +23,9 @@ export default function Register() {
     const newUser = {
       email,
       password,
-      username: phone,
-      name: email,
-      family: email,
+      username: 'mohamadreza',
+      name: 'mohammadreza',
+      family: 'mohammadreza',
     };
     fetch("https://thlearn.iran.liara.run/api/v1/signup", {
       method: "POST",
@@ -37,11 +37,9 @@ export default function Register() {
       .then((response) => response.json())
       .then((data) => {
         console.log("پاسخ دریافت شد:", data);
-        // در اینجا می‌توانید پاسخ را پردازش کنید.
       })
       .catch((error) => {
         console.error("خطا:", error);
-        // در اینجا می‌توانید با خطاها برخورد کنید و پیام‌های خطا را نمایش دهید.
       });
   };
 
