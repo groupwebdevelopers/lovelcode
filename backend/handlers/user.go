@@ -54,7 +54,7 @@ func Signin(c *fiber.Ctx) error{
 	}
 	
 	// check baned
-	if user.IsBanned == true{
+	if user.IsBanned{
 		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
 	}
 	

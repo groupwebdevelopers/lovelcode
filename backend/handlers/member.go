@@ -161,12 +161,17 @@ func GetAllMembers(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
+	ousers:= make([]models.OUser, len(users))
+	for i, u:= range users{
+		ousers[i].FillWithUser(u)
+	}
+
 	omembers := make([]models.OMember, len(members))
 	for i, m := range members{
 		omembers[i].FillWithMember(m)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"members":members, "users":users})
+	return utils.JSONResponse(c, 200, fiber.Map{"members":omembers, "users":ousers})
 }
 
 func GetMember(c *fiber.Ctx) error{
