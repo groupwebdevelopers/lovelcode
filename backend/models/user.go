@@ -50,8 +50,10 @@ func (u *SignupUser) Check() error{
 	if err := utils.IsNotInvalidCharacter(u.Name, "!@#$%^&*()_+-={}|[]\\:\";<>?./'"); err!=nil{
 		return errors.New("invalid name: "+ err.Error())
 	}
-	if err := utils.IsNotInvalidCharacter(u.Family, "!@#$%^&*()_+-={}|[]\\:\";<>?./'"); err!=nil{
-		return errors.New("invalid name: "+ err.Error())
+	if u.Family != "" {
+		if err := utils.IsNotInvalidCharacter(u.Family, "!@#$%^&*()_+-={}|[]\\:\";<>?./'"); err!=nil{
+			return errors.New("invalid family: "+ err.Error())
+		}
 	}
 	// if u.Number < 9000000000{
 		// return errors.New("small number")
