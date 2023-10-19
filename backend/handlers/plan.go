@@ -20,7 +20,7 @@ import (
 func CreatePlan(c *fiber.Ctx) error{
 
 	// plan and features
-	var pl models.CEPlan
+	var pl models.IPlan
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -32,7 +32,7 @@ func CreatePlan(c *fiber.Ctx) error{
 	
 	// create plan and fill it
 	var plan models.Plan
-	plan.FillWithCEPlan(pl)
+	plan.FillWithIPlan(pl)
 	plan.TimeCreated = time.Now()
 	plan.TimeModified = time.Now()
 
@@ -62,7 +62,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 	
 	
 	// get features from body
-	var ft []models.CEFeature
+	var ft []models.IFeature
 		if err:= c.BodyParser(&ft); err!=nil{
 			fmt.Println(err)
 			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
@@ -152,7 +152,7 @@ func EditPlan(c *fiber.Ctx) error{
 	}
 
 	// get plan from body
-	var pl models.CEPlan
+	var pl models.IPlan
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -163,7 +163,7 @@ func EditPlan(c *fiber.Ctx) error{
 	} 
 
 	// fill the plan
-	plan.FillWithCEPlan(pl)
+	plan.FillWithIPlan(pl)
 	plan.TimeModified = time.Now()
 
 	// modify plan in database
@@ -190,7 +190,7 @@ func EditFeature(c *fiber.Ctx) error{
 	}
 	
 	// get feature from body
-	var ft models.CEFeature
+	var ft models.IFeature
 	if err:= c.BodyParser(&ft); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -230,7 +230,12 @@ func GetAllPlans(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":plans})
+	var oplans []models.OPlan
+	for i, pl := range plans{
+		oplans[i].FillWithPlan(pl)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":oplans})
 }
 
 func GetPlan(c *fiber.Ctx) error{
@@ -248,7 +253,10 @@ func GetPlan(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":plan})
+	var oplan models.OPlan
+	oplan.FillWithPlan(plan)
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":oplan})
 	
 }
 
@@ -266,7 +274,10 @@ func GetFeature(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":feature})
+	var ofeature models.OFeature
+	ofeature.FillWithFeature(feature)
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":ofeature})
 }
 
 func GetAllFeatures(c *fiber.Ctx) error{
@@ -279,7 +290,12 @@ func GetAllFeatures(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":features})
+	var ofeatures []models.OFeature
+	for i, f := range features{
+		ofeatures[i].FillWithFeature(f)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":ofeatures})
 
 }
 
@@ -293,7 +309,18 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":fiber.Map{"features":features, "plans":plans}})
+	
+	var oplans []models.OPlan
+	for i, pl := range plans{
+		oplans[i].FillWithPlan(pl)
+	}
+
+	var ofeatures []models.OFeature
+	for i, f := range features{
+		ofeatures[i].FillWithFeature(f)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":fiber.Map{"features":ofeatures, "plans":oplans}})
 
 }
 

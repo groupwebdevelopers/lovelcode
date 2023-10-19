@@ -22,7 +22,7 @@ GET /pdr/get-all        (admin required)
 PUT /pdr/edit/:id       (admin required)    json(title, description, suggestedPrice(optional))
 DELETE /pdr/delete/:id  (admin required)
 
-# Plan
+# Plan filter f value
 POST /admin/plan/create                       json(name, price)
 POST /admin/plan/create-features/:planId      json(name, price, isHave)
 POST /admin/upload/upload-plan-image/:planId  (Content-Type: multipart/form-data) (with FormData js object) (without base url)

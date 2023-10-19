@@ -37,6 +37,13 @@ type SignupUser struct{
 	// Number int `json:"number"`
 }
 
+type OUser struct{
+	ID uint64
+	Name string
+	Family string
+	Email string	
+}
+
 func (u *SignupUser) Check() error{
 	if len(u.Name) > 50{
 		return errors.New("too big name")
@@ -94,3 +101,9 @@ func (u *SigninUser) Check() error{
 	return nil
 }
 
+func (o *OUser) FillWithUser(u User){
+	o.Email = u.Email
+	o.Family = u.Family
+	o.Name = u.Name
+	o.ID = u.ID
+}
