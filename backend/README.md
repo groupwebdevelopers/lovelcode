@@ -22,7 +22,7 @@ GET /pdr/get-all        (admin required)
 PUT /pdr/edit/:id       (admin required)    json(title, description, suggestedPrice(optional))
 DELETE /pdr/delete/:id  (admin required)
 
-# Plan filter
+# Plan
 GET	/plan/get-all-plans
 GET	/plan/get-plan/:planId
 GET	/plan/get-all-features/:planId

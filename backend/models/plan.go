@@ -46,6 +46,7 @@ type IPlan struct{
 }
 
 type OPlan struct{
+	ID uint64 `json:"ID"`
 	Name string `json:"name"`
 	Price uint32 `json:"price"`
 	ImagePath string `json:"imagePath"`
@@ -110,9 +111,11 @@ func (o *OPlan) FillWithPlan(p Plan){
 	o.Price = p.Price
 	o.ImagePath = p.ImagePath
 	o.Type = p.Type
+	o.ID = p.ID
 }
 
 func (o *OFeature) FillWithFeature(f Feature){
+	o.PlanID = f.PlanID
 	o.Name = f.Name
 	o.IsHave = f.IsHave
 	o.PlanID = f.PlanID
