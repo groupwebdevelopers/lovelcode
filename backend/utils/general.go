@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
-	"github.com/gofiber/fiber/v2"
 
+	"github.com/gofiber/fiber/v2"
 )
 
 func GetIntFromParams(c *fiber.Ctx, name string) uint64{
@@ -23,10 +24,18 @@ func CheckAdminPermision(permisions string, p string) uint8{
 	//  check hacker trap
 	if p[2] == '1'{
 		return 2
-	}
+	};fmt.Println(p)
 	switch p{
-	case "writeArticle":
+	case "createArticle":
 		return (permisions[0]-'0')
+	case "editMyArticle":
+		return (permisions[1]-'0')
+	case "deleteMyArticle":
+		return (permisions[3]-'0')
+	case "editOtherArticle":
+		return (permisions[4]-'0')
+	case "deleteOtherArticle":
+		return (permisions[5]-'0')
 	case "plan":
 		return (permisions[10]-'0')
 	case "member":

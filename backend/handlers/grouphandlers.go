@@ -1,9 +1,11 @@
 package handlers
 
 import (
-	"time"
+	"fmt"
+	"strconv"
 	"strings"
-"fmt"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
@@ -14,12 +16,12 @@ import (
 )
 
 func ApiOnly(c *fiber.Ctx) error{
-	
+	return c.Next()
 	ct, ok := c.GetReqHeaders()["Content-Type"]
 	if ct=="application/json" && ok{
 		return c.Next()
 	}
-	return c.Status(400).JSON(fiber.Map{"error":"Content-Type must be application/json"})
+	return utils.JSONResponse(c, 400, fiber.Map{"error":"Content-Type must be application/json"})
 }
 
 func AuthRequired(c *fiber.Ctx) error{
@@ -120,3 +122,50 @@ func AdminUploadImage(c *fiber.Ctx) error{
 		}
 		return c.Next()
 	}
+
+func AdminArticleRequired(c *fiber.Ctx) error{
+
+	// check user have permision
+	user:= c.Locals("user").(models.User)
+	splited := strings.Split(c.OriginalURL(), "/")
+	if len(splited) < 6{
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
+	}
+	field := splited[5]
+	if field != "create"{
+		// check the article is for user or not. if not add other to field
+		
+		if len(splited) < 7{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"articleId didn't send"})
+		}
+		id, err := strconv.Atoi(splited[6]) // todo: uint64
+		if err!=nil{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid articleId"})
+		}
+		var article models.Article
+		if err:=database.DB.First(&article, &models.Article{ID: uint64(id)}).Error;err!=nil{
+			if err== gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 404, fiber.Map{"error":"article not found"})
+			}
+			return utils.ServerError(c, err)
+		}
+
+		if article.UserID != user.ID{
+			field += "Other"
+		}else{
+			field += "My"
+		}
+		c.Locals("article", article)
+	}
+	field += "Article"
+	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
+	
+	if adminCode != 1{
+		if adminCode == 2{
+			hban(user)
+		}
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"}, string(field))
+	}
+	return c.Next()
+
+}

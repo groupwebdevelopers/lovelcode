@@ -15,6 +15,7 @@ func Route(app *fiber.App) {
 	fileUploadAdminReq := app.Group("/admin/upload", handlers.AdminUploadImage)
 	fileUploadAdminReq.Post("/plan/image/:planId", handlers.UploadPlanImage)
 	fileUploadAdminReq.Post("/member/image/:memberId", handlers.UploadMemberImage)
+	fileUploadAdminReq.Post("/article/image/:articleId", handlers.UploadArticleImage)
 	
 	// auth not required
 	
@@ -32,7 +33,11 @@ func Route(app *fiber.App) {
 	// member
 	apiV1.Get("/member/get-all", handlers.GetAllMembers)
 	apiV1.Get("/member/get/:memberId", handlers.GetMember)
-
+	
+	// article
+	apiV1.Get("/article/get/:articleTitleUrl", handlers.GetArticle)
+	apiV1.Get("/article/get-all/:page", handlers.GetAllArticlesTitles)
+	
 	// auth required
 	authReq := apiV1.Group("/", handlers.AuthRequired)
 	
@@ -45,24 +50,37 @@ func Route(app *fiber.App) {
 	
 	
 	// admin required
-	adminReq := authReq.Group("/admin", handlers.AdminRequired)
+
+	// article
+	adminArticleReq := authReq.Group("/admin/article", handlers.AdminArticleRequired)
+	adminArticleReq.Post("/create", handlers.CreateArticle)
+	adminArticleReq.Put("/edit/:articleId", handlers.EditArticle)
+	adminArticleReq.Delete("/delete/:articleId", handlers.DeleteArticle)
+
+
+	// adminReq := authReq.Group("/admin", handlers.AdminRequired)
 	
 	// user
-	adminReq.Post("/user/ban/:id", handlers.BanUser)
+	userAdminReq := authReq.Group("/admin/user", handlers.AdminRequired)
+	userAdminReq.Post("/ban/:id", handlers.BanUser)
 	
 	// Plan
-	adminReq.Post("/plan/create", handlers.CreatePlan)
-	adminReq.Post("/plan/create-features/:planId", handlers.CreateFeatures)
-	adminReq.Put("/plan/edit/:planId", handlers.EditPlan)
-	adminReq.Put("/plan/edit-feature/:featureId", handlers.EditFeature)
-	adminReq.Delete("/plan/delete-plan/:planId", handlers.DeletePlan) // todo:image must deleted
-	adminReq.Delete("/plan/delete-feature/:featureId", handlers.DeleteFeature)
+	planAdminReq := authReq.Group("/admin/plan", handlers.AdminRequired)
+	planAdminReq.Post("/plan/create", handlers.CreatePlan)
+	planAdminReq.Post("/plan/create-features/:planId", handlers.CreateFeatures)
+	planAdminReq.Put("/plan/edit/:planId", handlers.EditPlan)
+	planAdminReq.Put("/plan/edit-feature/:featureId", handlers.EditFeature)
+	planAdminReq.Delete("/plan/delete-plan/:planId", handlers.DeletePlan) // todo:image must deleted
+	planAdminReq.Delete("/plan/delete-feature/:featureId", handlers.DeleteFeature)
 	
 	
 	// member
-	adminReq.Post("/member/create/:userId", handlers.CreateMember)
-	adminReq.Put("/member/edit/:memberId", handlers.EditMember)
-	adminReq.Delete("/member/delete/:memberId", handlers.DeleteMember)
+	memberAdminReq := authReq.Group("/admin/member", handlers.AdminRequired)
+	memberAdminReq.Post("/create/:userId", handlers.CreateMember)
+	memberAdminReq.Put("/edit/:memberId", handlers.EditMember)
+	memberAdminReq.Delete("/delete/:memberId", handlers.DeleteMember)
+
+
 
 	// file upload admin required
 	// apt not found

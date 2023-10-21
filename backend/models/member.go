@@ -26,6 +26,7 @@ type IMember struct{
 }
 
 type OMember struct{
+	UserID uint64 `json:"userID"`
 	JobTitle string `json:"jobTitle"`
 	WorkExp int `json:"workExp"`
 	Contact string `json:"contact"`
@@ -43,6 +44,7 @@ func (o *OMember) FillWithMember(m Member) {
 	o.WorkExp = m.WorkExp
 	o.Contact = m.Contact
 	o.ImagePath = m.ImagePath
+	o.UserID = m.UserID
 }
 
 func (im *IMember) Check() error{

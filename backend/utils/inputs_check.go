@@ -53,3 +53,7 @@ func IsNotInvalidCharacter(s string, disallows... string) error{
 
 	return nil
 }
+
+func ConvertToUrl(s string) string{
+	return strings.Replace(s, " ", "-", -1)
+}

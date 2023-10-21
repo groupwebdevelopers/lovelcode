@@ -51,10 +51,12 @@ type OPlan struct{
 	Price uint32 `json:"price"`
 	ImagePath string `json:"imagePath"`
 	Type string `json:"type"`
+	Features []OFeature `json:"features"`
 }
 
 type OFeature struct{
 	PlanID uint64 `json:"planID"`
+	ID uint64 `json:"ID"`
 	Name string `json:"name"`
 	Value string `json:"value"`
 	Price uint32 `json:"price"`
@@ -79,8 +81,8 @@ func (f *IFeature) Check() error{
 	return nil
 }
 
-func (f *Feature) FillWithCEFeature(i IFeature){
-	// f.PlanID = ce.PlanID
+func (f *Feature) FillWithIFeature(i IFeature){
+	// f.ID = i.ID
 	f.Name = i.Name
 	f.Value = i.Value
 	f.Price = uint32(i.Price)
@@ -115,7 +117,7 @@ func (o *OPlan) FillWithPlan(p Plan){
 }
 
 func (o *OFeature) FillWithFeature(f Feature){
-	o.PlanID = f.PlanID
+	o.ID = f.ID
 	o.Name = f.Name
 	o.IsHave = f.IsHave
 	o.PlanID = f.PlanID

@@ -38,6 +38,7 @@ func Setup() error{
 		&models.Plan{},
 		&models.Feature{},
 		&models.Member{},
+		&models.Article{},
 	)
 
 	if err!=nil{
