@@ -289,7 +289,7 @@ export default function Tariffs() {
         <div className="mt-32 mb-36">
           <table className="w-full">
             <thead className="">
-              <tr className="grid grid-cols-12 items-center">
+              <tr className="grid grid-cols-12 items-center bg-[#e4e4e4]/40 md:py-6 md:px-8 rounded-t-3xl ">
                 <div className="col-span-2">
                   <th className="font-Ray-ExtraBlack  text-[10px] sm:text-base lg:text-lg">
                     امکانات / پلن‌ها
@@ -311,6 +311,29 @@ export default function Tariffs() {
                 </div>
               </tr>
             </thead>
+            <tbody>
+              <tr className="grid grid-cols-12 items-center bg-white md:py-6 md:px-8">
+                <div className="col-span-2">
+                  <td className="font-Ray-ExtraBlack  text-[10px] sm:text-base lg:text-lg">
+                    طراحی تم اختصاصی برند
+                  </td>
+                </div>
+                <div className="col-span-10 flex justify-evenly gap-1 lg:gap-5">
+                  <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
+                    <i class="bi bi-x-lg text-2xl"></i>
+                  </td>
+                  <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
+                    <i class="bi bi-x-lg text-2xl"></i>
+                  </td>
+                  <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
+                    <i class="bi bi-x-lg text-2xl"></i>
+                  </td>
+                  <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
+                    <i class="bi bi-x-lg text-2xl"></i>
+                  </td>
+                </div>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
