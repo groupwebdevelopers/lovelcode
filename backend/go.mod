@@ -1,8 +1,5 @@
 module lovelcode
 
-<<<<<<< HEAD
-go 1.21.1
-=======
 go 1.18
 
 require (
@@ -34,4 +31,3 @@ require (
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 )
->>>>>>> f946a84c97dd51201b54e986828b669ada586d68

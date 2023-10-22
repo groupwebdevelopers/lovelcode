@@ -302,7 +302,14 @@ func GetAllFeatures(c *fiber.Ctx) error{
 func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	var plans []models.Plan
 	var features []models.Feature
-	if err:= database.DB.Find(&plans).Find(&features).Error; err!=nil{
+	if err:= database.DB.Find(&plans).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	if err:= database.DB.Find(&features).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
 		}

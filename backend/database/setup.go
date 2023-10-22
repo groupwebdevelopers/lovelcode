@@ -12,7 +12,7 @@ import (
 )
 
 var DB *gorm.DB
-var Settings map[string]string
+var Settings models.Settings
 
 func Setup() error{
 	var err error
@@ -39,13 +39,19 @@ func Setup() error{
 		&models.Feature{},
 		&models.Member{},
 		&models.Article{},
+		&models.SettingsDB{},
 	)
 
 	if err!=nil{
 		return err
 	}
 
-	err = SetupSettings()
+	var st []models.SettingsDB
+	if err:=DB.Find(&st).Error; err!=nil{
+		return err
+	}
+	
+	Settings, err = models.SetupSettings(st)
 
 	// create Owner
 	// db.Create(models.User{
@@ -59,21 +65,3 @@ func Setup() error{
 	return err
 }
 
-
-func SetupSettings() error{
-	var st []models.SettingsDB
-	if err:=DB.Find(&st).Error; err!=nil{
-		return err
-	}
-	
-	Settings = make(map[string]string)
-	for _, s := range st{
-		if s.Value != ""{
-			Settings[s.Key] = s.Value
-		}else {
-			Settings[s.Key] = "72"
-		}
-	}
-
-	return nil
-}

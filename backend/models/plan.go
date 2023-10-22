@@ -51,7 +51,6 @@ type OPlan struct{
 	Price uint32 `json:"price"`
 	ImagePath string `json:"imagePath"`
 	Type string `json:"type"`
-	Features []OFeature `json:"features"`
 }
 
 type OFeature struct{

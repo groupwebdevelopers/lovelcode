@@ -38,8 +38,11 @@ func Route(app *fiber.App) {
 	apiV1.Get("/article/get/:articleTitleUrl", handlers.GetArticle)
 	apiV1.Get("/article/get-all/:page", handlers.GetAllArticlesTitles)
 	
+	// set features
+	apiV1.Get("/site-features/get-all", handlers.GetSiteFeatures)
+
 	// auth required
-	authReq := apiV1.Group("/", handlers.AuthRequired)
+	authReq := apiV1.Group("/a", handlers.AuthRequired)
 	
 	// Project Doing Request
 	authReq.Post("/pdr/create", handlers.CreateProjectDoingRequest)
@@ -80,6 +83,9 @@ func Route(app *fiber.App) {
 	memberAdminReq.Put("/edit/:memberId", handlers.EditMember)
 	memberAdminReq.Delete("/delete/:memberId", handlers.DeleteMember)
 
+	// settings
+	settingsAdminReq := authReq.Group("/admin/settings", handlers.AdminRequired)
+	settingsAdminReq.Post("/create-site-feature", handlers.CreateSiteFeature)
 
 
 	// file upload admin required

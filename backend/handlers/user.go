@@ -4,7 +4,6 @@ import (
 	"time"	
 	"crypto/sha256"
 	"encoding/base64"
-	"strconv"
 	"errors"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,19 +17,8 @@ import (
 
 
 func Signin(c *fiber.Ctx) error{
-	
-
-	// tokenExpHours, errr := getTokenExpHours()
-	// tokenExpHours := 72
-	var tokenExpHours uint16= 72
-
-
-	// if errr!=nil{
-		// return utils.ServerError(c, errr)
-	// }
 
 	// check json and extract data from it
-
 	var ss models.SigninUser
 	if err:= c.BodyParser(&ss); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"}, err.Error())
@@ -66,7 +54,7 @@ func Signin(c *fiber.Ctx) error{
 	token := utilstoken.CreateRandomToken()
 	token = hash(token)
 	user.Token = token
-	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours) * time.Hour)
+	user.TokenExp = time.Now().Add(time.Duration(database.Settings.TokenExpHours) * time.Hour)
 	// update database token
 	if err:= database.DB.Updates(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -76,7 +64,7 @@ func Signin(c *fiber.Ctx) error{
 	c.Cookie(&fiber.Cookie{
 		Name: "token",
 		Value: token,
-		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
+		Expires: time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour),
 	})
 	return utils.JSONResponse(c, 200, fiber.Map{"msg": "you signin"})
 				
@@ -85,15 +73,7 @@ func Signin(c *fiber.Ctx) error{
 
 func Signup(c *fiber.Ctx) error{
 	
-
-	// tokenExpHours, errr := getTokenExpHours()
-	var tokenExpHours uint16= 72
-	// if errr!=nil{
-		// return utils.ServerError(c, errr)
-	// }
-
 	// check json and extract data from it
-
 	var ss models.SignupUser
 	if err:= c.BodyParser(&ss); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
@@ -134,7 +114,7 @@ func Signup(c *fiber.Ctx) error{
 	user.IsDeleted = false
 	user.IsBanned = false
 	user.Token = token
-	user.TokenExp = time.Now().Add(time.Duration(tokenExpHours)*time.Hour)
+	user.TokenExp = time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour)
 
 	if err:= database.DB.Create(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -145,7 +125,7 @@ func Signup(c *fiber.Ctx) error{
 	c.Cookie(&fiber.Cookie{
 		Name: "token",
 		Value: token,
-		Expires: time.Now().Add(time.Duration(tokenExpHours)*time.Hour),
+		Expires: time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour),
 	})
 	return utils.JSONResponse(c, 200, fiber.Map{"msg": "user created"})
 
@@ -226,17 +206,6 @@ func hash(s string) string{
 	h:= sha256.New()
 	h.Write([]byte(s))
 	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
-}
-
-func getTokenExpHours() (uint16, error){
-	if i, err := strconv.Atoi(database.Settings["tokenExpHours"]);err!=nil{
-		return 0, errors.New(err.Error() + "\nin database tokenExpHours setted to invalid intiger")
-	}else{
-		if i > int(^uint16(0)){
-			return 0, errors.New("in database tokenExpHours value is too big")
-		}
-		return uint16(i), nil
-	}
 }
 
 func hban(user models.User) {
