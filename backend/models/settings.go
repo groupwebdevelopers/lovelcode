@@ -21,6 +21,7 @@ type ISettingsDB struct{
 
 type Settings struct{
 	TokenExpHours uint64
+	PageLength int
 	SiteFeatures []SiteFeature
 }
 
@@ -35,7 +36,7 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 	
 	// set default
 	settings.TokenExpHours = 72
-
+	settings.PageLength = 20
 
 	for _, s := range st{
 		if s.Value != ""{
@@ -52,6 +53,12 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 			case "siteFeature":
 				splited := strings.Split(s.Value, "|||")
 				settings.SiteFeatures = append(settings.SiteFeatures, SiteFeature{ImagePath: splited[1], Name: splited[0]})
+			case "pageLength":
+				i, err := strconv.Atoi(s.Value)
+				if err!=nil{
+					return settings,errors.New("invalid pageLength in database")
+				}
+				settings.PageLength = i
 			default:
 				return settings, errors.New("unhandled setting: "+ s.Key+" value:" +s.Value)
 			}

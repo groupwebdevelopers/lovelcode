@@ -161,7 +161,7 @@ func GetAllArticlesTitles(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
 	}
 	var articles []Ar
-	if err:= database.DB.Model(&models.Article{}).Select("title, title_url, image_path, short_desc").Find(&articles).Offset(int((page-1)*20)).Limit(20).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("title, title_url, image_path, short_desc").Find(&articles).Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}

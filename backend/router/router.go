@@ -38,9 +38,13 @@ func Route(app *fiber.App) {
 	apiV1.Get("/article/get/:articleTitleUrl", handlers.GetArticle)
 	apiV1.Get("/article/get-all/:page", handlers.GetAllArticlesTitles)
 	
+	// work sample
+	apiV1.Get("/work-sample/get-all/:page", handlers.GetAllWorkSamples)
+	
+	
 	// set features
 	apiV1.Get("/site-features/get-all", handlers.GetSiteFeatures)
-
+	
 	// auth required
 	authReq := apiV1.Group("/", handlers.AuthRequired)
 	
@@ -53,7 +57,7 @@ func Route(app *fiber.App) {
 	
 	
 	// admin required
-
+	
 	// article
 	adminArticleReq := authReq.Group("/admin/article", handlers.AdminArticleRequired)
 	adminArticleReq.Post("/create", handlers.CreateArticle)
@@ -82,13 +86,23 @@ func Route(app *fiber.App) {
 	memberAdminReq.Post("/create/:userId", handlers.CreateMember)
 	memberAdminReq.Put("/edit/:memberId", handlers.EditMember)
 	memberAdminReq.Delete("/delete/:memberId", handlers.DeleteMember)
-
+	
 	// settings
 	settingsAdminReq := authReq.Group("/admin/settings", handlers.AdminRequired)
 	settingsAdminReq.Post("/create", handlers.CreateSetting)
 	settingsAdminReq.Put("/edit/:settingId", handlers.EditSetting)
 	settingsAdminReq.Delete("/delete/:settingId", handlers.DeleteSetting)
 	settingsAdminReq.Get("/get-all", handlers.GetAllSettings)
+	
+	
+	apiV1.Get("/work-sample/get/:workSampleId", handlers.GetWorkSample)
+
+
+	// article
+	adminWorkSampleReq := authReq.Group("/admin/work-sample", handlers.AdminRequired)
+	adminWorkSampleReq.Post("/create", handlers.CreateWorkSample)
+	adminWorkSampleReq.Put("/edit/:workSampleId", handlers.EditWorkSample)
+	adminWorkSampleReq.Delete("/delete/:workSmapleId", handlers.DeleteWorkSample)
 
 
 	// file upload admin required
