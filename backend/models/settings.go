@@ -9,8 +9,14 @@ import (
 
 
 type SettingsDB struct{
-	Key string `gorm:"unique,not null" json:"key"`
+	ID uint64 `gorm:"primaryKey" json:"id"`
+	Key string `gorm:"not null" json:"key"`
 	Value string `gorm:"not null,size:800" json:"value"`
+}
+
+type ISettingsDB struct{
+	Key string `json:"key"`
+	Value string `json:"value"`
 }
 
 type Settings struct{
@@ -57,7 +63,7 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 	return settings, nil
 }
 
-func (st *SettingsDB) Check() error{
+func (st *ISettingsDB) Check() error{
 	if err:=utils.IsJustLetter(st.Key);err!=nil{
 		return errors.New("invalid setting key: "+err.Error())
 	}
@@ -66,4 +72,9 @@ func (st *SettingsDB) Check() error{
 	}
 
 	return nil
+}
+
+func (st *SettingsDB) FillWithISettingsDB(i ISettingsDB) {
+	st.Key = i.Key
+	st.Value = i.Value
 }

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"fmt"
+	
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -24,7 +24,7 @@ func CheckAdminPermision(permisions string, p string) uint8{
 	//  check hacker trap
 	if p[2] == '1'{
 		return 2
-	};fmt.Println(p)
+	}
 	switch p{
 	case "createArticle":
 		return (permisions[0]-'0')
@@ -36,6 +36,8 @@ func CheckAdminPermision(permisions string, p string) uint8{
 		return (permisions[4]-'0')
 	case "deleteOtherArticle":
 		return (permisions[5]-'0')
+	case "settings":
+		return (permisions[6]-'0')
 	case "plan":
 		return (permisions[10]-'0')
 	case "member":

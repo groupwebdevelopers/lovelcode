@@ -20,9 +20,10 @@ func IsJustLetter(s string, allows... string) error{
 	}
 
 	valid := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	for _, c := range allows[0]{
-		valid += string(c)
+	if len(allows) >0{
+		valid += allows[0]
 	}
+	
 	for _, c := range s{
 		if !strings.Contains(valid, string(c)){
 			return errors.New("invalid character: "+string(c))
