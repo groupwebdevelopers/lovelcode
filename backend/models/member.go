@@ -31,20 +31,16 @@ type OMember struct{
 	WorkExp int `json:"workExp"`
 	Contact string `json:"contact"`
 	ImagePath string `json:"imagePath"`
+	
+	Name string `json:"name"`
+	Family string `json:"family"`
+	Email string `json:"email"`
 }
 
 func (m *Member) FillWithIMember(im IMember) {
 	m.JobTitle = im.JobTitle
 	m.WorkExp = im.WorkExp
 	m.Contact = im.Contact
-}
-
-func (o *OMember) FillWithMember(m Member) {
-	o.JobTitle = m.JobTitle
-	o.WorkExp = m.WorkExp
-	o.Contact = m.Contact
-	o.ImagePath = m.ImagePath
-	o.UserID = m.UserID
 }
 
 func (im *IMember) Check() error{

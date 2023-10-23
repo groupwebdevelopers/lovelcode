@@ -1,7 +1,7 @@
 package utils
 
 import (
-	
+	"log"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -47,4 +47,8 @@ func CheckAdminPermision(permisions string, p string) uint8{
 	}
 
 	return 3
+}
+
+func LogError(err error){
+	log.Println(err)
 }

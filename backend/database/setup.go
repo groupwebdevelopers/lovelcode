@@ -41,6 +41,7 @@ func Setup() error{
 		&models.Member{},
 		&models.Article{},
 		&models.SettingsDB{},
+		&models.Temp{},
 	)
 
 	if err!=nil{

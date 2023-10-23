@@ -99,7 +99,7 @@ func UploadMemberImage(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"image added"})
 }
 
-// PUT, Auth Required, Admin Required, /:memberId
+// PUT, admin, /:memberId
 func EditMember(c *fiber.Ctx) error{
 	// get id form params
 	id := utils.GetIntFromParams(c, "memberId")
@@ -139,41 +139,21 @@ func EditMember(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfully modified"})
 }
 
-
+// GET
 func GetAllMembers(c *fiber.Ctx) error{
-	var members []models.Member
-	if err:= database.DB.Find(&members).Error; err!=nil{
+	var members []models.OMember
+	if err:= database.DB.Model(&models.Member{}).Select("members.job_title, members.image_path, members.work_exp, members.contact, users.name, users.family, users.email").Joins("INNER JOIN users ON members.user_id=users.id").Scan(&members).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no member found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	ids := make([]uint64, len(members))
-	for i, m := range members{
-		ids[i] = m.UserID
-	}
-	var users []models.User
-	if err:= database.DB.Find(&users, ids).Error;err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no member! found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	ousers:= make([]models.OUser, len(users))
-	for i, u:= range users{
-		ousers[i].FillWithUser(u)
-	}
-
-	omembers := make([]models.OMember, len(members))
-	for i, m := range members{
-		omembers[i].FillWithMember(m)
-	}
-
-	return utils.JSONResponse(c, 200, fiber.Map{"members":omembers, "users":ousers})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":members})
 }
 
+
+// GET, admin, /:id
 func GetMember(c *fiber.Ctx) error{
 	
 	id := utils.GetIntFromParams(c, "memberId")
@@ -189,13 +169,11 @@ func GetMember(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	var omember models.OMember
-	omember.FillWithMember(member)
-
-	return utils.JSONResponse(c, 200, fiber.Map{"data":omember})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":member})
 	
 }
 
+// DELETE, admin, /:id
 func DeleteMember(c *fiber.Ctx) error{
 	id := utils.GetIntFromParams(c, "memberId")
 	if id==0{

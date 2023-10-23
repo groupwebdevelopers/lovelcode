@@ -12,7 +12,7 @@ import (
 
 // GET
 func Home(c *fiber.Ctx) error{
-	return c.JSON(fiber.Map{"msg":"hello i'm working"})
+	return c.JSON(fiber.Map{"msg":"hello i'm working 1234"})
 }
 
 func GetSiteFeatures(c *fiber.Ctx) error{
