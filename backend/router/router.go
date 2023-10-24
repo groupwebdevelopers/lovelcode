@@ -25,6 +25,7 @@ func Route(app *fiber.App) {
 	
 	// plan
 	apiV1.Get("/plan/get-all-plans-and-features", handlers.GetAllPlansAndFeatures)
+	apiV1.Get("/plan/get-featured", handlers.GetFeaturedPlans)
 	
 	// member
 	apiV1.Get("/member/get-all", handlers.GetAllMembers)
@@ -32,10 +33,12 @@ func Route(app *fiber.App) {
 	// article
 	apiV1.Get("/article/get/:articleTitleUrl", handlers.GetArticle)
 	apiV1.Get("/article/get-all/:page", handlers.GetAllArticlesTitles)
+	apiV1.Get("/article/get-featured", handlers.GetFeaturedArticlesTitle)
+	
 	
 	// work sample
 	apiV1.Get("/work-sample/get-all/:page", handlers.GetAllWorkSamples)
-	
+	apiV1.Get("/work-sample/get-featured", handlers.GetFeaturedWorkSamples)
 	
 	// set features
 	apiV1.Get("/site-features/get-all", handlers.GetSiteFeatures)
@@ -98,12 +101,12 @@ func Route(app *fiber.App) {
 	apiV1.Get("/work-sample/get/:workSampleId", handlers.GetWorkSample)
 
 
-	// article
+	// work sample
 	adminWorkSampleReq := apiV1.Group("/admin/work-sample", handlers.AdminRequired)
 	adminWorkSampleReq.Post("/create", handlers.CreateWorkSample)
 	adminWorkSampleReq.Put("/edit/:workSampleId", handlers.EditWorkSample)
 	adminWorkSampleReq.Delete("/delete/:workSmapleId", handlers.DeleteWorkSample)
-
+	adminWorkSampleReq.Get("/get/:workSampleId", handlers.GetWorkSample)
 
 	// file upload admin required
 	// apt not found

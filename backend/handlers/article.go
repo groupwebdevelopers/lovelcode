@@ -165,7 +165,35 @@ func GetAllArticlesTitles(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
 	}
 	var articles []Ar
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Scan(&articles).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"articles":articles}) //user
+}
+
+
+// GET /:page
+func GetFeaturedArticlesTitle(c *fiber.Ctx) error{
+	type Ar struct{
+		Title string
+		TitleUrl string
+		ImagePath string
+		ShortDesc string
+		Views uint64
+
+		Name string
+		Family string
+	}
+	page := utils.GetIntFromParams(c, "page")
+	if page==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
+	}
+	var articles []Ar
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
@@ -186,6 +214,10 @@ func GetArticle(c *fiber.Ctx) error{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}
 		return utils.ServerError(c, err)
+	}
+
+	if article.Title == ""{
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 	}
 	
 	// have view token

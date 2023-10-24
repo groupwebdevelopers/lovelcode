@@ -42,6 +42,7 @@ func Setup() error{
 		&models.Article{},
 		&models.SettingsDB{},
 		&models.Temp{},
+		&models.WorkSample{},
 	)
 
 	if err!=nil{

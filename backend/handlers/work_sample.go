@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -128,8 +129,28 @@ func GetAllWorkSamples(c *fiber.Ctx) error{
 	if page==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
 	}
-	var WorkSamples []models.WorkSample
-	if err:= database.DB.Find(&WorkSamples).Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Error; err!=nil{
+	var WorkSamples []models.OWorkSample
+	if err:= database.DB.Model(&models.WorkSample{}).Order("id DESC").Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Find(&WorkSamples).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no WorkSample found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	for i := range WorkSamples{
+		date := strings.Split(WorkSamples[i].DoneTime, "T")[0]
+		WorkSamples[i].DoneTime = strings.Split(utils.ConvertToPersianTime(utils.ConvertStringToTime(date, time.UTC)).String(), " ")[0]
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"WorkSamples":WorkSamples}) //user
+}
+
+
+// GET
+func GetFeaturedWorkSamples(c *fiber.Ctx) error{
+
+	var WorkSamples []models.OWorkSample
+	if err:= database.DB.Model(&models.WorkSample{}).Where(&models.WorkSample{IsFeatured: true}).Find(&WorkSamples).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no WorkSample found"})
 		}
@@ -139,7 +160,9 @@ func GetAllWorkSamples(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"WorkSamples":WorkSamples}) //user
 }
 
-// GET, /:WorkSampleId
+
+
+// GET, admin, /:WorkSampleId
 func GetWorkSample(c *fiber.Ctx) error{
 
 	// get id form params
@@ -157,10 +180,7 @@ func GetWorkSample(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	var oWorkSample models.OWorkSample
-	oWorkSample.FillWithWorkSample(WorkSample)
-
-	return utils.JSONResponse(c, 200, fiber.Map{"data":oWorkSample})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":WorkSample})
 	
 }
 

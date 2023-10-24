@@ -17,6 +17,7 @@ type Article struct{
 	ShortDesc string `gorm:"not null,size:100"` // short description
 	ImagePath string `gorm:"size:200"`
 	Views uint64
+	IsFeatured bool
 
 	TimeCreated time.Time
 	TimeModified time.Time
@@ -27,6 +28,7 @@ type IArticle struct{
 	Body string `json:"body"`
 	Tags string `json:"tags"`
 	ShortDesc string `json:"shortDesc"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 // output article for user
@@ -58,6 +60,7 @@ func (a *Article) FillWithIArticle(i IArticle){
 	a.Body = i.Body
 	a.Tags = i.Tags
 	a.ShortDesc = i.ShortDesc
+	a.IsFeatured = i.IsFeatured
 }
 
 func (a *IArticle) Check() error{

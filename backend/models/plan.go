@@ -13,6 +13,8 @@ type Plan struct{
 	Price uint32 `gorm:"not null"`
 	ImagePath string `gorm:"size:200"`
 	Type string
+	IsFeatured bool
+
 	TimeCreated time.Time `gorm:"not null"`
 	TimeModified time.Time `gorm:"not null"`
 }
@@ -25,6 +27,7 @@ type Feature struct{
 	Value string
 	// Price uint32
 	IsHave bool `gorm:"not null"` // the plan is have this feature
+	IsFeatured bool
 
 	TimeCreated time.Time `gorm:"not null"`
 	TimeModified time.Time `gorm:"not null"`
@@ -37,12 +40,14 @@ type IFeature struct{
 	Value string `json:"value"`
 	// Price int `json:"price"`
 	IsHave bool `json:"isHave"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 type IPlan struct{
 	Title string `json:"title"`
 	Price uint32 `json:"price"`
 	Type string `json:"type"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 type OPlan struct{
@@ -50,6 +55,7 @@ type OPlan struct{
 	Price uint32 `json:"price"`
 	ImagePath string `json:"imagePath"`
 	Type string `json:"type"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 type OFeature struct{
@@ -57,6 +63,7 @@ type OFeature struct{
 	Value string `json:"value"`
 	// Price uint32 `json:"price"`
 	IsHave bool `json:"isHave"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 func (f *IFeature) Check() error{
@@ -83,6 +90,7 @@ func (f *Feature) FillWithIFeature(i IFeature){
 	f.Value = i.Value
 	// f.Price = uint32(i.Price)
 	f.IsHave = i.IsHave
+	f.IsFeatured = i.IsFeatured
 } 
 
 func (p *IPlan) Check() error{
@@ -102,4 +110,5 @@ func (p *Plan) FillWithIPlan(ce IPlan) {
 	p.Title = ce.Title
 	p.Price = ce.Price
 	p.Type = ce.Type
+	p.IsFeatured = ce.IsFeatured
 }

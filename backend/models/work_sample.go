@@ -4,6 +4,9 @@ import (
 	"errors"
 	"lovelcode/utils"
 	"time"
+	"strings"
+	"strconv"
+
 )
 
 type WorkSample struct{
@@ -12,6 +15,7 @@ type WorkSample struct{
 	ImagePath string `gorm:"size:400"`
 	SiteUrl string `gorm:"size:200"`
 	Description string `gorm:"size:800,not null"`
+	IsFeatured bool
 
 	DoneTime time.Time
 }
@@ -21,7 +25,8 @@ type IWorkSample struct{
 	Title string `json:"title"`
 	Description string `json:"description"`
 	SiteUrl string `json:"siteUrl"`
-	DoneTime time.Time `json:"time"`
+	DoneTime string `json:"doneTime"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 // output article for user
@@ -30,23 +35,16 @@ type OWorkSample struct{
 	Description string `json:"description"`
 	ImagePath string `json:"imagePath"`
 	SiteUrl string `json:"siteUrl"`
-	DoneTime time.Time `json:"time"`
+	DoneTime string `json:"doneTime"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 func (w *WorkSample) FillWithIWorkSample(i IWorkSample){
 	w.Title = i.Title
 	w.Description = i.Description
 	w.SiteUrl = i.SiteUrl
-	w.DoneTime = i.DoneTime
-}
-
-func (o *OWorkSample) FillWithWorkSample(a WorkSample){
-	o.Title = a.Title
-	o.Description = a.Description
-	o.ImagePath = a.ImagePath
-	o.SiteUrl = a.SiteUrl
-	o.ImagePath = a.ImagePath
-	o.DoneTime = a.DoneTime
+	w.IsFeatured = i.IsFeatured
+	w.DoneTime = utils.ConvertToMiladiTime(utils.ConvertStringToTime(i.DoneTime, time.FixedZone("Tehran", 3.5 * 60 *60)))
 }
 
 func (a *IWorkSample) Check() error{
@@ -54,5 +52,17 @@ func (a *IWorkSample) Check() error{
 		return errors.New("invalid titile:" + err.Error())
 	}
 	
+	// doneTime format year-month-day
+	splited := strings.Split(a.DoneTime, "-")
+	if len(splited) < 3{
+		return errors.New("invalid doneTime")
+	}
+	for _, s := range splited{
+		_, err := strconv.Atoi(s)
+		if err!=nil{
+			return errors.New("invalid doneTime")
+		}
+	}
+
 	return nil
 }

@@ -288,10 +288,13 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	type Result struct{
 		ID uint64
 		models.OPlan
-		models.OFeature
+		Name string
+		Value string
+		IsHave bool
+		FeatureIsFeatured bool
 	}
 	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, features.name, features.value, features.is_have").Joins("INNER JOIN features ON plans.id=features.plan_id").Scan(&result).Error; err!=nil{
+	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Scan(&result).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
 		}
@@ -316,11 +319,8 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 
 	}
 	
-	
-
-	
 	for _, r := range result{
-		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave}
+		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
 		for i, r2 := range result2{
 			if r2.ID == r.ID{
 				result2[i].Features = append(result2[i].Features, feature)
@@ -334,6 +334,58 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"data":result2})
 
 }
+
+func GetFeaturedPlans(c *fiber.Ctx) error{
+	type Result struct{
+		ID uint64
+		models.OPlan
+		Name string
+		Value string
+		IsHave bool
+		FeatureIsFeatured bool
+	}
+	var result []Result
+	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Where(&models.Plan{IsFeatured: true}).Scan(&result).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	type Result2 struct{
+		ID uint64
+		// models.OPlan
+		Title string
+		Price uint32
+		ImagePath string
+		Type string
+		Features []models.OFeature
+	}
+	
+	var result2 []Result2
+	
+	for _, r := range result{
+		res1 := Result2{ID: r.ID, Title: r.Title, Price:r.Price, ImagePath:r.ImagePath, Type:r.Type}
+		result2 = append(result2, res1)
+
+	}
+	
+	for _, r := range result{
+		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
+		for i, r2 := range result2{
+			if r2.ID == r.ID{
+				result2[i].Features = append(result2[i].Features, feature)
+				break
+			}
+		}
+		
+		}
+	
+	
+	return utils.JSONResponse(c, 200, fiber.Map{"data":result2})
+
+}
+
 
 func SearchPlan(c *fiber.Ctx) error{
 	// q := c.Queries()
