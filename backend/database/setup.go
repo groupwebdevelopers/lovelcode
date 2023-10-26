@@ -47,7 +47,7 @@ func Setup() error{
 		&models.ContactUs{},
 		&models.Customer{},
 		&models.MainpagesTexts{},
-		&models.Statistics{},
+		&models.Statistic{},
 	)
 
 	if err!=nil{

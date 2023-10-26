@@ -155,7 +155,7 @@ func EditMember(c *fiber.Ctx) error{
 // GET
 func GetAllMembers(c *fiber.Ctx) error{
 	var members []models.OMember
-	if err:= database.DB.Model(&models.Member{}).Select("members.job_title, members.image_path, members.work_exp, members.contact, users.name, users.family, users.email").Joins("INNER JOIN users ON members.user_id=users.id").Scan(&members).Error; err!=nil{
+	if err:= database.DB.Model(&models.Member{}).Select("members.id, members.job_title, members.image_path, members.work_exp, members.contact, users.name, users.family, users.email").Joins("INNER JOIN users ON members.user_id=users.id").Scan(&members).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no member found"})
 		}

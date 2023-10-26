@@ -34,7 +34,7 @@ func GetMainPage(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"empty pageName (pageName didn't send)"})
 	}
 	// check pageName
-	if err:=utils.IsJustLetter(pageName); err!=nil{
+	if err:=utils.IsJustLetter(pageName, "-"); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid pageName:"+err.Error()})
 	}
 	var mpt []models.OMainpagesTexts

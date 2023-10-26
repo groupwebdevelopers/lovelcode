@@ -26,7 +26,7 @@ type IMember struct{
 }
 
 type OMember struct{
-	UserID uint64 `json:"userID"`
+	ID uint64 `json:"id"`
 	JobTitle string `json:"jobTitle"`
 	WorkExp int `json:"workExp"`
 	Contact string `json:"contact"`

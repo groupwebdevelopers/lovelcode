@@ -110,7 +110,7 @@ DELETE /admin/article/delete/:articleId
 
 
 # Site Features
-GET /site-features/get-all
+GET /mainpage/site-feature/
 
 
 # Comments
@@ -152,3 +152,15 @@ POST /admin/upload/customer/image/:customerId (without /api/v1)
 PUT /admin/customer/edit/:customerId json(name, siteUrl, isFeatured)
 
 DELETE /admin/customer/delete/:customerId
+
+# Statistics
+
+GET /statistics/get-public
+
+GET /admin/statistic/get-all
+
+POST /admin/statistic/create    json(name, name2, number, isPublic)
+
+PUT /admin/statistic/edit/:statisticId json(name, name2, number, isPublic)
+
+DELETE /admin/statistic/delete/:statisticId

@@ -13,6 +13,7 @@ type MainpagesTexts struct{
 	Section string `gorm:"size:300"`
 	Body string `gorm:"size:5000,not null"`
 	ImagePath string `gorm:"size:300"`
+	OrderT int //`gorm:"not null"`
 }
 
 type OMainpagesTexts struct{
@@ -20,12 +21,14 @@ type OMainpagesTexts struct{
 	Section string `json:"section"`
 	Body string `json:"body"`
 	ImagePath string `json:"imagePath"`
+	Order int `json:"order"`
 }
 
 type IMainpagesTexts struct{
 	PageName string `json:"pageName"`
 	Section string `json:"section"`
 	Body string `json:"body"`
+	Order int `json:"order"`
 }
 
 
@@ -53,4 +56,5 @@ func (m *MainpagesTexts) Fill(i *IMainpagesTexts){
 	m.PageName = i.PageName
 	m.Section = i.Section
 	m.Body = i.Body
+	m.OrderT = i.Order
 }
