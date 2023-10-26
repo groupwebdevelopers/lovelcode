@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import AccordionComp from "./Accordion";
 
@@ -200,7 +200,7 @@ export default function Mag() {
         </div>
         {/* ------------------------------------- */}
         <div className="w-full grid grid-cols-12 gap-5 mt-12">
-          <AccordionComp/>
+          <AccordionComp />
           <div className="col-span-12 md:col-span-8 lg:col-span-9 grid grid-cols-12 gap-5">
             {createEmptyArray(15).map((i) => {
               return (
