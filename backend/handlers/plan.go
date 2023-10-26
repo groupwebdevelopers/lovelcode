@@ -32,7 +32,7 @@ func CreatePlan(c *fiber.Ctx) error{
 	
 	// create plan and fill it
 	var plan models.Plan
-	plan.FillWithIPlan(pl)
+	plan.Fill(&pl)
 	plan.TimeCreated = time.Now()
 	plan.TimeModified = time.Now()
 
@@ -77,7 +77,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 	// create features and fill its
 	features := make([]models.Feature, len(ft))
 	for i:= range features{
-		features[i].FillWithIFeature(ft[i])
+		features[i].Fill(&ft[i])
 		features[i].TimeCreated = time.Now()
 		features[i].TimeModified = time.Now()
 		features[i].PlanID = uint64(id)
@@ -108,6 +108,19 @@ func UploadPlanImage(c *fiber.Ctx) error{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Plan not found"})
 		}
 	}
+
+	// delete last image if exist
+	if plan.ImagePath !=""{
+		if strings.Contains(plan.ImagePath, "*"){
+			return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
+		}
+		if plan.ImagePath != ""{
+			err := os.Remove(fmt.Sprintf(".%s", plan.ImagePath))
+			if err!=nil{
+				return utils.ServerError(c, err)
+			}
+		}
+	}
 	
 
 	file, err := c.FormFile("i")
@@ -119,7 +132,7 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))
+	err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
 
 	if err!=nil{
 		return utils.ServerError(c, err)
@@ -163,7 +176,7 @@ func EditPlan(c *fiber.Ctx) error{
 	} 
 
 	// fill the plan
-	plan.FillWithIPlan(pl)
+	plan.Fill(&pl)
 	plan.TimeModified = time.Now()
 
 	// modify plan in database
@@ -210,7 +223,7 @@ func EditFeature(c *fiber.Ctx) error{
 	
 
 	// fill the feature
-	feature.FillWithIFeature(ft)
+	feature.Fill(&ft)
 	feature.TimeModified = time.Now()
 	feature.PlanID = id
 	
@@ -286,7 +299,6 @@ func GetAllFeatures(c *fiber.Ctx) error{
 
 func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	type Result struct{
-		ID uint64
 		models.OPlan
 		Name string
 		Value string
@@ -294,7 +306,7 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 		FeatureIsFeatured bool
 	}
 	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Scan(&result).Error; err!=nil{
+	if err:= database.DB.Model(&models.Plan{}).Select("plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Scan(&result).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
 		}
@@ -302,42 +314,52 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	}
 
 	type Result2 struct{
-		ID uint64
-		// models.OPlan
-		Title string
-		Price uint32
-		ImagePath string
-		Type string
+		models.OPlan
 		Features []models.OFeature
 	}
 	
 	var result2 []Result2
 	
 	for _, r := range result{
-		res1 := Result2{ID: r.ID, Title: r.Title, Price:r.Price, ImagePath:r.ImagePath, Type:r.Type}
-		result2 = append(result2, res1)
+		res1 := Result2{}
+		res1.IsCompare = r.IsCompare
+		res1.Title = r.Title
+		res1.Price = r.Price
+		res1.ImagePath = r.ImagePath
+		res1.Type = r.Type
+
+
+		// check id is exist
+		isExist := false
+		for _, r := range result2{
+			if r.Title == res1.Title{
+				isExist = true
+				break
+			}
+		}
+		if !isExist{
+			result2 = append(result2, res1)
+		}
 
 	}
 	
 	for _, r := range result{
 		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
 		for i, r2 := range result2{
-			if r2.ID == r.ID{
+			if r2.Title == r.Title{
 				result2[i].Features = append(result2[i].Features, feature)
 				break
 			}
 		}
 		
-		}
-	
-	
+		}	
+		
 	return utils.JSONResponse(c, 200, fiber.Map{"data":result2})
 
 }
 
 func GetFeaturedPlans(c *fiber.Ctx) error{
 	type Result struct{
-		ID uint64
 		models.OPlan
 		Name string
 		Value string
@@ -345,7 +367,7 @@ func GetFeaturedPlans(c *fiber.Ctx) error{
 		FeatureIsFeatured bool
 	}
 	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Where(&models.Plan{IsFeatured: true}).Scan(&result).Error; err!=nil{
+	if err:= database.DB.Model(&models.Plan{}).Select("plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Where(&models.Plan{IsFeatured: true}).Scan(&result).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
 		}
@@ -353,19 +375,34 @@ func GetFeaturedPlans(c *fiber.Ctx) error{
 	}
 
 	type Result2 struct{
-		ID uint64
-		// models.OPlan
-		Title string
-		Price uint32
-		ImagePath string
-		Type string
+		models.OPlan
+		
 		Features []models.OFeature
 	}
 	
 	var result2 []Result2
 	
 	for _, r := range result{
-		res1 := Result2{ID: r.ID, Title: r.Title, Price:r.Price, ImagePath:r.ImagePath, Type:r.Type}
+		res1 := Result2{}
+		res1.IsCompare = r.IsCompare
+		res1.Title = r.Title
+		res1.Price = r.Price
+		res1.ImagePath = r.ImagePath
+		res1.Type = r.Type
+		
+		// check id is exist
+		isExist := false
+		for _, r := range result2{
+			if r.Title == res1.Title{
+				isExist = true
+				break
+			}
+		}
+		if !isExist{
+			result2 = append(result2, res1)
+		}
+
+		
 		result2 = append(result2, res1)
 
 	}
@@ -373,7 +410,7 @@ func GetFeaturedPlans(c *fiber.Ctx) error{
 	for _, r := range result{
 		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
 		for i, r2 := range result2{
-			if r2.ID == r.ID{
+			if r2.Title == r.Title{
 				result2[i].Features = append(result2[i].Features, feature)
 				break
 			}

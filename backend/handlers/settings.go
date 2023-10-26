@@ -21,7 +21,7 @@ func CreateSetting(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	var setting models.SettingsDB
-	setting.FillWithISettingsDB(st)
+	setting.Fill(&st)
 	if err:= database.DB.Create(&setting).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
@@ -60,7 +60,7 @@ func EditSetting(c *fiber.Ctx) error{
 	} 
 
 	// fill the setting
-	setting.FillWithISettingsDB(st)
+	setting.Fill(&st)
 
 	// modify setting in database
 	if err:= database.DB.Updates(&setting).Error; err!=nil{

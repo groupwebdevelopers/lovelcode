@@ -40,9 +40,22 @@ func Route(app *fiber.App) {
 	apiV1.Get("/work-sample/get-all/:page", handlers.GetAllWorkSamples)
 	apiV1.Get("/work-sample/get-featured", handlers.GetFeaturedWorkSamples)
 	
-	// set features
+	// get features
 	apiV1.Get("/site-features/get-all", handlers.GetSiteFeatures)
 	
+	// comment
+	apiV1.Get("/comment/get-all-for-article/:articleTitleUrl", handlers.GetAllArticleComments)
+	
+	// contact us
+	apiV1.Get("/contactus/get-all-for-user", handlers.GetAllUserContactUss)
+
+	// customer
+	apiV1.Get("/customer/get-all", handlers.GetAllCustomers)
+	apiV1.Get("/customer/get-featured", handlers.GetFeaturedCustomers)
+	
+	// main pages
+	apiV1.Get("/mainpage/:pageName", handlers.GetMainPage)
+
 	// auth required
 	
 	// Project Doing Request
@@ -52,6 +65,20 @@ func Route(app *fiber.App) {
 	pdrAuthReq.Get("/get-all", handlers.GetAllProjectDoingRequests)
 	pdrAuthReq.Put("/edit/:id", handlers.EditProjectDoingRequest)
 	pdrAuthReq.Delete("/delete/:id", handlers.DeleteProjectDoingRequest)
+	
+	// comment
+	commentAuthReq := apiV1.Group("/comment", handlers.AuthRequired)
+	commentAuthReq.Post("/create", handlers.CreateComment)
+	commentAuthReq.Put("/edit/:id", handlers.EditComment)
+	commentAuthReq.Delete("/delete/:id", handlers.DeleteComment)
+	
+	// contactus
+	contactusAuthReq := apiV1.Group("/contactus", handlers.AuthRequired)
+	contactusAuthReq.Post("/create", handlers.CreateContactUs)
+	contactusAuthReq.Get("/get/:contactUsTitle", handlers.GetContactUsByTitle)
+	contactusAuthReq.Get("/get-all", handlers.GetAllUserContactUss)
+	contactusAuthReq.Put("/edit/:id", handlers.EditContactUs)
+	contactusAuthReq.Delete("/delete/:id", handlers.DeleteContactUs)
 	
 	
 	// admin required
@@ -97,9 +124,12 @@ func Route(app *fiber.App) {
 	settingsAdminReq.Delete("/delete/:settingId", handlers.DeleteSetting)
 	settingsAdminReq.Get("/get-all", handlers.GetAllSettings)
 	
-	
-	apiV1.Get("/work-sample/get/:workSampleId", handlers.GetWorkSample)
-
+	// customer
+	customerAdminReq := apiV1.Group("/admin/customer", handlers.AdminRequired)
+	customerAdminReq.Post("/create", handlers.CreateCustomer)
+	customerAdminReq.Put("/edit/:customerId", handlers.EditCustomer)
+	customerAdminReq.Delete("/delete/:customerId", handlers.DeleteCustomer)
+	customerAdminReq.Get("/member/get/:customerId", handlers.GetCustomer)
 
 	// work sample
 	adminWorkSampleReq := apiV1.Group("/admin/work-sample", handlers.AdminRequired)
@@ -107,6 +137,9 @@ func Route(app *fiber.App) {
 	adminWorkSampleReq.Put("/edit/:workSampleId", handlers.EditWorkSample)
 	adminWorkSampleReq.Delete("/delete/:workSmapleId", handlers.DeleteWorkSample)
 	adminWorkSampleReq.Get("/get/:workSampleId", handlers.GetWorkSample)
+
+
+
 
 	// file upload admin required
 	// apt not found

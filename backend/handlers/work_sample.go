@@ -31,7 +31,7 @@ func CreateWorkSample(c *fiber.Ctx) error{
 	
 	// create WorkSample and fill it
 	var WorkSample models.WorkSample
-	WorkSample.FillWithIWorkSample(al)
+	WorkSample.Fill(&al)
 
 	if err:= database.DB.Create(&WorkSample).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -57,6 +57,20 @@ func UploadWorkSampleImage(c *fiber.Ctx) error{
 		}
 		return utils.ServerError(c, err)
 	}
+
+
+	// delete last image if exist
+	if WorkSample.ImagePath != ""{
+		if strings.Contains(WorkSample.ImagePath, "*"){
+			return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
+		}
+		if WorkSample.ImagePath != ""{
+			err := os.Remove(fmt.Sprintf(".%s", WorkSample.ImagePath))
+			if err!=nil{
+				return utils.ServerError(c, err)
+			}
+		}
+	}
 	
 
 	file, err := c.FormFile("i")
@@ -68,7 +82,7 @@ func UploadWorkSampleImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))
+	err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
 
 	if err!=nil{
 		return utils.ServerError(c, err)
@@ -112,7 +126,7 @@ func EditWorkSample(c *fiber.Ctx) error{
 	} 
 
 	// fill the WorkSample
-	WorkSample.FillWithIWorkSample(al)
+	WorkSample.Fill(&al)
 
 	// modify WorkSample in database
 	if err:= database.DB.Updates(&WorkSample).Error; err!=nil{
@@ -155,6 +169,12 @@ func GetFeaturedWorkSamples(c *fiber.Ctx) error{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no WorkSample found"})
 		}
 		return utils.ServerError(c, err)
+	}
+
+	
+	for i := range WorkSamples{
+		date := strings.Split(WorkSamples[i].DoneTime, "T")[0]
+		WorkSamples[i].DoneTime = strings.Split(utils.ConvertToPersianTime(utils.ConvertStringToTime(date, time.UTC)).String(), " ")[0]
 	}
 
 	return utils.JSONResponse(c, 200, fiber.Map{"WorkSamples":WorkSamples}) //user
