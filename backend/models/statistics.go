@@ -9,7 +9,7 @@ type Statistic struct{
 	ID uint64 `gorm:"primaryKey"`
 	Name string `gorm:"size:100,not null,unique"`
 	Name2 string `gorm:"size:100,not null"`
-	Number uint64 `gorm:"not null"`
+	Number float64 `gorm:"not null"`
 	IsPublic bool
 
 }
@@ -17,13 +17,13 @@ type Statistic struct{
 type OStatistic struct{
 	Name string `json:"name"`
 	Name2 string `json:"name2"`
-	Number string `json:"number"`
+	Number float64 `json:"number"`
 }
 
 type IStatistic struct{
 	Name string `json:"name"`
 	Name2 string `json:"name2"`
-	Number uint64 `json:"number"`
+	Number float64 `json:"number"`
 }
 
 func (i *IStatistic) Check() error{

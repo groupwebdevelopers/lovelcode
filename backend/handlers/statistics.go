@@ -105,7 +105,7 @@ func GetAllStatistics(c *fiber.Ctx) error{
 }
 
 // DELETE, admin, /:id
-func DeleteStatistics(c *fiber.Ctx) error{
+func DeleteStatistic(c *fiber.Ctx) error{
 	id := utils.GetIntFromParams(c, "statisticId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
@@ -129,7 +129,7 @@ func AddOneRequest(){
 		var n uint64
 		if err:= database.DB.Model(&models.Statistic{}).Select("number").Where(&models.Statistic{Name: "requestNumber"}).Scan(&n).Error;err!=nil{
 			if err== gorm.ErrRecordNotFound{
-				database.DB.Create(&models.Statistic{Name: "requestNumber", Name2:"request number", Number: uint64(requestNumber), IsPublic: false})
+				database.DB.Create(&models.Statistic{Name: "requestNumber", Name2:"request number", Number: float64(requestNumber), IsPublic: false})
 				return
 			}else{
 				utils.LogError(err)

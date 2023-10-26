@@ -57,6 +57,9 @@ func Route(app *fiber.App) {
 	
 	// main pages
 	apiV1.Get("/mainpage/:pageName", handlers.GetMainPage)
+	
+	// statistic
+	apiV1.Get("/statistic/get-public", handlers.GetPublicStatistics)
 
 	// auth required
 	
@@ -145,6 +148,15 @@ func Route(app *fiber.App) {
 	contactusAdminReq.Get("/get-all", handlers.GetAllUserContactUss)
 	//todo: anwser
 
+
+	
+	// member
+	statisticAdminReq := apiV1.Group("/admin/statistic", handlers.AdminRequired)
+	statisticAdminReq.Post("/create/:statisticId", handlers.CreateStatistic)
+	statisticAdminReq.Put("/edit/:statisticId", handlers.EditStatistic)
+	statisticAdminReq.Delete("/delete/:statisticId", handlers.DeleteStatistic)
+	statisticAdminReq.Get("/get-all/", handlers.GetAllStatistics)
+	
 
 	// file upload admin required
 	// apt not found
