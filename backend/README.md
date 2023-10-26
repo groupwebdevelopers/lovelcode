@@ -78,7 +78,28 @@ GET /article/get-all/:page (page is number)
 
 GET /article/get/:articleTitleUrl (articleTitleUrl is in json)
 
+GET /article/get-featured
+
 POST /admin/article/create              josn(title, body, tags, shortDesc) (tags splited with | example: 'test|art')
+
 PUT /admin/article/edit/:articleId      josn(title, body, tags, shortDesc)
+
 DELETE /admin/article/delete/:articleId
 
+
+# Work Smaple
+
+GET /work-sample/get-all/:page (page is number)
+
+GET /work-sample/get-featured
+
+GET /admin/works-sample/get/:workSampleId
+
+POST /admin/work-sample/create              josn(title, imagePath, siteUrl, description, isFeatured)
+
+PUT /admin/article/edit/:articleId          josn(title, imagePath, siteUrl, description, isFeatured)
+
+DELETE /admin/article/delete/:articleId
+
+# Site Features
+GET /site-features/get-all

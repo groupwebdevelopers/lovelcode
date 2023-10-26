@@ -38,7 +38,6 @@ type SignupUser struct{
 }
 
 type OUser struct{
-	ID uint64 `json:"ID"`
 	Name string `json:"name"`
 	Family string `json:"family"`
 	Email string `json:"email"`
@@ -99,11 +98,4 @@ func (u *SigninUser) Check() error{
 	
 
 	return nil
-}
-
-func (o *OUser) FillWithUser(u User){
-	o.Email = u.Email
-	o.Family = u.Family
-	o.Name = u.Name
-	o.ID = u.ID
 }

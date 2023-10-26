@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"strconv"
+	// "strconv"
 	"strings"
 	"time"
 
@@ -58,8 +58,38 @@ func AuthRequired(c *fiber.Ctx) error{
 }
 
 func AdminRequired(c *fiber.Ctx) error{
+	// auth required
+	token := c.Cookies("token", "")
+	if token==""{
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+	}
+
+	var user models.User
+	// user, err := utilstoken.VerifyJWTToken(token)
+	// if err!=nil{
+		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
+	// }
+	// var user models.User = models.User{Token: token}
+	if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	// check banned
+	if user.IsBanned{
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
+	}
+
+	// check token
+	if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
+	}
+
+	c.Locals("user", user)
+
 	// check user have permision
-	user:= c.Locals("user").(models.User)
 	splited := strings.Split(c.OriginalURL(), "/")
 	if len(splited) < 5{
 		return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
@@ -138,12 +168,13 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 		if len(splited) < 7{
 			return utils.JSONResponse(c, 400, fiber.Map{"error":"articleId didn't send"})
 		}
-		id, err := strconv.Atoi(splited[6]) // todo: uint64
-		if err!=nil{
-			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid articleId"})
+
+		titleUrl := c.Params("titleUrl")
+		if titleUrl==""{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid titleUrl"})
 		}
 		var article models.Article
-		if err:=database.DB.First(&article, &models.Article{ID: uint64(id)}).Error;err!=nil{
+		if err:=database.DB.First(&article, &models.Article{TitleUrl: titleUrl}).Error;err!=nil{
 			if err== gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"article not found"})
 			}

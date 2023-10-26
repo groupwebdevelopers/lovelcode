@@ -1,12 +1,13 @@
 package database
 
 import (
+	"log"
 	"os"
 	"runtime"
 
-	"gorm.io/gorm"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	"lovelcode/models"
 )
@@ -40,6 +41,8 @@ func Setup() error{
 		&models.Member{},
 		&models.Article{},
 		&models.SettingsDB{},
+		&models.Temp{},
+		&models.WorkSample{},
 	)
 
 	if err!=nil{
@@ -65,3 +68,14 @@ func Setup() error{
 	return err
 }
 
+func RegetSettings(){
+	var err error
+	var st []models.SettingsDB
+	if err=DB.Find(&st).Error; err!=nil{
+		log.Fatal(err)
+	}
+	Settings, err = models.SetupSettings(st)
+	if err!=nil{
+		log.Fatal(err)
+	}
+}

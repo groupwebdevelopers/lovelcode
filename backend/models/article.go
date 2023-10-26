@@ -16,6 +16,8 @@ type Article struct{
 	Tags string `gorm:"size:200"` // split with |
 	ShortDesc string `gorm:"not null,size:100"` // short description
 	ImagePath string `gorm:"size:200"`
+	Views uint64
+	IsFeatured bool
 
 	TimeCreated time.Time
 	TimeModified time.Time
@@ -26,11 +28,11 @@ type IArticle struct{
 	Body string `json:"body"`
 	Tags string `json:"tags"`
 	ShortDesc string `json:"shortDesc"`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 // output article for user
 type OArticle struct{
-	OUser OUser `json:"user"`
 	Title string `json:"title"`
 	Body string `json:"body"`
 	Tags string `json:"tags"`
@@ -38,6 +40,11 @@ type OArticle struct{
 	ImagePath string `json:"imagePath"`
 	TimeCreated time.Time `json:"timeCreated"`
 	TimeModified time.Time `json:"timeModified"`
+	Views uint64
+
+	UserName string `json:"userName"`
+	UserFamily string `json:"userFamily"`
+	UserEmail string `json:"userEmail"`
 }
 
 // output article for admin
@@ -53,16 +60,7 @@ func (a *Article) FillWithIArticle(i IArticle){
 	a.Body = i.Body
 	a.Tags = i.Tags
 	a.ShortDesc = i.ShortDesc
-}
-
-func (o *OArticle) FillWithArticle(a Article){
-	o.Title = a.Title
-	o.Body = a.Body
-	o.ShortDesc = a.ShortDesc
-	o.Tags = a.Tags
-	o.ImagePath = a.ImagePath
-	o.TimeCreated = a.TimeCreated
-	o.TimeModified = a.TimeModified
+	a.IsFeatured = i.IsFeatured
 }
 
 func (a *IArticle) Check() error{
