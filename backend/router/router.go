@@ -16,6 +16,8 @@ func Route(app *fiber.App) {
 	fileUploadAdminReq.Post("/plan/image/:planId", handlers.UploadPlanImage)
 	fileUploadAdminReq.Post("/member/image/:memberId", handlers.UploadMemberImage)
 	fileUploadAdminReq.Post("/article/image/:articleId", handlers.UploadArticleImage)
+	fileUploadAdminReq.Post("/customer/image/:customerId", handlers.UploadCustomerImage)
+	fileUploadAdminReq.Post("/work-sample/image/:workSampleId", handlers.UploadWorkSampleImage)
 	
 	// auth not required
 	
@@ -76,7 +78,6 @@ func Route(app *fiber.App) {
 	contactusAuthReq := apiV1.Group("/contactus", handlers.AuthRequired)
 	contactusAuthReq.Post("/create", handlers.CreateContactUs)
 	contactusAuthReq.Get("/get/:contactUsTitle", handlers.GetContactUsByTitle)
-	contactusAuthReq.Get("/get-all", handlers.GetAllUserContactUss)
 	contactusAuthReq.Put("/edit/:id", handlers.EditContactUs)
 	contactusAuthReq.Delete("/delete/:id", handlers.DeleteContactUs)
 	
@@ -115,7 +116,7 @@ func Route(app *fiber.App) {
 	memberAdminReq.Post("/create/:userId", handlers.CreateMember)
 	memberAdminReq.Put("/edit/:memberId", handlers.EditMember)
 	memberAdminReq.Delete("/delete/:memberId", handlers.DeleteMember)
-	memberAdminReq.Get("/member/get/:memberId", handlers.GetMember)
+	memberAdminReq.Get("/get/:memberId", handlers.GetMember)
 	
 	// settings
 	settingsAdminReq := apiV1.Group("/admin/settings", handlers.AdminRequired)
@@ -129,16 +130,20 @@ func Route(app *fiber.App) {
 	customerAdminReq.Post("/create", handlers.CreateCustomer)
 	customerAdminReq.Put("/edit/:customerId", handlers.EditCustomer)
 	customerAdminReq.Delete("/delete/:customerId", handlers.DeleteCustomer)
-	customerAdminReq.Get("/member/get/:customerId", handlers.GetCustomer)
-
+	customerAdminReq.Get("/get/:customerId", handlers.GetCustomer)
+	
 	// work sample
 	adminWorkSampleReq := apiV1.Group("/admin/work-sample", handlers.AdminRequired)
 	adminWorkSampleReq.Post("/create", handlers.CreateWorkSample)
 	adminWorkSampleReq.Put("/edit/:workSampleId", handlers.EditWorkSample)
 	adminWorkSampleReq.Delete("/delete/:workSmapleId", handlers.DeleteWorkSample)
 	adminWorkSampleReq.Get("/get/:workSampleId", handlers.GetWorkSample)
+	
 
-
+	// contactus
+	contactusAdminReq := apiV1.Group("/admin/contactus", handlers.AdminRequired)
+	contactusAdminReq.Get("/get-all", handlers.GetAllUserContactUss)
+	//todo: anwser
 
 
 	// file upload admin required

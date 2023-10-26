@@ -29,7 +29,7 @@ type OCustomer struct{
 	Name string `json:"name"`
 	SiteUrl string `json:"siteUrl"`
 	ImagePath string `json:"imagePath"`
-	IsFeatured bool `json:"isFeatured`
+	IsFeatured bool `json:"isFeatured"`
 }
 
 

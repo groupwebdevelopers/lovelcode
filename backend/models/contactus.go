@@ -10,7 +10,8 @@ type ContactUs struct{
 	ID uint64 `gorm:"primaryKey"`
 	UserID uint64
 	User User
-	Title string `gorm:"size:100,not null,unique"`
+	Title string `gorm:"size:100,not null"`
+	TitleUrl string `gorm:"size:100,not null,unique"`
 	Body string `gorm:"size:400,not null"`
 	TimeCreated time.Time
 	TimeModified time.Time
@@ -24,6 +25,7 @@ type IContactUs struct{
 type OContactUs struct{
 	Title string `json:"title"`
 	Body string `json:"body"`
+	TitleUrl string `json:"titleUrl"`
 }
 
 func (i *IContactUs) Check() error{

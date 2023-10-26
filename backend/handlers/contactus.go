@@ -34,6 +34,7 @@ func CreateContactUs(c *fiber.Ctx) error{
 	// create ContactUs and fill it
 	var ContactUs models.ContactUs
 	ContactUs.Fill(&mb)
+	ContactUs.TitleUrl = utils.ConvertToUrl(ContactUs.Title)
 	ContactUs.UserID = user.ID
 	ContactUs.TimeCreated = time.Now()
 	ContactUs.TimeModified = time.Now()
@@ -75,6 +76,7 @@ func EditContactUs(c *fiber.Ctx) error{
 
 	// fill the ContactUs
 	ContactUs.Fill(&mb)
+	ContactUs.TitleUrl = utils.ConvertToUrl(ContactUs.Title)
 	ContactUs.TimeModified = time.Now()
 
 	// modify ContactUs in database
@@ -90,7 +92,7 @@ func GetAllUserContactUss(c *fiber.Ctx) error{
 	user := c.Locals("user").(models.User)
 
 	var ContactUss []models.OContactUs
-	if err:= database.DB.Model(&models.ContactUs{}).Select("body, title").Where(&models.ContactUs{UserID: user.ID}).Find(&ContactUss).Error; err!=nil{
+	if err:= database.DB.Model(&models.ContactUs{}).Where(&models.ContactUs{UserID: user.ID}).Find(&ContactUss).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no ContactUs found"})
 		}
