@@ -10,7 +10,7 @@ type Member struct{
 	ID uint64 `gorm:"primaryKey"`
 	UserID uint64
 	User User
-	JobTitle string `gorm:"not null"`
+	JobTitle string `gorm:"not null,size:50"`
 	ImagePath string `gorm:"size:100"`
 	WorkExp int `gorm:"not null"`  // woek experience
 	Contact string `gorm:"size:200"` // splited with |
@@ -37,7 +37,7 @@ type OMember struct{
 	Email string `json:"email"`
 }
 
-func (m *Member) FillWithIMember(im IMember) {
+func (m *Member) Fill(im *IMember) {
 	m.JobTitle = im.JobTitle
 	m.WorkExp = im.WorkExp
 	m.Contact = im.Contact
@@ -49,6 +49,16 @@ func (im *IMember) Check() error{
 	}
 	if err:=utils.IsNotInvalidCharacter(im.Contact); err!=nil{
 		return errors.New("invalid Contact:"+ err.Error())
+	}
+
+	if len(im.JobTitle) > 50{
+		return errors.New("too long jobTitle")
+	}
+	if im.WorkExp > 100{
+		return errors.New("too long workExp")
+	}
+	if len(im.Contact) > 200{
+		return errors.New("too long contact")
 	}
 
 	return nil

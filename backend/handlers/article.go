@@ -41,7 +41,7 @@ func CreateArticle(c *fiber.Ctx) error{
 	
 	// create Article and fill it
 	var article models.Article
-	article.FillWithIArticle(al)
+	article.Fill(al)
 	article.UserID = c.Locals("user").(models.User).ID
 	article.TimeCreated = time.Now()
 	article.TimeModified = time.Now()
@@ -138,7 +138,7 @@ func EditArticle(c *fiber.Ctx) error{
 	} 
 
 	// fill the Article
-	article.FillWithIArticle(al)
+	article.Fill(al)
 	article.TimeModified = time.Now()
 
 	// modify Article in database

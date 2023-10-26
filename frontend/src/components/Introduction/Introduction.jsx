@@ -13,6 +13,7 @@ export default function Introduction() {
       });
   }, []);
   const [active, setActive] = useState("frontend");
+  const filteredItems = members.filter((item) => item.jobTitle === active);
   return (
     <div className="w-full py-36  lg:px-28 md:py-48 lg:py-40 xl:py-48 container">
       <div className="w-full h-auto flex font-Ray-ExtraBold text-3xl justify-center gap-1">
@@ -64,7 +65,7 @@ export default function Introduction() {
           </div>
         </div>
         <div className=" w-full px-5 md:px-0 h-auto grid grid-cols-12 mt-14 gap-y-10 lg:gap-12 pb-10 justify-center lg:flex lg:justify-center">
-          {members.map((item) => {
+          {filteredItems.map((item) => {
             return (
               <div className=" flex flex-col items-center col-span-6 lg:col-span-3">
                 <div className="rounded-full lg:w-48 lg:h-48 w-32 h-32">

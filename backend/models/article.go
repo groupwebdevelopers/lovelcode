@@ -55,7 +55,7 @@ type OArticle struct{
 // 	ShortDesc string `json:"shortDesc"`
 // }
 
-func (a *Article) FillWithIArticle(i IArticle){
+func (a *Article) Fill(i IArticle){
 	a.Title = i.Title
 	a.Body = i.Body
 	a.Tags = i.Tags
@@ -72,5 +72,15 @@ func (a *IArticle) Check() error{
 		return errors.New("invalid tags:"+err.Error())
 	}
 
+	if len(a.Body) > 10000{
+		return errors.New("too long body")
+	}
+	if len(a.Tags) > 200{
+		return errors.New("too long tags")
+	}
+	if len(a.ShortDesc) > 100{
+		return errors.New("too long shertDesc")
+	}
+	
 	return nil
 }

@@ -10,7 +10,7 @@ import (
 
 type SettingsDB struct{
 	ID uint64 `gorm:"primaryKey" json:"id"`
-	Key string `gorm:"not null" json:"key"`
+	Key string `gorm:"not null,size:100" json:"key"`
 	Value string `gorm:"not null,size:800" json:"value"`
 }
 
@@ -23,6 +23,7 @@ type Settings struct{
 	TokenExpHours uint64
 	PageLength int
 	SiteFeatures []SiteFeature
+	ImageSaveUrl string
 }
 
 type SiteFeature struct{
@@ -37,6 +38,7 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 	// set default
 	settings.TokenExpHours = 72
 	settings.PageLength = 20
+	settings.ImageSaveUrl = "/../frontend/dist/images/"
 
 	for _, s := range st{
 		if s.Value != ""{
@@ -59,6 +61,8 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 					return settings,errors.New("invalid pageLength in database")
 				}
 				settings.PageLength = i
+			case "imageSaveUrl":
+				settings.ImageSaveUrl = s.Value
 			default:
 				return settings, errors.New("unhandled setting: "+ s.Key+" value:" +s.Value)
 			}
@@ -77,11 +81,17 @@ func (st *ISettingsDB) Check() error{
 	if err:=utils.IsNotInvalidCharacter(st.Key);err!=nil{
 		return errors.New("invalid setting value: "+err.Error())
 	}
+	if len(st.Key) > 100{
+		return errors.New("too long key")
+	}
+	if len(st.Value) > 800{
+		return errors.New("too long value")
+	}
 
 	return nil
 }
 
-func (st *SettingsDB) FillWithISettingsDB(i ISettingsDB) {
+func (st *SettingsDB) Fill(i *ISettingsDB) {
 	st.Key = i.Key
 	st.Value = i.Value
 }
