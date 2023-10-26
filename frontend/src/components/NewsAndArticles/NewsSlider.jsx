@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -6,47 +6,19 @@ import "swiper/css/navigation";
 import { Pagination } from "swiper/modules";
 import { Autoplay, Navigation } from "swiper/modules";
 
-const data = [
-  {
-    img: "images/mainweb/3D/Sec6/image 4.png",
-    title: "نصب جاوا اسکریپ در اندروید با 4 روش جدید 2023",
-    id: 1,
-    para: "چطوری باید جاوا اسکریپت رو بر روی اندروید نصب کنیم ؟ همونطور که می‌دونید در دنیای برنامه نویسی همانند دنیای واقعی، با زبان‌های بسیاری روبه‌رو هستیم. یکی از محبوب‌ترین زبان های زبان جاوا اس...",
-  },
-  {
-    img: "images/mainweb/3D/Sec6/image 5.png",
-    title: "بک اند چیست؟",
-    id: 2,
-    para: "بک اند (Back End) چیست؟ چه اتفاقاتی اون پشت میفته؟ بک اند چیست؟ اگه به حوزه برنامه نویسی وب علاقه داشته باشید، حتما کلمه های فرانت اند و بک اند…...",
-  },
-  {
-    img: "images/mainweb/3D/Sec6/image 6.png",
-    title: "پایتون چیست ؟ چرا پایتون شایسته ترین زبان برنامه نویسی است؟",
-    id: 3,
-    para: "چطوری باید جاوا اسکریپت رو بر روی اندروید نصب کنیم ؟ همونطور که می‌دونید در دنیای برنامه نویسی همانند دنیای واقعی، با زبان‌های بسیاری روبه‌رو هستیم. یکی از محبوب‌ترین زبان های زبان جاوا اس...",
-  },
-  {
-    img: "images/mainweb/3D/Sec6/image 4.png",
-    title: "نصب جاوا اسکریپ در اندروید با 4 روش جدید 2023",
-    id: 4,
-    para: "چطوری باید جاوا اسکریپت رو بر روی اندروید نصب کنیم ؟ همونطور که می‌دونید در دنیای برنامه نویسی همانند دنیای واقعی، با زبان‌های بسیاری روبه‌رو هستیم. یکی از محبوب‌ترین زبان های زبان جاوا اس...",
-  },
-  {
-    img: "images/mainweb/3D/Sec6/image 5.png",
-    title: "بک اند چیست؟",
-    id: 5,
-    para: "بک اند (Back End) چیست؟ چه اتفاقاتی اون پشت میفته؟ بک اند چیست؟ اگه به حوزه برنامه نویسی وب علاقه داشته باشید، حتما کلمه های فرانت اند و بک اند…...",
-  },
-  {
-    img: "images/mainweb/3D/Sec6/image 6.png",
-    title: "پایتون چیست ؟ چرا پایتون شایسته ترین زبان برنامه نویسی است؟",
-    id: 6,
-    para: "چطوری باید جاوا اسکریپت رو بر روی اندروید نصب کنیم ؟ همونطور که می‌دونید در دنیای برنامه نویسی همانند دنیای واقعی، با زبان‌های بسیاری روبه‌رو هستیم. یکی از محبوب‌ترین زبان های زبان جاوا اس...",
-  },
-];
 const NewsSlider = () => {
+  const [articles, setArticles] = useState([]);
+  useEffect(() => {
+    fetch("https://thlearn.iran.liara.run/api/v1/article/get-all/1")
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        setArticles(res.articles);
+        console.log(res)
+      });
+  }, []);
   const swiperRef = useRef(null);
-  console.log(swiperRef.current);
   return (
     <div className="container lg:mt-10 mt-4 lg:px-24 2xl:relative">
       <button
@@ -96,22 +68,22 @@ const NewsSlider = () => {
         }}
         modules={[Autoplay, Navigation]}
       >
-        {data.map((item) => {
+        {articles.map((item) => {
           return (
             <SwiperSlide className="w-full h-auto" key={item.id}>
               <div className="w-auto h-full bg-white rounded-3xl flex flex-col items-center ">
                 <div className="w-auto h-full flex flex-col items-center pt-4 px-4">
                   <img
-                    src={item.img}
-                    alt={item.title}
+                    src={item.ImagePath}
+                    alt={item.Title}
                     className="object-cover xl:w-full xl:h-64 xl:rounded-3xl"
                   />
                   <div className="w-full flex flex-col items-start mt-4 text-second-gray-text-web">
                     <h2 className="font-Ray-ExtraBold text-main-dark-text-web h-12 md:h-8">
-                      {item.title}
+                      {item.Title}
                     </h2>
                     <p className="font-Ray-Medium mt-2 h-32 md:h-28 text-sm md:text-base">
-                      {item.para}
+                      {}
                     </p>
                   </div>
                   <div className="w-full h-auto flex justify-start gap-8 ">

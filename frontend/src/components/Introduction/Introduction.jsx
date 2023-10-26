@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 
 export default function Introduction() {
-  const [users, setUsers] = useState([]);
   const [members, setMembers] = useState([]);
   useEffect(() => {
     fetch("https://thlearn.iran.liara.run/api/v1/member/get-all")
@@ -10,8 +9,7 @@ export default function Introduction() {
         return res.json();
       })
       .then((res) => {
-        setUsers(res.users);
-        setMembers(res.members);
+        setMembers(res.data);
       });
   }, []);
   const [active, setActive] = useState("frontend");
@@ -68,10 +66,6 @@ export default function Introduction() {
         </div>
         <div className=" w-full px-5 md:px-0 h-auto grid grid-cols-12 mt-14 gap-y-10 lg:gap-12 pb-10 justify-center lg:flex lg:justify-center">
           {filteredItems.map((item) => {
-            const usersInMember = users.filter(
-              (user) => user.ID === item.userID
-            );
-            console.log(usersInMember[0].name);
             return (
               <div className=" flex flex-col items-center col-span-6 lg:col-span-3">
                 <div className="rounded-full lg:w-48 lg:h-48 w-32 h-32">
@@ -82,7 +76,7 @@ export default function Introduction() {
                   />
                 </div>
                 <span className="font-Ray-ExtraBold text-main-dark-text-web mt-3">
-                  {usersInMember[0].name}
+                  {item.name}
                 </span>
                 <span className="font-Ray-bold text-main-gray-text-web text-xs pb-2">
                   {item.workExp} سال سابقه کار
