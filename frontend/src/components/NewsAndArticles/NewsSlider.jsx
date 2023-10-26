@@ -70,9 +70,9 @@ const NewsSlider = () => {
       >
         {articles.map((item) => {
           return (
-            <SwiperSlide className="w-full h-auto" key={item.id}>
-              <div className="w-auto h-full bg-white rounded-3xl flex flex-col items-center ">
-                <div className="w-auto h-full flex flex-col items-center pt-4 px-4">
+            <SwiperSlide className="w-full h-auto" key={item.Title}>
+              <div className="w-auto h-full bg-white rounded-3xl flex flex-col items-center shadow-md shadow-slate-600">
+                <div className="w-full h-full flex flex-col items-center pt-4 px-4">
                   <img
                     src={item.ImagePath}
                     alt={item.Title}

@@ -282,7 +282,7 @@ export default function Tariffs() {
           <a className="flex justify-center" href="#">
             <button className="font-Ray-Bold text-sm bg-main-blue-web text-main-light-web px-8 py-3 rounded-xl mt-[8px] flex items-center justify-center gap-2">
               <p>دریافت تماس و مشاوره</p>
-              <i class="bi bi-arrow-left"></i>
+              <i className="bi bi-arrow-left"></i>
             </button>
           </a>
         </div>
@@ -320,16 +320,16 @@ export default function Tariffs() {
                 </div>
                 <div className="col-span-10 flex justify-evenly gap-1 lg:gap-5">
                   <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
-                    <i class="bi bi-x-lg text-2xl"></i>
+                    <i className="bi bi-x-lg text-2xl"></i>
                   </td>
                   <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
-                    <i class="bi bi-x-lg text-2xl"></i>
+                    <i className="bi bi-x-lg text-2xl"></i>
                   </td>
                   <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
-                    <i class="bi bi-x-lg text-2xl"></i>
+                    <i className="bi bi-x-lg text-2xl"></i>
                   </td>
                   <td className="text-main-red-web font-Ray-ExtraBold text-[8px] px-2 py-1 lg:px-11 lg:py-3 sm:text-base flex justify-center w-[173px]">
-                    <i class="bi bi-x-lg text-2xl"></i>
+                    <i className="bi bi-x-lg text-2xl"></i>
                   </td>
                 </div>
               </tr>
