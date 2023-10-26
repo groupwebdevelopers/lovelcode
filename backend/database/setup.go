@@ -46,7 +46,7 @@ func Setup() error{
 		&models.Comment{},
 		&models.ContactUs{},
 		&models.Customer{},
-		&models.MainpagesTexts{},
+		&models.MainpageText{},
 		&models.Statistic{},
 	)
 

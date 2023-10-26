@@ -37,8 +37,8 @@ func GetMainPage(c *fiber.Ctx) error{
 	if err:=utils.IsJustLetter(pageName, "-"); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid pageName:"+err.Error()})
 	}
-	var mpt []models.OMainpagesTexts
-	if err:= database.DB.Model(&models.MainpagesTexts{}).Where(&models.MainpagesTexts{PageName: pageName}).Scan(&mpt).Error; err!=nil{
+	var mpt []models.OMainpageText
+	if err:= database.DB.Model(&models.MainpageText{}).Where(&models.MainpageText{PageName: pageName}).Scan(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
@@ -51,9 +51,9 @@ func GetMainPage(c *fiber.Ctx) error{
 
 
 // POST, auth required, admin required
-func CreateMainpage(c *fiber.Ctx) error{
+func CreateMainpageTexts(c *fiber.Ctx) error{
 
-	var mb models.IMainpagesTexts
+	var mb models.IMainpageText
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -63,8 +63,8 @@ func CreateMainpage(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	
-	// create MainpagesTexts and fill it
-	var mpt models.MainpagesTexts
+	// create MainpageText and fill it
+	var mpt models.MainpageText
 	mpt.Fill(&mb)
 	if err:= database.DB.Create(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -74,19 +74,19 @@ func CreateMainpage(c *fiber.Ctx) error{
 
 // POST, Auth Required, Admin Required, /:id
 // function getting mainpage id and a image
-func UploadMainpagesTextsImage(c *fiber.Ctx) error{
+func UploadMainpageTextImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "mainpagesTextsId")
+	id := utils.GetIntFromParams(c, "MainpageTextId")
 	if id==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"the mainpagesTextsId didn't send"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the MainpageTextId didn't send"})
 	}
 	
 	
-	// check MainpagesTexts is exist
-	var mpt models.MainpagesTexts
-	if err:=database.DB.First(&mpt, &models.MainpagesTexts{ID: id}).Error;err!=nil{
+	// check MainpageText is exist
+	var mpt models.MainpageText
+	if err:=database.DB.First(&mpt, &models.MainpageText{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpagesTexts not found"})
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpageText not found"})
 		}
 	}
 	
@@ -108,45 +108,45 @@ func UploadMainpagesTextsImage(c *fiber.Ctx) error{
 	
 	imageURL := fmt.Sprintf("/images/%s", image)
 
-	if err = database.DB.Model(&models.MainpagesTexts{}).Where(&models.MainpagesTexts{ID: id}).Update("image_path", imageURL).Error; err!=nil{
+	if err = database.DB.Model(&models.MainpageText{}).Where(&models.MainpageText{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"image added"})
 }
 
-// PUT, admin, /:mainpagesTextsId
-func EditMainpagesTexts(c *fiber.Ctx) error{
+// PUT, admin, /:MainpageTextId
+func EditMainpageText(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "mainpagesTextsId")
+	id := utils.GetIntFromParams(c, "mainpageTextId")
 	if id==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"the mainpagesTextsId didn't send"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the mainpageTextId didn't send"})
 	}
 
-	// check MainpagesTexts is exist
-	var mpt models.MainpagesTexts
-	if err:= database.DB.First(&mpt, &models.MainpagesTexts{ID: id}).Error; err!=nil{
+	// check MainpageText is exist
+	var mpt models.MainpageText
+	if err:= database.DB.First(&mpt, &models.MainpageText{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpagesTexts not found"})
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpageText not found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	// get MainpagesTexts from body
-	var mb models.IMainpagesTexts
+	// get MainpageText from body
+	var mb models.IMainpageText
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
-	// check MainpagesTexts validation
+	// check MainpageText validation
 	if err:=mb.Check(); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	} 
 
-	// fill the MainpagesTexts
+	// fill the MainpageText
 	mpt.Fill(&mb)
 
-	// modify MainpagesTexts in database
+	// modify MainpageText in database
 	if err:= database.DB.Updates(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
@@ -155,29 +155,29 @@ func EditMainpagesTexts(c *fiber.Ctx) error{
 }
 
 // GET, admin required
-func GetAllMainpagesTexts(c *fiber.Ctx) error{
-	var MainpagesTextss []models.MainpagesTexts
-	if err:= database.DB.Model(&models.MainpagesTexts{}).Scan(&MainpagesTextss).Error; err!=nil{
+func GetAllMainpageText(c *fiber.Ctx) error{
+	var MainpageTexts []models.MainpageText
+	if err:= database.DB.Model(&models.MainpageText{}).Scan(&MainpageTexts).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no MainpagesTexts found"})
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no MainpageText found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":MainpagesTextss})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":MainpageTexts})
 }
 
 // DELETE, admin, /:id
-func DeleteMainpagesTexts(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "mainpagesTextsId")
+func DeleteMainpageText(c *fiber.Ctx) error{
+	id := utils.GetIntFromParams(c, "mainpageTextId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	var mpt models.MainpagesTexts
-	if err:= database.DB.First(&mpt, &models.MainpagesTexts{ID: id}).Delete(&mpt).Error; err!=nil{
+	var mpt models.MainpageText
+	if err:= database.DB.First(&mpt, &models.MainpageText{ID: id}).Delete(&mpt).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpagesTexts not found"})
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpageText not found"})
 		}
 		return utils.ServerError(c, err)
 	}

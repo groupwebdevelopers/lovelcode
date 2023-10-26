@@ -7,16 +7,16 @@ import (
 
 )
 
-type MainpagesTexts struct{
+type MainpageText struct{
 	ID uint64 `gorm:"primaryKey"`
 	PageName string `gorm:"size:100,not null"`
 	Section string `gorm:"size:300"`
 	Body string `gorm:"size:5000,not null"`
 	ImagePath string `gorm:"size:300"`
-	OrderT int //`gorm:"not null"`
+	OrderT int `gorm:"not null"`
 }
 
-type OMainpagesTexts struct{
+type OMainpageText struct{
 	PageName string `json:"pageName"`
 	Section string `json:"section"`
 	Body string `json:"body"`
@@ -24,7 +24,7 @@ type OMainpagesTexts struct{
 	Order int `json:"order"`
 }
 
-type IMainpagesTexts struct{
+type IMainpageText struct{
 	PageName string `json:"pageName"`
 	Section string `json:"section"`
 	Body string `json:"body"`
@@ -32,7 +32,7 @@ type IMainpagesTexts struct{
 }
 
 
-func (i *IMainpagesTexts) Check() error{
+func (i *IMainpageText) Check() error{
 	if err:= utils.IsNotInvalidCharacter(i.PageName); err!=nil{
 		return errors.New("invalid pageName: " + err.Error())
 	}
@@ -52,7 +52,7 @@ func (i *IMainpagesTexts) Check() error{
 	return nil
 }
 
-func (m *MainpagesTexts) Fill(i *IMainpagesTexts){
+func (m *MainpageText) Fill(i *IMainpageText){
 	m.PageName = i.PageName
 	m.Section = i.Section
 	m.Body = i.Body

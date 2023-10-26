@@ -20,6 +20,9 @@ import (
 func CreateComment(c *fiber.Ctx) error{
 
 	articleTitleUrl := c.Params("articleTitleUrl")
+	if articleTitleUrl == ""{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"article title url didn't sent"})
+	}
 
 	user := c.Locals("user").(models.User)
 
