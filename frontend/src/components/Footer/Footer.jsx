@@ -5,7 +5,7 @@ export default function Footer() {
     <>
       <div className="bg-third-gray-text-web/20 relative">
         <a href="#top" className="hidden absolute -top-3 right-1/2 bg-white w-9 h-9 sm:flex justify-center items-center rounded-full hover:text-white hover:bg-main-blue-web duration-300">
-      <i class="bi bi-chevron-up"></i>
+      <i className="bi bi-chevron-up"></i>
         </a>
         <div className="bg-gradient-to-r from-main-blue-web to-main-violet-web pt-12 pb-5 text-white md:rounded-t-[50px] rounded-t-[10px]">
           <div className="container leading-8">

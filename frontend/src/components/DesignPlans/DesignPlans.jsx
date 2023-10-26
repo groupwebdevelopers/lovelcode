@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DesignPlan from "../DesignPlan/DesignPlan";
 
 export default function DesignPlans() {
+  const [plans , setPlans] = useState([])
+
+  useEffect(() => {
+    fetch("https://thlearn.iran.liara.run/api/v1/plan/get-all-plans-and-features")
+      .then(res=>res.json())
+      .then(data=>console.log(data))
+  }, []);
   const boxses = [
     {
       id: 1,
@@ -104,22 +111,22 @@ export default function DesignPlans() {
           checked: "bi-check-lg",
         },
         {
-          id: 4,
+          id: 5,
           title: "مدیریت آسان محتوا بدون دانش فنی",
           checked: "bi-check-lg",
         },
         {
-          id: 5,
+          id: 6,
           title: "مناسب برای تمامی مشاغل",
           checked: "bi-check-lg",
         },
         {
-          id: 6,
+          id: 7,
           title: "پشتیبانی و هاست NVME رایگان",
           checked: "bi-check-lg",
         },
         {
-          id: 7,
+          id: 8,
           title: "صفحات , محصولات و ایمیل نامحدود",
           checked: "bi-check-lg",
         },

@@ -8,11 +8,11 @@ export default function ContactUs() {
     <div>
       <NavBar />
       <div className="w-full container px-8 flex gap-1 items-center text-main-dark-text-web font-Ray-Bold text-xs md:text-sm">
-        <i class="bi bi-geo-alt text-xs"></i>
+        <i className="bi bi-geo-alt text-xs"></i>
         <Link to={"/"}>
           <span className="cursor-pointer">خانه </span>
         </Link>
-        <i class="bi bi-chevron-left text-xs"></i>
+        <i className="bi bi-chevron-left text-xs"></i>
         <span className="cursor-pointer">تماس با ما</span>
       </div>
       <div className="container w-full flex flex-col items-center">
@@ -57,7 +57,7 @@ export default function ContactUs() {
         <ul className="w-full flex justify-between md:px-[5rem] lg:px-[8rem] px-5 py-10 rounded-3xl bg-white flex-grow flex-wrap gap-y-4 gap-x-4">
           <li className=" flex flex-col items-start">
             <div className="font-Ray-Bold text-main-blue-web text-lg flex gap-2 items-center">
-              <i class="bi bi-stopwatch text-base"></i>
+              <i className="bi bi-stopwatch text-base"></i>
               <span>ساعت کاری</span>
             </div>
             <span className="font-Ray-Bold text-sm mt-1">
@@ -66,7 +66,7 @@ export default function ContactUs() {
           </li>
           <li className=" flex flex-col items-start">
             <div className="font-Ray-Bold text-main-blue-web text-lg flex gap-2 items-center">
-              <i class="bi bi-envelope text-base"></i>
+              <i className="bi bi-envelope text-base"></i>
               <span>ایمیل</span>
             </div>
             <span className="font-Ray-Bold text-sm mt-1">
@@ -75,14 +75,14 @@ export default function ContactUs() {
           </li>
           <li className=" flex flex-col items-start">
             <div className="font-Ray-Bold text-main-blue-web text-lg flex gap-2 items-center">
-              <i class="bi bi-telephone-forward text-base"></i>
+              <i className="bi bi-telephone-forward text-base"></i>
               <span>شماره پشتیبان واتساپ</span>
             </div>
             <span className="font-Ray-Bold text-sm mt-1">091212121212</span>
           </li>
           <li className=" flex flex-col items-start">
             <div className="font-Ray-Bold text-main-blue-web text-lg flex gap-2 items-center">
-              <i class="bi bi-geo-alt text-base"></i>
+              <i className="bi bi-geo-alt text-base"></i>
               <span>آدرس شرکت</span>
             </div>
             <span className="font-Ray-Bold text-sm mt-1">

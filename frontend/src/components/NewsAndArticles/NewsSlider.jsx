@@ -110,7 +110,7 @@ const NewsSlider = () => {
                   </div>
                 </div>
                 <button className="w-full h-14 flex justify-center items-center gap-2 mt-2 md:mt-4 border-t border-solid text-second-gray-text-web hover:bg-main-blue-web hover:text-main-bg-web transition-all duration-300 rounded-b-2xl">
-                  <i class="bi bi-search"></i>
+                  <i className="bi bi-search"></i>
                   <span className="font-Ray-Medium ">مطالعه مقاله</span>
                 </button>
               </div>
