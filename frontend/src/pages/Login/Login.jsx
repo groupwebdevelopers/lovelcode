@@ -58,7 +58,7 @@ export default function Login() {
               className="bg-gray-normal rounded-xl w-full h-10 sm:h-12 outline-none font-Ray-Medium text-sm px-5"
               placeholder="رمز عبور"
             />
-            <i class="absolute top-0 bottom-0 left-4 flex items-center opacity-60 cursor-pointer bi bi-eye"></i>
+            <i className="absolute top-0 bottom-0 left-4 flex items-center opacity-60 cursor-pointer bi bi-eye"></i>
           </div>
         </div>
         <div className="flex gap-2 text-main-gray-text-web mb-6">
@@ -67,7 +67,7 @@ export default function Login() {
         </div>
         <div onClick={submitHandler} className="bg-main-blue-web h-10 sm:h-12 rounded-xl flex justify-center items-center text-white text-xs sm:text-sm gap-2 mb-7">
           وارد شوید
-          <i class="text-lg bi bi-arrow-left-short"></i>
+          <i className="text-lg bi bi-arrow-left-short"></i>
         </div>
         <div className="grid grid-cols-2 gap-2 sm:gap-6 h-10 sm:h-12 mb-6 sm:mb-9">
           <div className="bg-gray-normal rounded-xl text-xs flex justify-center items-center text-main-gray-text-web font-Ray-Bold">
@@ -91,7 +91,7 @@ export default function Login() {
           <div className="h-px w-full grow bg-main-dark-text-web"></div>
         </div>
         <div className="h-10 sm:h-12 bg-gray-normal rounded-xl flex justify-center items-center text-sm text-main-gray-text-web font-Ray-Bold gap-2">
-          <i class="bi bi-google flex items-center justify-center"></i>
+          <i className="bi bi-google flex items-center justify-center"></i>
           ورود با گوگل
         </div>
       </div>

@@ -16,7 +16,7 @@ const AccordionComp = () => {
       <div className="w-full  bg-white px-3 py-5 rounded-xl h-[45rem] hidden md:block">
         <div className="px-2 mb-2">
           <button className="w-full bg-main-blue-web text-white py-4 font-Ray-Bold text-sm rounded-xl">
-            <i class="bi bi-funnel ml-2"></i>
+            <i className="bi bi-funnel ml-2"></i>
             <span>دسته بندی مقالات</span>
           </button>
         </div>
@@ -167,7 +167,7 @@ const AccordionComp = () => {
       </div>
       <div className="col-span-12 px-2 mb-2 md:hidden">
         <button className="w-full bg-main-blue-web text-white py-4 font-Ray-Bold text-sm rounded-xl">
-          <i class="bi bi-funnel ml-2"></i>
+          <i className="bi bi-funnel ml-2"></i>
           <span>دسته بندی مقالات</span>
         </button>
       </div>
