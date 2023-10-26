@@ -28,12 +28,31 @@ func CreateComment(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
+	// check article is exist
 	var articleID uint64
 	if err:= database.DB.Model(&models.Article{}).Select("id").Where(models.Article{TitleUrl: articleTitleUrl}).Scan(&articleID).Error;err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"article not found"})
 		}
 		return utils.ServerError(c, err)
+	}
+	if articleID == 0{
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"article not found"})
+	}
+
+	if mb.CommentAnswerID != 0{
+		// check comment is exist
+		var commentID uint64
+		if err:= database.DB.Model(&models.Comment{}).Select("id").Where(models.Comment{ID: mb.CommentAnswerID}).Scan(&commentID).Error;err!=nil{
+			if err == gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
+			}
+			return utils.ServerError(c, err)
+		}
+		if commentID == 0{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
+		}
+
 	}
 
 	// check check validation
@@ -81,7 +100,23 @@ func EditComment(c *fiber.Ctx) error{
 	// check Comment validation
 	if err:=mb.Check(); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
-	} 
+	}
+	
+	if mb.CommentAnswerID != 0{
+		// check comment is exist
+		var commentID uint64
+		if err:= database.DB.Model(&models.Comment{}).Select("id").Where(models.Comment{ID: mb.CommentAnswerID}).Scan(&commentID).Error;err!=nil{
+			if err == gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
+			}
+			return utils.ServerError(c, err)
+		}
+		if commentID == 0{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
+		}
+
+	}
+
 
 	// fill the Comment
 	Comment.Fill(&mb)
