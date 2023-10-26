@@ -13,6 +13,7 @@ type WorkSample struct{
 	ID uint64 `gorm:"primaryKey"`
 	Title string `gorm:"not null"`
 	ImagePath string `gorm:"size:400"`
+	LogoPath string `gorm:"size:400"`
 	SiteUrl string `gorm:"size:200"`
 	Description string `gorm:"size:800,not null"`
 	IsFeatured bool
@@ -36,9 +37,11 @@ type OWorkSample struct{
 	Title string `json:"title"`
 	Description string `json:"description"`
 	ImagePath string `json:"imagePath"`
+	LogoPath string `json:"logoPath"`
 	SiteUrl string `json:"siteUrl"`
 	DoneTime string `json:"doneTime"`
 	IsFeatured bool `json:"isFeatured"`
+	Type string `json:"type"`
 }
 
 func (w *WorkSample) Fill(i *IWorkSample){

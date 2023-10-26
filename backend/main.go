@@ -11,13 +11,15 @@ import (
 	"lovelcode/router"
 	"lovelcode/database"
 	"lovelcode/utils/token"
+	"lovelcode/utils"
+	"lovelcode/handlers"
 )
 
 
 func main(){
 
 	token.Setup()
-
+	utils.Setup(handlers.LogFunction)
 	// engine := html.New("../frontend", ".html")
 	
 	app:= fiber.New()//fiber.Config{
