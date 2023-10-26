@@ -9,11 +9,12 @@ import (
 
 type Plan struct{
 	ID uint64 `gorm:"primaryKey"`
-	Title string `gorm:"not null"`
+	Title string `gorm:"not null,size:100,unique"`
 	Price uint32 `gorm:"not null"`
 	ImagePath string `gorm:"size:200"`
-	Type string
+	Type string `gorm:"size:50"`
 	IsFeatured bool
+	IsCompare bool
 
 	TimeCreated time.Time `gorm:"not null"`
 	TimeModified time.Time `gorm:"not null"`
@@ -23,8 +24,8 @@ type Feature struct{
 	ID uint64 `gorm:"primaryKey"`
 	PlanID uint64
 	Plan Plan
-	Name string `gorm:"not null"`
-	Value string
+	Name string `gorm:"not null,size:200"`
+	Value string `gorm:"size:100"`
 	// Price uint32
 	IsHave bool `gorm:"not null"` // the plan is have this feature
 	IsFeatured bool
@@ -48,6 +49,7 @@ type IPlan struct{
 	Price uint32 `json:"price"`
 	Type string `json:"type"`
 	IsFeatured bool `json:"isFeatured"`
+	IsCompare bool `json:"isCompare"`
 }
 
 type OPlan struct{
@@ -56,6 +58,7 @@ type OPlan struct{
 	ImagePath string `json:"imagePath"`
 	Type string `json:"type"`
 	IsFeatured bool `json:"isFeatured"`
+	IsCompare bool `json:"isCompare"`
 }
 
 type OFeature struct{
@@ -71,20 +74,23 @@ func (f *IFeature) Check() error{
 		return errors.New("invalid feature name:"+err.Error())
 	}
 	if f.Value != ""{
-	if err:=utils.IsNotInvalidCharacter(f.Value); err!=nil{
-		return errors.New("invalid feature value:"+err.Error())
+		if err:=utils.IsNotInvalidCharacter(f.Value); err!=nil{
+			return errors.New("invalid feature value:"+err.Error())
+		}
 	}
-}
+	if len(f.Name) > 200{
+		return errors.New("too long name")
+	}
+	if len(f.Value) > 100{
+		return errors.New("too long value")
+	}
 	// if f.Price < 0{
 		// return errors.New("invalid price")
-	// }
-	// if f.PlanID == 0{
-	// 	return errors.New("invalid planID")
 	// }
 	return nil
 }
 
-func (f *Feature) FillWithIFeature(i IFeature){
+func (f *Feature) Fill(i *IFeature){
 	// f.ID = i.ID
 	f.Name = i.Name
 	f.Value = i.Value
@@ -100,15 +106,24 @@ func (p *IPlan) Check() error{
 	if err:=utils.IsNotInvalidCharacter(p.Type); err!=nil{
 		return errors.New("invalid plan type:"+err.Error())
 	}
+
+	if len(p.Title) > 100{
+		return errors.New("too long title")
+	}
+	if len(p.Type) > 50{
+		return errors.New("too long type")
+	}
+
 	if p.Price <= 0{
 		return errors.New("invalid price")
 	}
 	return nil
 }
 
-func (p *Plan) FillWithIPlan(ce IPlan) {
+func (p *Plan) Fill(ce *IPlan) {
 	p.Title = ce.Title
 	p.Price = ce.Price
 	p.Type = ce.Type
 	p.IsFeatured = ce.IsFeatured
+	p.IsCompare = ce.IsCompare
 }

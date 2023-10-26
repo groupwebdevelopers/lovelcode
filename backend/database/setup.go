@@ -43,6 +43,11 @@ func Setup() error{
 		&models.SettingsDB{},
 		&models.Temp{},
 		&models.WorkSample{},
+		&models.Comment{},
+		&models.ContactUs{},
+		&models.Customer{},
+		&models.MainpagesTexts{},
+		&models.Statistics{},
 	)
 
 	if err!=nil{

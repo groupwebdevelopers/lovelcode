@@ -45,7 +45,7 @@ func CreateMember(c *fiber.Ctx) error{
 	
 	// create member and fill it
 	var member models.Member
-	member.FillWithIMember(mb)
+	member.Fill(&mb)
 	member.UserID = id
 	member.TimeCreated = time.Now()
 	member.TimeModified = time.Now()
@@ -73,6 +73,19 @@ func UploadMemberImage(c *fiber.Ctx) error{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Member not found"})
 		}
 	}
+
+	// delete last image if exist
+	if member.ImagePath!=""{
+		if strings.Contains(member.ImagePath, "*"){
+			return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
+		}
+		if member.ImagePath != ""{
+			err := os.Remove(fmt.Sprintf(".%s", member.ImagePath))
+			if err!=nil{
+				return utils.ServerError(c, err)
+			}
+		}
+	}
 	
 
 	file, err := c.FormFile("i")
@@ -84,7 +97,7 @@ func UploadMemberImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))
+	err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
 
 	if err!=nil{
 		return utils.ServerError(c, err)
@@ -128,7 +141,7 @@ func EditMember(c *fiber.Ctx) error{
 	} 
 
 	// fill the member
-	member.FillWithIMember(mb)
+	member.Fill(&mb)
 	member.TimeModified = time.Now()
 
 	// modify member in database

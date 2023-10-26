@@ -34,22 +34,23 @@ DELETE /pdr/delete/:id  (admin required)
 
 # Plan
 
-GET	/plan/get-all-plans
+GET	/admin/plan/get-all-plans
 
-GET	/plan/get-plan/:planId
+GET	/admin/plan/get-plan/:planId
 
 GET	/plan/get-all-features/:planId
 
-GET	/plan/get-feature/:featureId
+GET	/admin/plan/get-feature/:featureId
 
 GET /plan/get-all-plans-and-features
+
+GET /plan/get-featured
 
 POST /admin/plan/create                       json(name, price)
 
 POST /admin/plan/create-features/:planId      json(name, price, isHave)
 
-POST /admin/upload/plan/image/:planId  (Content-Type: multipart/form-data) (with FormData js object) (without base 
-url)
+POST /admin/upload/plan/image/:planId  (Content-Type: multipart/form-data) (with FormData js object) (without /api/v1)
 
 PUT /admin/plan/edit/:planId                  json(name, price)
 
@@ -68,6 +69,8 @@ GET /member/get/:memberId
 
 POST /admin/member/create
 
+POST /admin/upload/member/image/:memberId (without /api/v1)
+
 Put /admin/member/edit/:memberId
 
 Delete /admin/member/delete/:memberId
@@ -81,6 +84,8 @@ GET /article/get/:articleTitleUrl (articleTitleUrl is in json)
 GET /article/get-featured
 
 POST /admin/article/create              josn(title, body, tags, shortDesc) (tags splited with | example: 'test|art')
+
+POST /admin/upload/article/image/:articleId (without /api/v1)
 
 PUT /admin/article/edit/:articleId      josn(title, body, tags, shortDesc)
 
@@ -97,9 +102,53 @@ GET /admin/works-sample/get/:workSampleId
 
 POST /admin/work-sample/create              josn(title, imagePath, siteUrl, description, isFeatured)
 
+POST /admin/upload/work-smaple/image/:workSampleId  (without /api/v1)
+
 PUT /admin/article/edit/:articleId          josn(title, imagePath, siteUrl, description, isFeatured)
 
 DELETE /admin/article/delete/:articleId
 
+
 # Site Features
 GET /site-features/get-all
+
+
+# Comments
+
+GET /comment/get-all-for-article/:articleTitleUrl
+
+POST /comment/create json(body)
+
+PUT /comment/edit/:id json(body)
+
+DELETE /comment/delete/:id
+
+# Contactus
+
+GET /contactus/get-all-for-user
+
+GET /contactus/get/:contactusTitle
+
+GET /admin/contactus/get-all
+
+POST /contactus/create json(title, body)
+
+PUT /contactus/edit/:titleUrl json(title, body)
+
+DELETE /contactus/delete/:titleUrl
+
+# Customer
+
+GET /customer/get-all
+
+GET /customer/get-feautred
+
+GET /admin/customer/get/:customerId
+
+POST /admin/customer/create json(name, siteUrl, isFeatured)
+
+POST /admin/upload/customer/image/:customerId (without /api/v1)
+
+PUT /admin/customer/edit/:customerId json(name, siteUrl, isFeatured)
+
+DELETE /admin/customer/delete/:customerId

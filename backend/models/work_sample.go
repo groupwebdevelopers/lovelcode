@@ -16,6 +16,7 @@ type WorkSample struct{
 	SiteUrl string `gorm:"size:200"`
 	Description string `gorm:"size:800,not null"`
 	IsFeatured bool
+	Type string
 
 	DoneTime time.Time
 }
@@ -27,6 +28,7 @@ type IWorkSample struct{
 	SiteUrl string `json:"siteUrl"`
 	DoneTime string `json:"doneTime"`
 	IsFeatured bool `json:"isFeatured"`
+	Type string `json:"type"`
 }
 
 // output article for user
@@ -39,19 +41,28 @@ type OWorkSample struct{
 	IsFeatured bool `json:"isFeatured"`
 }
 
-func (w *WorkSample) FillWithIWorkSample(i IWorkSample){
+func (w *WorkSample) Fill(i *IWorkSample){
 	w.Title = i.Title
 	w.Description = i.Description
 	w.SiteUrl = i.SiteUrl
 	w.IsFeatured = i.IsFeatured
 	w.DoneTime = utils.ConvertToMiladiTime(utils.ConvertStringToTime(i.DoneTime, time.FixedZone("Tehran", 3.5 * 60 *60)))
+	w.Type = i.Type
 }
 
 func (a *IWorkSample) Check() error{
 	if err:= utils.IsNotInvalidCharacter(a.Title, "/"); err!=nil{
 		return errors.New("invalid titile:" + err.Error())
 	}
+
+	if len(a.Description) > 800{
+		return errors.New("too long desctiption")
+	}
+	if len(a.SiteUrl) > 200{
+		return errors.New("too long body")
+	}
 	
+	if a.DoneTime != ""{
 	// doneTime format year-month-day
 	splited := strings.Split(a.DoneTime, "-")
 	if len(splited) < 3{
@@ -62,6 +73,9 @@ func (a *IWorkSample) Check() error{
 		if err!=nil{
 			return errors.New("invalid doneTime")
 		}
+	}
+	}else{
+		return errors.New("empty doneTime")
 	}
 
 	return nil
