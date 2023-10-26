@@ -110,7 +110,7 @@ DELETE /admin/article/delete/:articleId
 
 
 # Site Features
-GET /site-features/get-all
+GET /mainpage/site-feature/
 
 
 # Comments
