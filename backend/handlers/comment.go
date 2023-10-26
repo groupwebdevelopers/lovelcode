@@ -43,7 +43,7 @@ func CreateComment(c *fiber.Ctx) error{
 	if mb.CommentAnswerID != 0{
 		// check comment is exist
 		var commentID uint64
-		if err:= database.DB.Model(&models.Comment{}).Select("id").Where(models.Comment{ID: mb.CommentAnswerID}).Scan(&commentID).Error;err!=nil{
+		if err:= database.DB.Model(&models.Comment{}).Select("id").Where(models.Comment{ID: mb.CommentAnswerID, ArticleID: articleID}).Scan(&commentID).Error;err!=nil{
 			if err == gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
 			}
@@ -117,6 +117,10 @@ func EditComment(c *fiber.Ctx) error{
 
 	}
 
+	// check the commentAnswerID is changed
+	if Comment.CommentAnswerID != mb.CommentAnswerID{
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"you don't have access to change commentAnswerID"})
+	}
 
 	// fill the Comment
 	Comment.Fill(&mb)
