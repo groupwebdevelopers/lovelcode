@@ -24,9 +24,15 @@ func GetIntFromParams(c *fiber.Ctx, name string) uint64{
 // 3 means not found
 func CheckAdminPermision(permisions string, p string) uint8{
 	//  check hacker trap
+	if len(permisions) < 15{
+		return 0
+	}
+	
 	if p[2] == '1'{
 		return 2
 	}
+
+
 	switch p{
 	case "createArticle":
 		return (permisions[0]-'0')
@@ -42,10 +48,16 @@ func CheckAdminPermision(permisions string, p string) uint8{
 		return (permisions[6]-'0')
 	case "work-sample":
 		return (permisions[7]-'0')
+	case "customer":
+		return (permisions[8]-'0')
+	case "deleteComment":
+		return (permisions[9]-'0')
 	case "plan":
 		return (permisions[10]-'0')
 	case "member":
 		return (permisions[11]-'0')
+	case "mainpage":
+		return (permisions[12]-'0')
 	}
 
 	return 3

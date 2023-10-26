@@ -73,16 +73,16 @@ func Route(app *fiber.App) {
 	
 	// comment
 	commentAuthReq := apiV1.Group("/comment", handlers.AuthRequired)
-	commentAuthReq.Post("/create", handlers.CreateComment)
-	commentAuthReq.Put("/edit/:id", handlers.EditComment)
-	commentAuthReq.Delete("/delete/:id", handlers.DeleteComment)
+	commentAuthReq.Post("/create/:articleTitleUrl", handlers.CreateComment)
+	commentAuthReq.Put("/edit/:commentId", handlers.EditComment)
+	commentAuthReq.Delete("/delete/:commentId", handlers.DeleteComment)
 	
 	// contactus
 	contactusAuthReq := apiV1.Group("/contactus", handlers.AuthRequired)
 	contactusAuthReq.Post("/create", handlers.CreateContactUs)
 	contactusAuthReq.Get("/get/:contactUsTitle", handlers.GetContactUsByTitle)
-	contactusAuthReq.Put("/edit/:id", handlers.EditContactUs)
-	contactusAuthReq.Delete("/delete/:id", handlers.DeleteContactUs)
+	contactusAuthReq.Put("/edit/:contactusId", handlers.EditContactUs)
+	contactusAuthReq.Delete("/delete/:contactusId", handlers.DeleteContactUs)
 	
 	
 	// admin required
@@ -156,6 +156,13 @@ func Route(app *fiber.App) {
 	statisticAdminReq.Put("/edit/:statisticId", handlers.EditStatistic)
 	statisticAdminReq.Delete("/delete/:statisticId", handlers.DeleteStatistic)
 	statisticAdminReq.Get("/get-all/", handlers.GetAllStatistics)
+	
+	// mainpage
+	mainpageAdminReq := apiV1.Group("/admin/mainpage", handlers.AdminRequired)
+	mainpageAdminReq.Post("/create/:mainpageTextId", handlers.CreateMainpageTexts)
+	mainpageAdminReq.Put("/edit/:mainpageTextId", handlers.EditMainpageText)
+	mainpageAdminReq.Delete("/delete/:mainpageTextId", handlers.DeleteMainpageText)
+	mainpageAdminReq.Get("/get-all/", handlers.GetAllMainpageText)
 	
 
 	// file upload admin required

@@ -12,6 +12,7 @@ type Comment struct{
 	User User
 	ArticleID uint64
 	Article Article
+	CommentAnswerID uint64
 
 	Body string `gorm:"size:100"`
 
@@ -21,16 +22,19 @@ type Comment struct{
 
 type IComment struct{
 	Body string `json:"body"`
+	CommentAnswerID uint64 `json:"commentAnswerID"`
 }
 
 type OComment struct{
 	Body string `json:"body"`
 	Name string  `json:"name"`
 	Family string `json:"family"`
+	CommentAnswerID uint64 `json:"commentAnswerID"`
 }
 
 func (c *Comment) Fill(i *IComment){
 	c.Body = i.Body
+	c.CommentAnswerID = i.CommentAnswerID
 }
 
 func (i *IComment) Check() error{

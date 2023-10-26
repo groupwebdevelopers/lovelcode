@@ -117,9 +117,9 @@ GET /mainpage/site-feature/
 
 GET /comment/get-all-for-article/:articleTitleUrl
 
-POST /comment/create json(body)
+POST /comment/create json(body, commentAnswerID(0 if not answer and id of comment for answer it))
 
-PUT /comment/edit/:id json(body)
+PUT /comment/edit/:id json(body, commentAnswerID(0 if not answer and id of comment for answer it))
 
 DELETE /comment/delete/:id
 
