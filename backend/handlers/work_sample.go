@@ -38,7 +38,7 @@ func GetAllWorkSamples(c *fiber.Ctx) error{
 		WorkSamples[i].DoneTime = strings.Split(utils.ConvertToPersianTime(utils.ConvertStringToTime(date, time.UTC)).String(), " ")[0]
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"WorkSamples":WorkSamples}) //user
+	return utils.JSONResponse(c, 200, fiber.Map{"data":WorkSamples}) //user
 }
 
 
