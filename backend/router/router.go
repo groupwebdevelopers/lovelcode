@@ -34,12 +34,12 @@ func Route(app *fiber.App) {
 	
 	// article
 	apiV1.Get("/article/get/:articleTitleUrl", handlers.GetArticle)
-	apiV1.Get("/article/get-all/:page", handlers.GetAllArticlesTitles)
+	apiV1.Get("/article/get-all", handlers.GetAllArticlesTitles)
 	apiV1.Get("/article/get-featured", handlers.GetFeaturedArticlesTitle)
 	
 	
 	// work sample
-	apiV1.Get("/work-sample/get-all/:page", handlers.GetAllWorkSamples)
+	apiV1.Get("/work-sample/get-all", handlers.GetAllWorkSamples)
 	apiV1.Get("/work-sample/get-featured", handlers.GetFeaturedWorkSamples)
 	
 	// get features
