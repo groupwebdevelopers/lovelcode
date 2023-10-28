@@ -26,6 +26,7 @@ type IComment struct{
 }
 
 type OComment struct{
+	ID uint64 `json:"id"`
 	Body string `json:"body"`
 	Name string  `json:"name"`
 	Family string `json:"family"`

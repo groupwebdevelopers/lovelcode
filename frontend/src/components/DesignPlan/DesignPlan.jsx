@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import RequestRegistration from "../RequestRegistration/RequestRegistration";
 export default function DesignPlan({color,vector,title,price,list}) {
+  const [isShowModal , setIsShowModal] = useState(false)
   return (
     <>
       <div className="flex justify-center">
@@ -40,12 +42,13 @@ export default function DesignPlan({color,vector,title,price,list}) {
             
           </div>
           </div>
-          <Link className="flex items-center justify-center gap-2 bg-main-blue-web text-white px-14 py-[14px] rounded-[12px] " to={'#'}>
-            <button className="text-[14px] font-Ray-Bold">ثبت درخاست</button>
+          <Link onClick={()=>setIsShowModal(priv=>!priv)} className="flex items-center justify-center gap-2 bg-main-blue-web text-white px-14 py-[14px] rounded-[12px] " to={'#'}>
+            <button  className="text-[14px] font-Ray-Bold">ثبت درخاست</button>
             <i className="bi bi-arrow-left"></i>
           </Link>
         </div>
       </div>
+      <RequestRegistration></RequestRegistration>
     </>
   );
 }

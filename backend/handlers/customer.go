@@ -16,6 +16,44 @@ import (
 	"lovelcode/utils"
 )
 
+/////////////////  public    //////////////////////////////////
+
+
+// GET
+func GetAllCustomers(c *fiber.Ctx) error{
+	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
+	if err != nil {
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
+	}
+
+	var Customers []models.OCustomer
+	if err:= database.DB.Offset((page-1)*pageLimit).Limit(pageLimit).Find(&Customers).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
+}
+
+
+// GET
+func GetFeaturedCustomers(c *fiber.Ctx) error{
+	var Customers []models.OCustomer
+	if err:= database.DB.Find(&Customers, models.Customer{IsFeatured: true}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
+}
+
+
+////////////////////   admin    /////////////////////////////////////
+
 // POST, auth required, admin required 
 func CreateCustomer(c *fiber.Ctx) error{
 
@@ -45,7 +83,7 @@ func CreateCustomer(c *fiber.Ctx) error{
 // function getting Customer id and a image
 func UploadCustomerImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the CustomerId didn't send"})
 	}
@@ -100,7 +138,7 @@ func UploadCustomerImage(c *fiber.Ctx) error{
 // PUT, admin, /:CustomerId
 func EditCustomer(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the CustomerId didn't send"})
 	}
@@ -137,38 +175,11 @@ func EditCustomer(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfully modified"})
 }
 
-// GET
-func GetAllCustomers(c *fiber.Ctx) error{
-	var Customers []models.OCustomer
-	if err:= database.DB.Find(&Customers).Error; err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
-}
-
-
-// GET
-func GetFeaturedCustomers(c *fiber.Ctx) error{
-	var Customers []models.OCustomer
-	if err:= database.DB.Find(&Customers, models.Customer{IsFeatured: true}).Error; err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
-}
-
 
 // GET, admin, /:id
 func GetCustomer(c *fiber.Ctx) error{
 	
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -187,7 +198,7 @@ func GetCustomer(c *fiber.Ctx) error{
 
 // DELETE, admin, /:id
 func DeleteCustomer(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

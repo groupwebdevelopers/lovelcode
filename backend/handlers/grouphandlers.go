@@ -25,69 +25,29 @@ func ApiOnly(c *fiber.Ctx) error{
 }
 
 func AuthRequired(c *fiber.Ctx) error{
-	token := c.Cookies("token", "")
-	if token==""{
-		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-	}
-
-	var user models.User
-	// user, err := utilstoken.VerifyJWTToken(token)
-	// if err!=nil{
-		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
-	// }
-	// var user models.User = models.User{Token: token}
-	if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-		}
+	status, mp, err := authRequired(c)
+	if err!=nil{
 		return utils.ServerError(c, err)
 	}
-
-	// check banned
-	if user.IsBanned{
-		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
+	if mp!=nil{
+		return utils.JSONResponse(c, status, mp)
 	}
 
-	// check token
-	if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
-		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-	}
-
-	c.Locals("user", user)
 	return c.Next()
 }
 
 func AdminRequired(c *fiber.Ctx) error{
-	// auth required
-	token := c.Cookies("token", "")
-	if token==""{
-		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-	}
 
-	var user models.User
-	// user, err := utilstoken.VerifyJWTToken(token)
-	// if err!=nil{
-		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
-	// }
-	// var user models.User = models.User{Token: token}
-	if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-		}
+	// auth requried
+	status, mp, err := authRequired(c)
+	if err!=nil{
 		return utils.ServerError(c, err)
 	}
-
-	// check banned
-	if user.IsBanned{
-		return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
+	if mp!=nil{
+		return utils.JSONResponse(c, status, mp)
 	}
 
-	// check token
-	if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
-		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-	}
-
-	c.Locals("user", user)
+	user := c.Locals("user").(models.User)
 
 	// check user have permision
 	splited := strings.Split(c.OriginalURL(), "/")
@@ -100,14 +60,23 @@ func AdminRequired(c *fiber.Ctx) error{
 		if adminCode == 2{
 			hban(user)
 		}
-		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"}, string(field))
+		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
 	}
+
 	return c.Next()
 }
 
 func AdminUploadImage(c *fiber.Ctx) error{
-	ct, err := c.GetReqHeaders()["Content-Type"]
-	fmt.Println(ct, err)
+	
+	// auth required
+	status, mp, err := authRequired(c)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+	if mp!=nil{
+		return utils.JSONResponse(c, status, mp)
+	}
+
 	token := c.Cookies("token", "")
 	if token==""{
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
@@ -117,26 +86,8 @@ func AdminUploadImage(c *fiber.Ctx) error{
 	// if err!=nil{
 		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
 		// }
-	var user models.User
-		if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
-			if err==gorm.ErrRecordNotFound{
-				return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-			}
-			return utils.ServerError(c, err)
-		}
 		
-		// check banned
-		if user.IsBanned{
-			return utils.JSONResponse(c, 403, fiber.Map{"error":"you are banned!"})
-		}
-		
-		// check token
-		if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
-			return utils.JSONResponse(c, 401, fiber.Map{"error":"authentication required"})
-		}
-		
-		c.Locals("user", user)
-		user= c.Locals("user").(models.User)
+		user:= c.Locals("user").(models.User)
 
 		splited := strings.Split(c.OriginalURL(), "/")
 		if len(splited) < 4{
@@ -155,6 +106,16 @@ func AdminUploadImage(c *fiber.Ctx) error{
 
 func AdminArticleRequired(c *fiber.Ctx) error{
 
+	// auth requried
+	status, mp, err := authRequired(c)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+	if mp!=nil{
+		return utils.JSONResponse(c, status, mp)
+	}
+
+	
 	// check user have permision
 	user:= c.Locals("user").(models.User)
 	splited := strings.Split(c.OriginalURL(), "/")
@@ -199,4 +160,41 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 	}
 	return c.Next()
 
+}
+
+
+func authRequired(c *fiber.Ctx) (int, fiber.Map, error){
+// auth required
+	token := c.Cookies("token", "")
+	if token==""{
+		return 401, fiber.Map{"error":"authentication required"}, nil
+	}
+
+	var user models.User
+	// user, err := utilstoken.VerifyJWTToken(token)
+	// if err!=nil{
+		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
+	// }
+	// var user models.User = models.User{Token: token}
+	if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return 401, fiber.Map{"error":"authentication required"},nil
+		}
+		return 500, fiber.Map{}, err
+	}
+
+	// check banned
+	if user.IsBanned{
+		return 403, fiber.Map{"error":"you are banned!"}, nil
+	}
+
+	// check token
+	if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
+		return 401, fiber.Map{"error":"authentication required"}, nil
+	}
+
+	c.Locals("user", user)
+
+		
+	return 200, nil, nil
 }

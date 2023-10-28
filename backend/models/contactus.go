@@ -8,24 +8,34 @@ import (
 
 type ContactUs struct{
 	ID uint64 `gorm:"primaryKey"`
-	UserID uint64
-	User User
 	Title string `gorm:"size:100,not null"`
-	TitleUrl string `gorm:"size:100,not null,unique"`
 	Body string `gorm:"size:400,not null"`
+	Email string `gorm:"size:400,not null"`
+	Number uint32
+
+	IsSeen bool
+	
 	TimeCreated time.Time
-	TimeModified time.Time
+	// TimeModified time.Time
 }
 
 type IContactUs struct{
 	Title string `json:"title"`
 	Body string `json:"body"`
+	Email string `json:"email"`
+	Number uint32 `json:"number"`
 }
 
+
 type OContactUs struct{
+	ID uint64 `json:"id"`
 	Title string `json:"title"`
 	Body string `json:"body"`
 	TitleUrl string `json:"titleUrl"`
+	Email string `json:"email"`
+	Number uint64 `json:"number"`
+	IsSeen bool `json:"isSeen"`
+	TimeCreated time.Time
 }
 
 func (i *IContactUs) Check() error{
@@ -49,4 +59,6 @@ func (i *IContactUs) Check() error{
 func (c *ContactUs) Fill(i *IContactUs){
 	c.Title = i.Title
 	c.Body = i.Body
+	c.Email = i.Email
+	c.Number = i.Number
 }

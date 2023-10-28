@@ -55,7 +55,7 @@ func CreateStatistic(c *fiber.Ctx) error{
 // PUT, admin, /:StatisticsId
 func EditStatistic(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "statisticId")
+	id := utils.GetIDFromParams(c, "statisticId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the StatisticsId didn't send"})
 	}
@@ -106,7 +106,7 @@ func GetAllStatistics(c *fiber.Ctx) error{
 
 // DELETE, admin, /:id
 func DeleteStatistic(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "statisticId")
+	id := utils.GetIDFromParams(c, "statisticId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

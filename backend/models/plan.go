@@ -53,6 +53,7 @@ type IPlan struct{
 }
 
 type OPlan struct{
+	ID uint64 `json:"id"`
 	Title string `json:"title"`
 	Price uint32 `json:"price"`
 	ImagePath string `json:"imagePath"`
@@ -62,6 +63,7 @@ type OPlan struct{
 }
 
 type OFeature struct{
+	FID uint64 `json:"id"`
 	Name string `json:"name"`
 	Value string `json:"value"`
 	// Price uint32 `json:"price"`
