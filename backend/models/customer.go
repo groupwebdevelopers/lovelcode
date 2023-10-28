@@ -26,6 +26,7 @@ type ICustomer struct{
 
 
 type OCustomer struct{
+	ID uint64 `json:"id"`
 	Name string `json:"name"`
 	SiteUrl string `json:"siteUrl"`
 	ImagePath string `json:"imagePath"`

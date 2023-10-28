@@ -6,15 +6,169 @@ import (
 	"fmt"
 	"strings"
 	"os"
-
+	
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-
+	
 	"lovelcode/utils"
 	"lovelcode/models"
 	"lovelcode/database"
 )
+
+/////////////////////  public /////////////////////
+
+
+
+func GetAllPlansAndFeatures(c *fiber.Ctx) error{
+	type Result struct{
+		models.OPlan
+		Name string
+		Value string
+		IsHave bool
+		FeatureIsFeatured bool
+	}
+	var result []Result
+	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Scan(&result).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	type Result2 struct{
+		models.OPlan
+		Features []models.OFeature
+	}
+	
+	var result2 []Result2
+	
+	for _, r := range result{
+		res1 := Result2{}
+		res1.IsCompare = r.IsCompare
+		res1.Title = r.Title
+		res1.Price = r.Price
+		res1.ImagePath = r.ImagePath
+		res1.Type = r.Type
+
+
+		// check id is exist
+		isExist := false
+		for _, r := range result2{
+			if r.Title == res1.Title{
+				isExist = true
+				break
+			}
+		}
+		if !isExist{
+			result2 = append(result2, res1)
+		}
+
+	}
+	
+	for _, r := range result{
+		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
+		for i, r2 := range result2{
+			if r2.Title == r.Title{
+				result2[i].Features = append(result2[i].Features, feature)
+				break
+			}
+		}
+		
+		}	
+		
+	return utils.JSONResponse(c, 200, fiber.Map{"data":result2})
+
+}
+
+func GetFeaturedPlans(c *fiber.Ctx) error{
+	type Result struct{
+		models.OPlan
+		Name string
+		Value string
+		IsHave bool
+		FeatureIsFeatured bool
+	}
+
+	var result []Result
+	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Where(&models.Plan{IsFeatured: true}).Scan(&result).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	type Result2 struct{
+		models.OPlan
+		
+		Features []models.OFeature
+	}
+	
+	var result2 []Result2
+	
+	for _, r := range result{
+		res1 := Result2{}
+		res1.IsCompare = r.IsCompare
+		res1.Title = r.Title
+		res1.Price = r.Price
+		res1.ImagePath = r.ImagePath
+		res1.Type = r.Type
+		
+		// check id is exist
+		isExist := false
+		for _, r := range result2{
+			if r.Title == res1.Title{
+				isExist = true
+				break
+			}
+		}
+		if !isExist{
+			result2 = append(result2, res1)
+		}
+
+		
+		result2 = append(result2, res1)
+
+	}
+	
+	for _, r := range result{
+		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
+		for i, r2 := range result2{
+			if r2.Title == r.Title{
+				result2[i].Features = append(result2[i].Features, feature)
+				break
+			}
+		}
+		
+		}
+	
+	
+	return utils.JSONResponse(c, 200, fiber.Map{"data":result2})
+
+}
+
+
+func SearchPlan(c *fiber.Ctx) error{
+// q := c.Queries()
+// type Result struct{
+// 	models.OPlan
+
+// }
+// if title, ok := q["title"]; ok{
+// 	// search by title
+// 	if err:= 
+
+// }else if ty, ok:= q["type"]; ok{
+// 	// search by type
+
+// }
+return nil
+
+}
+
+
+/////////////////  admin   ///////////////////////////
+
 
 // POST, auth required, admin required
 func CreatePlan(c *fiber.Ctx) error{
@@ -289,158 +443,13 @@ func GetAllFeatures(c *fiber.Ctx) error{
 	if err:= database.DB.Find(&features).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no feature found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	return utils.JSONResponse(c, 200, fiber.Map{"data":features})
-
-}
-
-func GetAllPlansAndFeatures(c *fiber.Ctx) error{
-	type Result struct{
-		models.OPlan
-		Name string
-		Value string
-		IsHave bool
-		FeatureIsFeatured bool
-	}
-	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Scan(&result).Error; err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	type Result2 struct{
-		models.OPlan
-		Features []models.OFeature
-	}
-	
-	var result2 []Result2
-	
-	for _, r := range result{
-		res1 := Result2{}
-		res1.IsCompare = r.IsCompare
-		res1.Title = r.Title
-		res1.Price = r.Price
-		res1.ImagePath = r.ImagePath
-		res1.Type = r.Type
-
-
-		// check id is exist
-		isExist := false
-		for _, r := range result2{
-			if r.Title == res1.Title{
-				isExist = true
-				break
-			}
-		}
-		if !isExist{
-			result2 = append(result2, res1)
-		}
-
-	}
-	
-	for _, r := range result{
-		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
-		for i, r2 := range result2{
-			if r2.Title == r.Title{
-				result2[i].Features = append(result2[i].Features, feature)
-				break
-			}
-		}
-		
-		}	
-		
-	return utils.JSONResponse(c, 200, fiber.Map{"data":result2})
-
-}
-
-func GetFeaturedPlans(c *fiber.Ctx) error{
-	type Result struct{
-		models.OPlan
-		Name string
-		Value string
-		IsHave bool
-		FeatureIsFeatured bool
-	}
-	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Where(&models.Plan{IsFeatured: true}).Scan(&result).Error; err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	type Result2 struct{
-		models.OPlan
-		
-		Features []models.OFeature
-	}
-	
-	var result2 []Result2
-	
-	for _, r := range result{
-		res1 := Result2{}
-		res1.IsCompare = r.IsCompare
-		res1.Title = r.Title
-		res1.Price = r.Price
-		res1.ImagePath = r.ImagePath
-		res1.Type = r.Type
-		
-		// check id is exist
-		isExist := false
-		for _, r := range result2{
-			if r.Title == res1.Title{
-				isExist = true
-				break
-			}
-		}
-		if !isExist{
-			result2 = append(result2, res1)
-		}
-
-		
-		result2 = append(result2, res1)
-
-	}
-	
-	for _, r := range result{
-		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
-		for i, r2 := range result2{
-			if r2.Title == r.Title{
-				result2[i].Features = append(result2[i].Features, feature)
-				break
-			}
-		}
-		
-		}
-	
-	
-	return utils.JSONResponse(c, 200, fiber.Map{"data":result2})
-
-}
-
-
-func SearchPlan(c *fiber.Ctx) error{
-	// q := c.Queries()
-	// type Result struct{
-	// 	models.OPlan
-		
-	// }
-	// if title, ok := q["title"]; ok{
-	// 	// search by title
-	// 	if err:= 
-
-	// }else if ty, ok:= q["type"]; ok{
-	// 	// search by type
-
-	// }
-return nil
-	
-}
+			}	
+			return utils.ServerError(c, err)
+			}	
+			
+			return utils.JSONResponse(c, 200, fiber.Map{"data":features})
+			
+			}	
 
 func DeletePlan(c *fiber.Ctx) error{
 	id := utils.GetIntFromParams(c, "planId")

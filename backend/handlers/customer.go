@@ -16,6 +16,39 @@ import (
 	"lovelcode/utils"
 )
 
+/////////////////  public    //////////////////////////////////
+
+
+// GET
+func GetAllCustomers(c *fiber.Ctx) error{
+	var Customers []models.OCustomer
+	if err:= database.DB.Find(&Customers).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
+}
+
+
+// GET
+func GetFeaturedCustomers(c *fiber.Ctx) error{
+	var Customers []models.OCustomer
+	if err:= database.DB.Find(&Customers, models.Customer{IsFeatured: true}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
+}
+
+
+////////////////////   admin    /////////////////////////////////////
+
 // POST, auth required, admin required 
 func CreateCustomer(c *fiber.Ctx) error{
 
@@ -135,33 +168,6 @@ func EditCustomer(c *fiber.Ctx) error{
 	}
 
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfully modified"})
-}
-
-// GET
-func GetAllCustomers(c *fiber.Ctx) error{
-	var Customers []models.OCustomer
-	if err:= database.DB.Find(&Customers).Error; err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
-}
-
-
-// GET
-func GetFeaturedCustomers(c *fiber.Ctx) error{
-	var Customers []models.OCustomer
-	if err:= database.DB.Find(&Customers, models.Customer{IsFeatured: true}).Error; err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
-		}
-		return utils.ServerError(c, err)
-	}
-
-	return utils.JSONResponse(c, 200, fiber.Map{"data":Customers})
 }
 
 

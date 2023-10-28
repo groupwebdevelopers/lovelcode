@@ -34,6 +34,7 @@ type IWorkSample struct{
 
 // output article for user
 type OWorkSample struct{
+	ID uint64 `json:"id"`
 	Title string `json:"title"`
 	Description string `json:"description"`
 	ImagePath string `json:"imagePath"`
