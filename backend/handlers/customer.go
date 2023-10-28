@@ -21,8 +21,13 @@ import (
 
 // GET
 func GetAllCustomers(c *fiber.Ctx) error{
+	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
+	if err != nil {
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
+	}
+
 	var Customers []models.OCustomer
-	if err:= database.DB.Find(&Customers).Error; err!=nil{
+	if err:= database.DB.Offset((page-1)*pageLimit).Limit(pageLimit).Find(&Customers).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Customer found"})
 		}

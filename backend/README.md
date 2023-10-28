@@ -34,6 +34,8 @@ DELETE /pdr/delete/:id  (admin required)
 
 # Plan
 
+GET /plan/get-all-plans-and-features/?page=1&pageLimit=20
+
 GET	/admin/plan/get-all-plans
 
 GET	/admin/plan/get-plan/:planId
@@ -42,7 +44,6 @@ GET	/plan/get-all-features/:planId
 
 GET	/admin/plan/get-feature/:featureId
 
-GET /plan/get-all-plans-and-features
 
 GET /plan/get-featured
 
@@ -77,7 +78,7 @@ Delete /admin/member/delete/:memberId
 
 
 # Article
-GET /article/get-all/:page (page is number)
+GET /article/get-all/?page=1&pageLimit=20
 
 GET /article/get/:articleTitleUrl (articleTitleUrl is in json)
 
@@ -94,7 +95,7 @@ DELETE /admin/article/delete/:articleId
 
 # Work Smaple
 
-GET /work-sample/get-all/:page (page is number)
+GET /work-sample/get-all/?page=1&pageLimit=20
 
 GET /work-sample/get-featured
 
@@ -125,21 +126,21 @@ DELETE /comment/delete/:id
 
 # Contactus
 
-GET /contactus/get-all-for-user
+POST /contactus/create json(title, body, email, number)
 
-GET /contactus/get/:contactusTitle
+admin
 
-GET /admin/contactus/get-all
+GET /admin/contactus/get-all/?page=1&pageLimit=20
 
-POST /contactus/create json(title, body)
+GET /admin/contactus/get/:contactusTitle
 
-PUT /contactus/edit/:titleUrl json(title, body)
+GET /admin/contactus/get-all/?page=1&pageLimit=20
 
-DELETE /contactus/delete/:titleUrl
+DELETE /admin/contactus/delete/:titleUrl
 
 # Customer
 
-GET /customer/get-all
+GET /customer/get-all/?page=1&pageLimit=20
 
 GET /customer/get-feautred
 

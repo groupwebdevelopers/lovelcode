@@ -49,8 +49,8 @@ func Route(app *fiber.App) {
 	apiV1.Get("/comment/get-all-for-article/:articleTitleUrl", handlers.GetAllArticleComments)
 	
 	// contact us
-	apiV1.Get("/contactus/get-all-for-user", handlers.GetAllUserContactUss)
-
+	apiV1.Post("/contactus/create", handlers.CreateContactUs)
+	
 	// customer
 	apiV1.Get("/customer/get-all", handlers.GetAllCustomers)
 	apiV1.Get("/customer/get-featured", handlers.GetFeaturedCustomers)
@@ -76,13 +76,6 @@ func Route(app *fiber.App) {
 	commentAuthReq.Post("/create/:articleTitleUrl", handlers.CreateComment)
 	commentAuthReq.Put("/edit/:commentId", handlers.EditComment)
 	commentAuthReq.Delete("/delete/:commentId", handlers.DeleteComment)
-	
-	// contactus
-	contactusAuthReq := apiV1.Group("/contactus", handlers.AuthRequired)
-	contactusAuthReq.Post("/create", handlers.CreateContactUs)
-	contactusAuthReq.Get("/get/:contactUsTitle", handlers.GetContactUsByTitle)
-	contactusAuthReq.Put("/edit/:contactusId", handlers.EditContactUs)
-	contactusAuthReq.Delete("/delete/:contactusId", handlers.DeleteContactUs)
 	
 	
 	// admin required
@@ -142,13 +135,15 @@ func Route(app *fiber.App) {
 	adminWorkSampleReq.Delete("/delete/:workSmapleId", handlers.DeleteWorkSample)
 	adminWorkSampleReq.Get("/get/:workSampleId", handlers.GetWorkSample)
 	
-
+	
 	// contactus
 	contactusAdminReq := apiV1.Group("/admin/contactus", handlers.AdminRequired)
-	contactusAdminReq.Get("/get-all", handlers.GetAllUserContactUss)
-	//todo: anwser
-
-
+	
+	// contactus
+	contactusAuthReq := apiV1.Group("/admin/contactus", handlers.AdminRequired)
+	contactusAuthReq.Get("/get/:contactusId", handlers.GetContactUs)
+	contactusAuthReq.Delete("/delete/:contactusId", handlers.DeleteContactUs)
+	contactusAdminReq.Get("/get-all/", handlers.GetAllContactUss) // with query
 	
 	// member
 	statisticAdminReq := apiV1.Group("/admin/statistic", handlers.AdminRequired)

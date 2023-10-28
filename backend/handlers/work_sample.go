@@ -21,12 +21,12 @@ import (
 // GET /:page
 func GetAllWorkSamples(c *fiber.Ctx) error{
 
-	page := utils.GetIDFromParams(c, "page")
-	if page==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
+	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
+	if err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	var WorkSamples []models.OWorkSample
-	if err:= database.DB.Model(&models.WorkSample{}).Order("id DESC").Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Find(&WorkSamples).Error; err!=nil{
+	if err:= database.DB.Model(&models.WorkSample{}).Order("id DESC").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Find(&WorkSamples).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no WorkSample found"})
 		}
@@ -148,7 +148,7 @@ func UploadWorkSampleImage(c *fiber.Ctx) error{
 // PUT, Auth Required, Admin Required, /:WorkSampleId
 func EditWorkSample(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIDFromParams(c, "WorkSampleId")
+	id := utils.GetIDFromParams(c, "workSampleId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the WorkSampleId didn't send"})
 	}	
@@ -157,7 +157,7 @@ func EditWorkSample(c *fiber.Ctx) error{
 	var WorkSample models.WorkSample
 	if err:= database.DB.First(&WorkSample, &models.WorkSample{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"WorkSample not found"})
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"workSample not found"})
 		}	
 		return utils.ServerError(c, err)
 	}	
@@ -189,9 +189,9 @@ func EditWorkSample(c *fiber.Ctx) error{
 func GetWorkSample(c *fiber.Ctx) error{
 
 	// get id form params
-	id := utils.GetIDFromParams(c, "WorkSampleId")
+	id := utils.GetIDFromParams(c, "workSampleId")
 	if id==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"the WorkSampleId didn't send"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the workSampleId didn't send"})
 	}
 
 	
@@ -209,23 +209,24 @@ func GetWorkSample(c *fiber.Ctx) error{
 
 // DELETE, /:WorkSampleId
 func DeleteWorkSample(c *fiber.Ctx) error{
-	id := utils.GetIDFromParams(c, "WorkSampleId")
+	id := utils.GetIDFromParams(c, "workSampleId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
-	WorkSample := c.Locals("WorkSample").(models.WorkSample)
+
+	var workSample models.WorkSample
 	
-	if err:= database.DB.Delete(&WorkSample).Error; err!=nil{
+	if err:= database.DB.First(&workSample, &models.WorkSample{ID: id}).Delete(&models.WorkSample{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"WorkSample not found"})
 		}
 		return utils.ServerError(c, err)
 	}
-	if strings.Contains(WorkSample.ImagePath, "*"){
+	if strings.Contains(workSample.ImagePath, "*"){
 		return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
 	}
-	if WorkSample.ImagePath != ""{
-		err := os.Remove(fmt.Sprintf(".%s", WorkSample.ImagePath))
+	if workSample.ImagePath != ""{
+		err := os.Remove(fmt.Sprintf(".%s", workSample.ImagePath))
 		if err!=nil{
 			return utils.ServerError(c, err)
 		}

@@ -28,8 +28,14 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 		IsHave bool
 		FeatureIsFeatured bool
 	}
+
+	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
+	if err != nil {
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
+	}
+
 	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Scan(&result).Error; err!=nil{
+	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Offset((page-1)*pageLimit).Limit(pageLimit).Scan(&result).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
 		}
