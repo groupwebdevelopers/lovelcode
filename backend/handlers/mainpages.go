@@ -76,7 +76,7 @@ func CreateMainpageTexts(c *fiber.Ctx) error{
 // function getting mainpage id and a image
 func UploadMainpageTextImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "MainpageTextId")
+	id := utils.GetIDFromParams(c, "MainpageTextId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the MainpageTextId didn't send"})
 	}
@@ -118,7 +118,7 @@ func UploadMainpageTextImage(c *fiber.Ctx) error{
 // PUT, admin, /:MainpageTextId
 func EditMainpageText(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "mainpageTextId")
+	id := utils.GetIDFromParams(c, "mainpageTextId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the mainpageTextId didn't send"})
 	}
@@ -169,7 +169,7 @@ func GetAllMainpageText(c *fiber.Ctx) error{
 
 // DELETE, admin, /:id
 func DeleteMainpageText(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "mainpageTextId")
+	id := utils.GetIDFromParams(c, "mainpageTextId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

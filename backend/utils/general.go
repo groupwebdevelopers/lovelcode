@@ -5,17 +5,65 @@ import (
 	"strconv"
 	"time"
 	"strings"
+	"errors"
+	"math"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetIntFromParams(c *fiber.Ctx, name string) uint64{
-	sid := c.Params(name, "")
+func GetIntFromString(sid string, name string) int{
+
 	if sid==""{
 		return 0
 	}
 	id, _ := strconv.Atoi(sid)
-	return uint64(id) // todo: id is int
+	return id
+}
+
+
+func GetIDFromParams(c *fiber.Ctx, name string) uint64{
+	sid := c.Params(name, "")
+	if sid==""{
+		return 0
+	}
+	var result uint64
+
+	ln := len(sid)
+
+	if ln==0{
+		return 0
+	}
+
+	for i, n := range sid{
+		n -= '0' // convert n to int
+		if n < 0 || n > 9{
+			return 0
+		}
+		result += uint64(n) * uint64(math.Pow10((ln - i-1)))
+	}
+	
+	return result
+}
+
+// default will be pageLimit:20
+func GetPageAndPageLimitFromMap(m map[string]string) (int, int, error){
+	pageStr, ok := m["page"]
+	page, err := strconv.Atoi(pageStr)
+	if !ok || err!=nil{
+		return 0,0, errors.New("invalid page")
+	}
+
+	pageLimitStr, ok := m["pageLimit"]
+	pageLimit, err := strconv.Atoi(pageLimitStr)
+	if !ok || err!=nil{
+		return page, 20, nil
+	}
+
+	if pageLimit > 50 || pageLimit < 5{
+		return 0,0, errors.New("invalid pageLimit")
+	}
+
+	return page, pageLimit, nil
 }
 
 // todo: add &models.User
@@ -27,7 +75,7 @@ func CheckAdminPermision(permisions string, p string) uint8{
 	if len(permisions) < 15{
 		return 0
 	}
-	
+
 	if p[2] == '1'{
 		return 2
 	}

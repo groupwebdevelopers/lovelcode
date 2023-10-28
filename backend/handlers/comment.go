@@ -80,7 +80,7 @@ func CreateComment(c *fiber.Ctx) error{
 // PUT, auth, /:commentId
 func EditComment(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "commentId")
+	id := utils.GetIDFromParams(c, "commentId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the CommentId didn't send"})
 	}
@@ -154,7 +154,7 @@ func GetAllArticleComments(c *fiber.Ctx) error{
 // GET, admin, /:id
 func GetComment(c *fiber.Ctx) error{
 	
-	id := utils.GetIntFromParams(c, "commentId")
+	id := utils.GetIDFromParams(c, "commentId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -173,7 +173,7 @@ func GetComment(c *fiber.Ctx) error{
 
 // DELETE, /:id
 func DeleteComment(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "commentId")
+	id := utils.GetIDFromParams(c, "commentId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

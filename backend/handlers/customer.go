@@ -78,7 +78,7 @@ func CreateCustomer(c *fiber.Ctx) error{
 // function getting Customer id and a image
 func UploadCustomerImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the CustomerId didn't send"})
 	}
@@ -133,7 +133,7 @@ func UploadCustomerImage(c *fiber.Ctx) error{
 // PUT, admin, /:CustomerId
 func EditCustomer(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the CustomerId didn't send"})
 	}
@@ -174,7 +174,7 @@ func EditCustomer(c *fiber.Ctx) error{
 // GET, admin, /:id
 func GetCustomer(c *fiber.Ctx) error{
 	
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -193,7 +193,7 @@ func GetCustomer(c *fiber.Ctx) error{
 
 // DELETE, admin, /:id
 func DeleteCustomer(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "customerId")
+	id := utils.GetIDFromParams(c, "customerId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

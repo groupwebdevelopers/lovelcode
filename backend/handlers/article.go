@@ -34,12 +34,12 @@ func GetAllArticlesTitles(c *fiber.Ctx) error{
 		Name string
 		Family string
 	}
-	page := utils.GetIntFromParams(c, "page")
-	if page==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
+	page, pageLimit, err :=utils.GetPageAndPageLimitFromMap(c.Queries())
+	if err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	var articles []Ar
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Scan(&articles).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Scan(&articles).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
@@ -62,12 +62,13 @@ func GetFeaturedArticlesTitle(c *fiber.Ctx) error{
 		Name string
 		Family string
 	}
-	page := utils.GetIntFromParams(c, "page")
-	if page==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
+
+	page, pageLimit, err :=utils.GetPageAndPageLimitFromMap(c.Queries())
+	if err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	var articles []Ar
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*database.Settings.PageLength).Limit(database.Settings.PageLength).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*pageLimit).Limit(pageLimit).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
@@ -155,7 +156,7 @@ func CreateArticle(c *fiber.Ctx) error{
 // function getting article id and a image
 func UploadArticleImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "articleId")
+	id := utils.GetIDFromParams(c, "articleId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the articleId didn't send"})
 	}

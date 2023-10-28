@@ -21,7 +21,7 @@ import (
 // GET /:page
 func GetAllWorkSamples(c *fiber.Ctx) error{
 
-	page := utils.GetIntFromParams(c, "page")
+	page := utils.GetIDFromParams(c, "page")
 	if page==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
 	}
@@ -91,7 +91,7 @@ func CreateWorkSample(c *fiber.Ctx) error{
 // function getting WorkSample id and a image
 func UploadWorkSampleImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "workSampleId")
+	id := utils.GetIDFromParams(c, "workSampleId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the workSampleId didn't send"})
 	}	
@@ -148,7 +148,7 @@ func UploadWorkSampleImage(c *fiber.Ctx) error{
 // PUT, Auth Required, Admin Required, /:WorkSampleId
 func EditWorkSample(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "WorkSampleId")
+	id := utils.GetIDFromParams(c, "WorkSampleId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the WorkSampleId didn't send"})
 	}	
@@ -189,7 +189,7 @@ func EditWorkSample(c *fiber.Ctx) error{
 func GetWorkSample(c *fiber.Ctx) error{
 
 	// get id form params
-	id := utils.GetIntFromParams(c, "WorkSampleId")
+	id := utils.GetIDFromParams(c, "WorkSampleId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the WorkSampleId didn't send"})
 	}
@@ -209,7 +209,7 @@ func GetWorkSample(c *fiber.Ctx) error{
 
 // DELETE, /:WorkSampleId
 func DeleteWorkSample(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "WorkSampleId")
+	id := utils.GetIDFromParams(c, "WorkSampleId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

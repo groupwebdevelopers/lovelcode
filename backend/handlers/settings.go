@@ -33,7 +33,7 @@ func CreateSetting(c *fiber.Ctx) error{
 // PUT, Auth Required, Admin Required, /:settingId
 func EditSetting(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "settingId")
+	id := utils.GetIDFromParams(c, "settingId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the settingId didn't send or invalid"})
 	}
@@ -87,7 +87,7 @@ func GetAllSettings(c *fiber.Ctx) error{
 // GET, admin requrid /:settingId
 func GetSetting(c *fiber.Ctx) error{
 	
-	id := utils.GetIntFromParams(c, "settingId")
+	id := utils.GetIDFromParams(c, "settingId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the settingId didn't send or invalid"})
 	}
@@ -106,7 +106,7 @@ func GetSetting(c *fiber.Ctx) error{
 
 // DELETE, admin required /:settingId
 func DeleteSetting(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "settingId")
+	id := utils.GetIDFromParams(c, "settingId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

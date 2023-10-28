@@ -56,7 +56,7 @@ func GetAllProjectDoingRequests(c *fiber.Ctx) error{
 
 // GET, auth required, /:id
 func GetProjectDoingRequest(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "id")
+	id := utils.GetIDFromParams(c, "id")
 	var pdr models.ProjectDoingRequest
 	query := models.ProjectDoingRequest{ID: id}
 	if err:= database.DB.First(&pdr, &query).Error; err!=nil{
@@ -72,7 +72,7 @@ func GetProjectDoingRequest(c *fiber.Ctx) error{
 
 // POST, auth required, /:id
 func EditProjectDoingRequest(c *fiber.Ctx) error {
-	id := utils.GetIntFromParams(c, "id")
+	id := utils.GetIDFromParams(c, "id")
 
 	var pdr models.CEPDR
 	if err:= c.BodyParser(&pdr); err!=nil{
@@ -104,7 +104,7 @@ func EditProjectDoingRequest(c *fiber.Ctx) error {
 }
 
 func DeleteProjectDoingRequest(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "id")
+	id := utils.GetIDFromParams(c, "id")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

@@ -39,7 +39,7 @@ func GetAllMembers(c *fiber.Ctx) error{
 // POST, auth required, admin required /:userId
 func CreateMember(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "userId")
+	id := utils.GetIDFromParams(c, "userId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the uesrId didn't send"})
 	}
@@ -80,7 +80,7 @@ func CreateMember(c *fiber.Ctx) error{
 // function getting member id and a image
 func UploadMemberImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "memberId")
+	id := utils.GetIDFromParams(c, "memberId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the memberId didn't send"})
 	}
@@ -135,7 +135,7 @@ func UploadMemberImage(c *fiber.Ctx) error{
 // PUT, admin, /:memberId
 func EditMember(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "memberId")
+	id := utils.GetIDFromParams(c, "memberId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the memberId didn't send"})
 	}
@@ -176,7 +176,7 @@ func EditMember(c *fiber.Ctx) error{
 // GET, admin, /:id
 func GetMember(c *fiber.Ctx) error{
 	
-	id := utils.GetIntFromParams(c, "memberId")
+	id := utils.GetIDFromParams(c, "memberId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -195,7 +195,7 @@ func GetMember(c *fiber.Ctx) error{
 
 // DELETE, admin, /:id
 func DeleteMember(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "memberId")
+	id := utils.GetIDFromParams(c, "memberId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}

@@ -200,7 +200,7 @@ func CreatePlan(c *fiber.Ctx) error{
 // function getting list of features
 func CreateFeatures(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "planId")
+	id := utils.GetIDFromParams(c, "planId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the planId is invalid"})
 	}
@@ -249,7 +249,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 // function getting plan id and a image
 func UploadPlanImage(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "planId")
+	id := utils.GetIDFromParams(c, "planId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the planId didn't send"})
 	}
@@ -304,7 +304,7 @@ func UploadPlanImage(c *fiber.Ctx) error{
 // PUT, Auth Required, Admin Required, /:planId
 func EditPlan(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIntFromParams(c, "planId")
+	id := utils.GetIDFromParams(c, "planId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the planId didn't send"})
 	}
@@ -343,7 +343,7 @@ func EditPlan(c *fiber.Ctx) error{
 
 func EditFeature(c *fiber.Ctx) error{
 	// get id from params
-	id := utils.GetIntFromParams(c, "featureId")
+	id := utils.GetIDFromParams(c, "featureId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the featureId is invalid"})
 	}
@@ -403,7 +403,7 @@ func GetAllPlans(c *fiber.Ctx) error{
 
 func GetPlan(c *fiber.Ctx) error{
 	
-	id := utils.GetIntFromParams(c, "planId")
+	id := utils.GetIDFromParams(c, "planId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -422,7 +422,7 @@ func GetPlan(c *fiber.Ctx) error{
 
 func GetFeature(c *fiber.Ctx) error{
 
-	id := utils.GetIntFromParams(c, "featureId")
+	id := utils.GetIDFromParams(c, "featureId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -452,7 +452,7 @@ func GetAllFeatures(c *fiber.Ctx) error{
 			}	
 
 func DeletePlan(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "planId")
+	id := utils.GetIDFromParams(c, "planId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
@@ -485,12 +485,12 @@ func DeletePlan(c *fiber.Ctx) error{
 
 
 func DeleteFeature(c *fiber.Ctx) error{
-	id := utils.GetIntFromParams(c, "featureId")
+	id := utils.GetIDFromParams(c, "featureId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	if err:= database.DB.Delete(&models.Feature{}, &models.Feature{ID: id}).Error; err!=nil{
+	if err:= database.DB.Delete(&models.Feature{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"feature not found"})
 		}
