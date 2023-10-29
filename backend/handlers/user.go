@@ -4,7 +4,7 @@ import (
 	"time"	
 	"crypto/sha256"
 	"encoding/base64"
-	"errors"
+	
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -18,6 +18,12 @@ import (
 
 func Signin(c *fiber.Ctx) error{
 
+	sess, err := globalSession.Get(c)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+	defer sess.Save()
+	
 	// check json and extract data from it
 	var ss models.SigninUser
 	if err:= c.BodyParser(&ss); err!=nil{
@@ -59,7 +65,14 @@ func Signin(c *fiber.Ctx) error{
 	if err:= database.DB.Updates(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
-		
+
+	// put user info into session
+	sess.Set("userID", user.ID)
+	sess.Set("userName", user.Name)
+	sess.Set("userFamily", user.Family)
+	sess.Set("token", user.Token)
+	sess.Set("adminPermisions", user.AdminPermisions)	
+
 	// set token to cookie
 	c.Cookie(&fiber.Cookie{
 		Name: "token",
@@ -121,13 +134,13 @@ func Signup(c *fiber.Ctx) error{
 	}
 
 
-	// set token into cookie
-	c.Cookie(&fiber.Cookie{
-		Name: "token",
-		Value: token,
-		Expires: time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour),
-	})
-	return utils.JSONResponse(c, 200, fiber.Map{"msg": "user created"})
+	// // set token into cookie
+	// c.Cookie(&fiber.Cookie{
+	// 	Name: "token",
+	// 	Value: token,
+	// 	Expires: time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour),
+	// })
+	return utils.JSONResponse(c, 200, fiber.Map{"msg": "user created. go to signin"})
 
 }
 
@@ -135,21 +148,12 @@ func Signup(c *fiber.Ctx) error{
 func BanUser(c *fiber.Ctx) error{
 	// get id from url
 	id := utils.GetIDFromParams(c, "id")
-	user := c.Locals("user").(models.User)
 	if id ==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	// check user have permision for ban user
-	ap := utils.CheckAdminPermision(user.AdminPermisions, "banuser")
-	if ap == 0 || ap == 2{
-		if ap == 2{
-			hban(user)
-		}
-		return utils.JSONResponse(c, 403, fiber.Map{"error":"you don't access to do this"})
-	}
 	// user have permisoin and should ban target user
-	if ap == 1{
+
 		var targetUser models.User
 		if err:= database.DB.First(&targetUser, &models.User{ID: id}).Error;err!=nil{
 			if err== gorm.ErrRecordNotFound{
@@ -167,26 +171,16 @@ func BanUser(c *fiber.Ctx) error{
 				return utils.ServerError(c, err)
 			}
 		}
-		utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly banned"})
-	}
-	if ap == 3{
-		return utils.ServerError(c, errors.New("the sent permision to function not found"))
-	}
 
-	return utils.ServerError(c, errors.New("can't do this (ap="+string(ap)+")"))
+		return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly banned"})
+	
+
+
 }
 
 
 // GET, auth required, admin required, /:page
 func GetUsersPaged(c *fiber.Ctx) error{
-	user:= c.Locals("user").(models.User)
-	adminCode := utils.CheckAdminPermision(user.AdminPermisions, "seeUsers")
-	if adminCode != 1{
-		if adminCode == 2{
-			hban(user)
-		}
-		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
-	}
 
 	page := utils.GetIDFromParams(c, "id")
 	var users []models.User
@@ -208,7 +202,7 @@ func hash(s string) string{
 	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
 }
 
-func hban(user models.User) {
-	user.IsBanned = true
-	database.DB.Updates(&user)
+func hban(userID uint64) {
+	err := database.DB.Model(&models.User{}).Where("id=?", userID).Update("isBanned", true).Error
+	utils.LogError(err)
 }

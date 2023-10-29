@@ -5,8 +5,10 @@ import (
 	// "strconv"
 	"strings"
 	"time"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"gorm.io/gorm"
 
 	"lovelcode/utils"
@@ -14,6 +16,10 @@ import (
 	"lovelcode/database"
 	"lovelcode/models"
 )
+
+
+var globalSession = session.New()
+
 
 func ApiOnly(c *fiber.Ctx) error{
 	return c.Next()
@@ -46,19 +52,22 @@ func AdminRequired(c *fiber.Ctx) error{
 	if mp!=nil{
 		return utils.JSONResponse(c, status, mp)
 	}
-
-	user := c.Locals("user").(models.User)
-
+	
+	// user := c.Locals("user").(models.User)
+	userID, adminPermisions, err := getUserIDAndAdminPermisionsFromSession(c)
+	if err!=nil{
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
+	}
 	// check user have permision
 	splited := strings.Split(c.OriginalURL(), "/")
 	if len(splited) < 5{
 		return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
 	}
 	field := splited[4]
-	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
+	adminCode := utils.CheckAdminPermision(adminPermisions, field)
 	if adminCode != 1{
 		if adminCode == 2{
-			hban(user)
+			hban(userID)
 		}
 		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
 	}
@@ -87,17 +96,20 @@ func AdminUploadImage(c *fiber.Ctx) error{
 		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
 		// }
 		
-		user:= c.Locals("user").(models.User)
+		userID, adminPermisions, err := getUserIDAndAdminPermisionsFromSession(c)
+	if err!=nil{
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
+	}
 
 		splited := strings.Split(c.OriginalURL(), "/")
 		if len(splited) < 4{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
 		}
 		field := splited[3];fmt.Println(field)
-		adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
+		adminCode := utils.CheckAdminPermision(adminPermisions, field)
 		if adminCode != 1{
 			if adminCode == 2{
-				hban(user)
+				hban(userID)
 			}
 			return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"})
 		}
@@ -116,8 +128,13 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 	}
 
 	
+	userID, adminPermisions, err := getUserIDAndAdminPermisionsFromSession(c)
+	if err!=nil{
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
+	}
+	
+	
 	// check user have permision
-	user:= c.Locals("user").(models.User)
 	splited := strings.Split(c.OriginalURL(), "/")
 	if len(splited) < 6{
 		return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
@@ -142,7 +159,7 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 			return utils.ServerError(c, err)
 		}
 
-		if article.UserID != user.ID{
+		if article.UserID != userID{
 			field += "Other"
 		}else{
 			field += "My"
@@ -150,11 +167,11 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 		c.Locals("article", article)
 	}
 	field += "Article"
-	adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
+	adminCode := utils.CheckAdminPermision(adminPermisions, field)
 	
 	if adminCode != 1{
 		if adminCode == 2{
-			hban(user)
+			hban(userID)
 		}
 		return utils.JSONResponse(c, 403, fiber.Map{"error":"Access Denied"}, string(field))
 	}
@@ -165,17 +182,34 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 
 func authRequired(c *fiber.Ctx) (int, fiber.Map, error){
 // auth required
-	token := c.Cookies("token", "")
-	if token==""{
-		return 401, fiber.Map{"error":"authentication required"}, nil
-	}
 
-	var user models.User
-	// user, err := utilstoken.VerifyJWTToken(token)
-	// if err!=nil{
-		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
+token := c.Cookies("token", "")
+if token==""{
+	return 401, fiber.Map{"error":"authentication required"}, nil
+}
+var user models.User
+// user, err := utilstoken.VerifyJWTToken(token)
+// if err!=nil{
+	// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
 	// }
 	// var user models.User = models.User{Token: token}
+		
+
+	sess, err := globalSession.Get(c)
+	if err!=nil{
+		return 500, nil, err
+	}
+	defer sess.Save()
+
+	storedToken := sess.Get("token")
+	if storedToken != nil{
+
+		if token == sess.Get("token"){;fmt.Println("login with session sucesss")
+			return 200, nil, nil
+		}
+		
+	}
+	
 	if err:=database.DB.First(&user, &models.User{Token: token}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return 401, fiber.Map{"error":"authentication required"},nil
@@ -197,4 +231,21 @@ func authRequired(c *fiber.Ctx) (int, fiber.Map, error){
 
 		
 	return 200, nil, nil
+}
+
+func getUserIDAndAdminPermisionsFromSession(c *fiber.Ctx) (uint64, string, error) {
+	
+		sess, err := globalSession.Get(c)
+		if err!=nil{
+			utils.LogError(err)
+			return 0, "", err
+		}
+	iAdminPermisions := sess.Get("adminPermsions")
+	iUserID := sess.Get("userID")
+	if iAdminPermisions == nil || iUserID == nil{
+		return 0, "", errors.New("auth required")
+	}
+	 
+	return iUserID.(uint64),iAdminPermisions.(string), nil
+
 }

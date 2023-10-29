@@ -9,7 +9,7 @@ import (
 
 )
 
-type WorkSample struct{
+type Portfolio struct{
 	ID uint64 `gorm:"primaryKey"`
 	Title string `gorm:"not null"`
 	ImagePath string `gorm:"size:400"`
@@ -23,7 +23,7 @@ type WorkSample struct{
 }
 
 
-type IWorkSample struct{
+type IPortfolio struct{
 	Title string `json:"title"`
 	Description string `json:"description"`
 	SiteUrl string `json:"siteUrl"`
@@ -33,7 +33,7 @@ type IWorkSample struct{
 }
 
 // output article for user
-type OWorkSample struct{
+type OPortfolio struct{
 	ID uint64 `json:"id"`
 	Title string `json:"title"`
 	Description string `json:"description"`
@@ -45,7 +45,7 @@ type OWorkSample struct{
 	Type string `json:"type"`
 }
 
-func (w *WorkSample) Fill(i *IWorkSample){
+func (w *Portfolio) Fill(i *IPortfolio){
 	w.Title = i.Title
 	w.Description = i.Description
 	w.SiteUrl = i.SiteUrl
@@ -54,7 +54,7 @@ func (w *WorkSample) Fill(i *IWorkSample){
 	w.Type = i.Type
 }
 
-func (a *IWorkSample) Check() error{
+func (a *IPortfolio) Check() error{
 	if err:= utils.IsNotInvalidCharacter(a.Title, "/"); err!=nil{
 		return errors.New("invalid titile:" + err.Error())
 	}

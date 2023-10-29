@@ -184,7 +184,10 @@ func DeleteComment(c *fiber.Ctx) error{
 
 	isHavePermison := false
 
-	user := c.Locals("user").(models.User)
+	userID, adminPermisions, err := getUserIDAndAdminPermisionsFromSession(c)
+	if err!=nil{
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
+	}
 	
 	var Comment models.Comment
 	if err:= database.DB.First(&Comment, models.Comment{ID: id}).Error; err!=nil{
@@ -194,13 +197,13 @@ func DeleteComment(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	if Comment.UserID == user.ID{
+	if Comment.UserID == userID{
 		isHavePermison = true
 	}else{
-		p:=utils.CheckAdminPermision(user.AdminPermisions, "deleteComment")
+		p:=utils.CheckAdminPermision(adminPermisions, "deleteComment")
 		if p!=1{
 			if p==3{
-				hban(user)
+				hban(userID)
 			}
 		}else{
 			isHavePermison = true
