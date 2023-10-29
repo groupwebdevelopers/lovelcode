@@ -15,9 +15,9 @@ func Route(app *fiber.App) {
 	fileUploadAdminReq := app.Group("/admin/upload", handlers.AdminUploadImage)
 	fileUploadAdminReq.Post("/plan/image/:planId", handlers.UploadPlanImage)
 	fileUploadAdminReq.Post("/member/image/:memberId", handlers.UploadMemberImage)
-	fileUploadAdminReq.Post("/article/image/:articleId", handlers.UploadArticleImage)
+	fileUploadAdminReq.Post("/blog/image/:articleId", handlers.UploadArticleImage)
 	fileUploadAdminReq.Post("/customer/image/:customerId", handlers.UploadCustomerImage)
-	fileUploadAdminReq.Post("/work-sample/image/:workSampleId", handlers.UploadWorkSampleImage)
+	fileUploadAdminReq.Post("/portfolio/image/:portfolioId", handlers.UploadPortfolioImage)
 	
 	// auth not required
 	
@@ -33,14 +33,14 @@ func Route(app *fiber.App) {
 	apiV1.Get("/member/get-all", handlers.GetAllMembers)
 	
 	// article
-	apiV1.Get("/article/get/:articleTitleUrl", handlers.GetArticle)
-	apiV1.Get("/article/get-all", handlers.GetAllArticlesTitles)
-	apiV1.Get("/article/get-featured", handlers.GetFeaturedArticlesTitle)
+	apiV1.Get("/blog/get/:articleTitleUrl", handlers.GetArticle)
+	apiV1.Get("/blog/get-all", handlers.GetAllArticlesTitles)
+	apiV1.Get("/blog/get-featured", handlers.GetFeaturedArticlesTitle)
 	
 	
-	// work sample
-	apiV1.Get("/work-sample/get-all", handlers.GetAllWorkSamples)
-	apiV1.Get("/work-sample/get-featured", handlers.GetFeaturedWorkSamples)
+	// portfolio
+	apiV1.Get("/portfolio/get-all", handlers.GetAllPortfolios)
+	apiV1.Get("/portfolio/get-featured", handlers.GetFeaturedPortfolios)
 	
 	// get features
 	apiV1.Get("/site-features/get-all", handlers.GetSiteFeatures)
@@ -81,7 +81,7 @@ func Route(app *fiber.App) {
 	// admin required
 	
 	// article
-	adminArticleReq := apiV1.Group("/admin/article", handlers.AdminArticleRequired)
+	adminArticleReq := apiV1.Group("/admin/blog", handlers.AdminArticleRequired)
 	adminArticleReq.Post("/create", handlers.CreateArticle)
 	adminArticleReq.Put("/edit/:articleId", handlers.EditArticle)
 	adminArticleReq.Delete("/delete/:articleId", handlers.DeleteArticle)
@@ -128,12 +128,12 @@ func Route(app *fiber.App) {
 	customerAdminReq.Delete("/delete/:customerId", handlers.DeleteCustomer)
 	customerAdminReq.Get("/get/:customerId", handlers.GetCustomer)
 	
-	// work sample
-	adminWorkSampleReq := apiV1.Group("/admin/work-sample", handlers.AdminRequired)
-	adminWorkSampleReq.Post("/create", handlers.CreateWorkSample)
-	adminWorkSampleReq.Put("/edit/:workSampleId", handlers.EditWorkSample)
-	adminWorkSampleReq.Delete("/delete/:workSmapleId", handlers.DeleteWorkSample)
-	adminWorkSampleReq.Get("/get/:workSampleId", handlers.GetWorkSample)
+	// portfolio
+	adminPortfolioReq := apiV1.Group("/admin/portfolio", handlers.AdminRequired)
+	adminPortfolioReq.Post("/create", handlers.CreatePortfolio)
+	adminPortfolioReq.Put("/edit/:portfolioId", handlers.EditPortfolio)
+	adminPortfolioReq.Delete("/delete/:portfolioId", handlers.DeletePortfolio)
+	adminPortfolioReq.Get("/get/:portfolioId", handlers.GetPortfolio)
 	
 	
 	// contactus
