@@ -4,7 +4,7 @@ import (
 	"errors"
 	"lovelcode/utils"
 	"strconv"
-	"strings"
+	
 )
 
 
@@ -22,15 +22,9 @@ type ISettingsDB struct{
 type Settings struct{
 	TokenExpHours uint64
 	PageLength int
-	SiteFeatures []SiteFeature
 	ImageSaveUrl string
+	SocialMedias string
 }
-
-type SiteFeature struct{
-	ImagePath string `json:"imagePath"`
-	Name string `json:"name"`
-}
-
 
 func SetupSettings(st []SettingsDB) (Settings, error){
 	var settings Settings
@@ -52,9 +46,6 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 				}
 				settings.TokenExpHours = uint64(i)
 			
-			case "siteFeature":
-				splited := strings.Split(s.Value, "|||")
-				settings.SiteFeatures = append(settings.SiteFeatures, SiteFeature{ImagePath: splited[1], Name: splited[0]})
 			case "pageLength":
 				i, err := strconv.Atoi(s.Value)
 				if err!=nil{
@@ -63,6 +54,9 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 				settings.PageLength = i
 			case "imageSaveUrl":
 				settings.ImageSaveUrl = s.Value
+			case "socialMedias":
+				settings.SocialMedias = s.Value
+
 			default:
 				return settings, errors.New("unhandled setting: "+ s.Key+" value:" +s.Value)
 			}

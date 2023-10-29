@@ -42,8 +42,8 @@ func Route(app *fiber.App) {
 	apiV1.Get("/portfolio/get-all", handlers.GetAllPortfolios)
 	apiV1.Get("/portfolio/get-featured", handlers.GetFeaturedPortfolios)
 	
-	// get features
-	apiV1.Get("/site-features/get-all", handlers.GetSiteFeatures)
+	// social media
+	apiV1.Get("/site-social-media", handlers.GetSiteSocialMedia)
 	
 	// comment
 	apiV1.Get("/comment/get-all-for-article/:articleTitleUrl", handlers.GetAllArticleComments)

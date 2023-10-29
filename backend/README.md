@@ -129,6 +129,7 @@ DELETE /admin/portfolio/delete/:articleId
 
 
 ## Site Features
+
 GET /mainpage/site-features/
 
 
@@ -143,6 +144,7 @@ POST /comment/create json(body, commentAnswerID(0 if not answer and id of commen
 PUT /comment/edit/:id json(body, commentAnswerID(0 if not answer and id of comment for answer it))
 
 DELETE /comment/delete/:id
+
 
 ## Contactus
 
@@ -159,6 +161,7 @@ GET /admin/contactus/get/:contactusTitle
 GET /admin/contactus/get-all/?page=1&pageLimit=20
 
 DELETE /admin/contactus/delete/:titleUrl
+
 
 ## Customer
 
@@ -180,6 +183,7 @@ PUT /admin/customer/edit/:customerId json(name, siteUrl, isFeatured)
 
 DELETE /admin/customer/delete/:customerId
 
+
 ## Statistics
 
 <b>Public:</b>
@@ -195,3 +199,8 @@ POST /admin/statistic/create    json(name, name2, number, isPublic)
 PUT /admin/statistic/edit/:statisticId json(name, name2, number, isPublic)
 
 DELETE /admin/statistic/delete/:statisticId
+
+
+## Social Media
+
+GET /site-social-media
