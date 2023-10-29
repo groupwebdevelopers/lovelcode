@@ -26,7 +26,7 @@ func Route(app *fiber.App) {
 	apiV1.Post("/signup", handlers.Signup)
 	
 	// plan
-	apiV1.Get("/plan/get-all-plans-and-features", handlers.GetAllPlansAndFeatures)
+	apiV1.Get("/plan/get-all", handlers.GetAllPlansAndFeatures)
 	apiV1.Get("/plan/get-featured", handlers.GetFeaturedPlans)
 	
 	// member

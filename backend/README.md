@@ -1,12 +1,12 @@
-### Backnd with GoFiber
+###### Backnd with GoFiber
 
-## Info
+##### Info
 Content-Type: application/json
 base url: /api/v1/...
 
 
-## Routes
-GET /api/v1/home
+#### Routes
+GET /api/v1/
 
 
 # auth
@@ -34,18 +34,22 @@ DELETE /pdr/delete/:id  (admin required)
 
 # Plan
 
-GET /plan/get-all-plans-and-features/?page=1&pageLimit=20
+<b>Public:</b>
+
+GET /plan/get-all/?page=1&pageLimit=20
+
+<i>For main page</i>
+GET /plan/get-featured
+
+<b>Admin:</b>
 
 GET	/admin/plan/get-all-plans
 
 GET	/admin/plan/get-plan/:planId
 
-GET	/plan/get-all-features/:planId
-
 GET	/admin/plan/get-feature/:featureId
 
-
-GET /plan/get-featured
+GET	/plan/get-all-features/:planId
 
 POST /admin/plan/create                       json(name, price)
 
@@ -64,9 +68,13 @@ DELETE /admin/plan/delete-feature/:featureId
 
 # Member
 
+<b>Public:</b>
+
 GET /member/get-all
 
 GET /member/get/:memberId
+
+<b>Admin:</b>
 
 POST /admin/member/create
 
@@ -77,44 +85,59 @@ Put /admin/member/edit/:memberId
 Delete /admin/member/delete/:memberId
 
 
-# Article
-GET /article/get-all/?page=1&pageLimit=20
+# Blog
 
-GET /article/get/:articleTitleUrl (articleTitleUrl is in json)
+<b>Public:</b>
 
-GET /article/get-featured
+GET /blog/get-all/?page=1&pageLimit=20
+
+GET /blog/get/:articleTitleUrl (articleTitleUrl is in json)
+
+<i>For main page</i>
+GET /blog/get-featured
+
+<b>Admin:</b>
 
 POST /admin/article/create              josn(title, body, tags, shortDesc) (tags splited with | example: 'test|art')
 
-POST /admin/upload/article/image/:articleId (without /api/v1)
+POST /admin/upload/blog/image/:articleId (without /api/v1)
 
-PUT /admin/article/edit/:articleId      josn(title, body, tags, shortDesc)
+PUT /admin/blog/edit/:articleId      josn(title, body, tags, shortDesc)
 
-DELETE /admin/article/delete/:articleId
+DELETE /admin/blog/delete/:articleId
 
 
-# Work Smaple
+# Portfolio
 
-GET /work-sample/get-all/?page=1&pageLimit=20
+<b>Public:</b>
 
-GET /work-sample/get-featured
+<i>Get all portfolios</i>
+GET /portfolio/get-all/?page=1&pageLimit=20
 
-GET /admin/works-sample/get/:workSampleId
+<i>For main page</i>
+GET /portfolio/get-featured
 
-POST /admin/work-sample/create              josn(title, imagePath, siteUrl, description, isFeatured)
+<i>Get single portfolio</i>
+GET /admin/portfolio/get/:portfolioId
 
-POST /admin/upload/work-smaple/image/:workSampleId  (without /api/v1)
+<b>Admin:</b>
 
-PUT /admin/article/edit/:articleId          josn(title, imagePath, siteUrl, description, isFeatured)
+POST /admin/portfolio/create              josn(title, imagePath, siteUrl, description, isFeatured)
 
-DELETE /admin/article/delete/:articleId
+POST /admin/upload/portfolio/image/:portfolioId  (without /api/v1)
+
+PUT /admin/portfolio/edit/:articleId          josn(title, imagePath, siteUrl, description, isFeatured)
+
+DELETE /admin/portfolio/delete/:articleId
 
 
 # Site Features
-GET /mainpage/site-feature/
+GET /mainpage/site-features/
 
 
 # Comments
+
+<b>Public:</b>
 
 GET /comment/get-all-for-article/:articleTitleUrl
 
@@ -126,9 +149,11 @@ DELETE /comment/delete/:id
 
 # Contactus
 
+<b>Public:</b>
+
 POST /contactus/create json(title, body, email, number)
 
-admin
+<b>Admin:</b>
 
 GET /admin/contactus/get-all/?page=1&pageLimit=20
 
@@ -140,10 +165,17 @@ DELETE /admin/contactus/delete/:titleUrl
 
 # Customer
 
+<b>Public:</b>
+
+<i>Get all customers</i>
 GET /customer/get-all/?page=1&pageLimit=20
 
+<i>For main page</i>
 GET /customer/get-feautred
 
+<b>Admin:</b>
+
+<i>Get single customer</i>
 GET /admin/customer/get/:customerId
 
 POST /admin/customer/create json(name, siteUrl, isFeatured)
@@ -156,7 +188,11 @@ DELETE /admin/customer/delete/:customerId
 
 # Statistics
 
+<b>Public:</b>
+
 GET /statistics/get-public
+
+<b>Admin:</b>
 
 GET /admin/statistic/get-all
 
