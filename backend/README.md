@@ -9,7 +9,7 @@ base url: /api/v1/...
 GET /api/v1/
 
 
-### auth
+## auth
 
 POST /signup (json with email, password, name, family(optional))
     password lenght bigger than 8
@@ -19,7 +19,7 @@ POST /signup (json with email, password, name, family(optional))
 POST /signin (json with email, password)
 
 
-### Project Doing Request
+## Project Doing Request
 
 POST /pdr/create        (admin required)    json(title, description, suggestedPrice(optional))
 
@@ -32,14 +32,14 @@ PUT /pdr/edit/:id       (admin required)    json(title, description, suggestedPr
 DELETE /pdr/delete/:id  (admin required)
 
 
-### Plan
+## Plan
 
 <b>Public:</b>
 
 GET /plan/get-all/?page=1&pageLimit=20
 
 GET /plan/get-featured
-<i>For main page</i>
+<br><i>For main page</i>
 
 <b>Admin:</b>
 
@@ -66,7 +66,7 @@ DELETE /admin/plan/delete-plan/:planId
 DELETE /admin/plan/delete-feature/:featureId
 
 
-### Member
+## Member
 
 <b>Public:</b>
 
@@ -85,7 +85,7 @@ Put /admin/member/edit/:memberId
 Delete /admin/member/delete/:memberId
 
 
-### Blog
+## Blog
 
 <b>Public:</b>
 
@@ -94,7 +94,7 @@ GET /blog/get-all/?page=1&pageLimit=20
 GET /blog/get/:articleTitleUrl (articleTitleUrl is in json)
 
 GET /blog/get-featured
-<i>For main page</i>
+<br><i>For main page</i>
 
 
 <b>Admin:</b>
@@ -108,19 +108,19 @@ PUT /admin/blog/edit/:articleId      josn(title, body, tags, shortDesc)
 DELETE /admin/blog/delete/:articleId
 
 
-### Portfolio
+## Portfolio
 
 <b>Public:</b>
 
 GET /portfolio/get-all/?page=1&pageLimit=20
-<i>Get all portfolios</i>
+<br><i>Get all portfolios</i>
 
 
 GET /portfolio/get-featured
-<i>For main page</i>
+<br><i>For main page</i>
 
 GET /admin/portfolio/get/:portfolioId
-<i>Get single portfolio</i>
+<br><i>Get single portfolio</i>
 
 <b>Admin:</b>
 
@@ -133,11 +133,11 @@ PUT /admin/portfolio/edit/:articleId          josn(title, imagePath, siteUrl, de
 DELETE /admin/portfolio/delete/:articleId
 
 
-### Site Features
+## Site Features
 GET /mainpage/site-features/
 
 
-### Comments
+## Comments
 
 <b>Public:</b>
 
@@ -149,7 +149,7 @@ PUT /comment/edit/:id json(body, commentAnswerID(0 if not answer and id of comme
 
 DELETE /comment/delete/:id
 
-### Contactus
+## Contactus
 
 <b>Public:</b>
 
@@ -165,21 +165,20 @@ GET /admin/contactus/get-all/?page=1&pageLimit=20
 
 DELETE /admin/contactus/delete/:titleUrl
 
-### Customer
+## Customer
 
 <b>Public:</b>
 
-(Get all customers)
 GET /customer/get-all/?page=1&pageLimit=20
-<i>Get all customers</i>
+<br><i>Get all customers</i>
 
 GET /customer/get-feautred
-<i>For main page</i>
+<br><i>For main page</i>
 
 <b>Admin:</b>
 
 GET /admin/customer/get/:customerId
-<i>Get single customer</i>
+<br><i>Get single customer</i>
 
 POST /admin/customer/create json(name, siteUrl, isFeatured)
 
@@ -189,7 +188,7 @@ PUT /admin/customer/edit/:customerId json(name, siteUrl, isFeatured)
 
 DELETE /admin/customer/delete/:customerId
 
-### Statistics
+## Statistics
 
 <b>Public:</b>
 
