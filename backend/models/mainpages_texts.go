@@ -21,7 +21,7 @@ type OMainpageText struct{
 	Section string `json:"section"`
 	Body string `json:"body"`
 	ImagePath string `json:"imagePath"`
-	Order int `json:"order"`
+	OrderT int `json:"order"`
 }
 
 type IMainpageText struct{
