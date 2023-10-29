@@ -1,15 +1,15 @@
-###### Backnd with GoFiber
+# Backnd with GoFiber
 
-##### Info
+## Info
 Content-Type: application/json
 base url: /api/v1/...
 
 
-#### Routes
+### Routes
 GET /api/v1/
 
 
-# auth
+#### auth
 
 POST /signup (json with email, password, name, family(optional))
     password lenght bigger than 8
@@ -19,7 +19,7 @@ POST /signup (json with email, password, name, family(optional))
 POST /signin (json with email, password)
 
 
-# Project Doing Request
+#### Project Doing Request
 
 POST /pdr/create        (admin required)    json(title, description, suggestedPrice(optional))
 
@@ -32,14 +32,13 @@ PUT /pdr/edit/:id       (admin required)    json(title, description, suggestedPr
 DELETE /pdr/delete/:id  (admin required)
 
 
-# Plan
+#### Plan
 
 <b>Public:</b>
 
 GET /plan/get-all/?page=1&pageLimit=20
 
-<i>For main page</i>
-
+For main page
 GET /plan/get-featured
 
 <b>Admin:</b>
@@ -67,7 +66,7 @@ DELETE /admin/plan/delete-plan/:planId
 DELETE /admin/plan/delete-feature/:featureId
 
 
-# Member
+#### Member
 
 <b>Public:</b>
 
@@ -86,7 +85,7 @@ Put /admin/member/edit/:memberId
 Delete /admin/member/delete/:memberId
 
 
-# Blog
+#### Blog
 
 <b>Public:</b>
 
@@ -94,8 +93,7 @@ GET /blog/get-all/?page=1&pageLimit=20
 
 GET /blog/get/:articleTitleUrl (articleTitleUrl is in json)
 
-<i>For main page</i>
-
+(For main page)
 GET /blog/get-featured
 
 
@@ -110,20 +108,17 @@ PUT /admin/blog/edit/:articleId      josn(title, body, tags, shortDesc)
 DELETE /admin/blog/delete/:articleId
 
 
-# Portfolio
+#### Portfolio
 
 <b>Public:</b>
 
-<i>Get all portfolios</i>
-
+(Get all portfolios)
 GET /portfolio/get-all/?page=1&pageLimit=20
 
-<i>For main page</i>
-
+(For main page)
 GET /portfolio/get-featured
 
-<i>Get single portfolio</i>
-
+(Get single portfolio)
 GET /admin/portfolio/get/:portfolioId
 
 <b>Admin:</b>
@@ -173,18 +168,15 @@ DELETE /admin/contactus/delete/:titleUrl
 
 <b>Public:</b>
 
-<i>Get all customers</i>
-
+(Get all customers)
 GET /customer/get-all/?page=1&pageLimit=20
 
-<i>For main page</i>
-
+(For main page)
 GET /customer/get-feautred
 
 <b>Admin:</b>
 
-<i>Get single customer</i>
-
+(Get single customer)
 GET /admin/customer/get/:customerId
 
 POST /admin/customer/create json(name, siteUrl, isFeatured)
