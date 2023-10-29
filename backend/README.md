@@ -38,8 +38,7 @@ DELETE /pdr/delete/:id  (admin required)
 
 GET /plan/get-all/?page=1&pageLimit=20
 
-GET /plan/get-featured
-<br><i>For main page</i>
+GET /plan/get-featured <i>(For main page)</i>
 
 <b>Admin:</b>
 
@@ -93,8 +92,7 @@ GET /blog/get-all/?page=1&pageLimit=20
 
 GET /blog/get/:articleTitleUrl (articleTitleUrl is in json)
 
-GET /blog/get-featured
-<br><i>For main page</i>
+GET /blog/get-featured <i>(For main page)</i>
 
 
 <b>Admin:</b>
@@ -112,15 +110,12 @@ DELETE /admin/blog/delete/:articleId
 
 <b>Public:</b>
 
-GET /portfolio/get-all/?page=1&pageLimit=20
-<br><i>Get all portfolios</i>
+GET /portfolio/get-all/?page=1&pageLimit=20   <i>(Get all portfolios)</i>
 
 
-GET /portfolio/get-featured
-<br><i>For main page</i>
+GET /portfolio/get-featured   <i>(For main page)</i>
 
-GET /admin/portfolio/get/:portfolioId
-<br><i>Get single portfolio</i>
+GET /admin/portfolio/get/:portfolioId   <i>(Get single portfolio)</i>
 
 <b>Admin:</b>
 
@@ -169,16 +164,13 @@ DELETE /admin/contactus/delete/:titleUrl
 
 <b>Public:</b>
 
-GET /customer/get-all/?page=1&pageLimit=20
-<br><i>Get all customers</i>
+GET /customer/get-all/?page=1&pageLimit=20   <i>(Get all customers)</i>
 
-GET /customer/get-feautred
-<br><i>For main page</i>
+GET /customer/get-feautred   <i>(For main page)</i>
 
 <b>Admin:</b>
 
-GET /admin/customer/get/:customerId
-<br><i>Get single customer</i>
+GET /admin/customer/get/:customerId   <i>(Get single customer)</i>
 
 POST /admin/customer/create json(name, siteUrl, isFeatured)
 
