@@ -22,7 +22,7 @@ export default function Portfolio() {
         return res.json();
       })
       .then((res) => {
-        setPortfolios(res.data);
+        setPortfolios(res.WorkSamples);
       });
   }, []);
   useEffect(() => {
