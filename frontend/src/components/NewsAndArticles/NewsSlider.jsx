@@ -9,7 +9,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 const NewsSlider = () => {
   const [articles, setArticles] = useState([]);
   useEffect(() => {
-    fetch("https://thlearn.iran.liara.run/api/v1/article/get-all?page=1")
+    fetch("https://thlearn.iran.liara.run/api/v1/blog/get-all?page=1")
       .then((res) => {
         return res.json();
       })
