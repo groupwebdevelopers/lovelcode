@@ -29,7 +29,7 @@ func GetSiteSocialMedia(c *fiber.Ctx) error{
 
 
 func GetSitePhoneNumbers(c *fiber.Ctx) error{
-	return utils.JSONResponse(c, 200, fiber.Map{"data":database.Settings.PhoneNumbers})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":database.Settings.SitePhoneNumbers})
 }
 
 

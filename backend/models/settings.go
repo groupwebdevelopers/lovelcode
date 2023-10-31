@@ -4,7 +4,7 @@ import (
 	"errors"
 	"lovelcode/utils"
 	"strconv"
-	
+	"log"
 )
 
 
@@ -24,8 +24,9 @@ type Settings struct{
 	PageLength int
 	ImageSaveUrl string
 	SocialMedias string
-	PhoneNumbers []string //splited with |
+	SitePhoneNumbers []string //splited with |
 	ArticleCategories []string // english|persian
+	MainpageInMemory bool
 }
 
 func SetupSettings(st []SettingsDB) (Settings, error){
@@ -36,8 +37,7 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 	settings.PageLength = 20
 	settings.ImageSaveUrl = "/../frontend/dist/images/"
 
-
-
+	
 	for _, s := range st{
 		if s.Value != ""{
 			
@@ -49,7 +49,6 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 					return settings,errors.New("invalid tokenExpHours in database")
 				}
 				settings.TokenExpHours = uint64(i)
-			
 			case "pageLength":
 				i, err := strconv.Atoi(s.Value)
 				if err!=nil{
@@ -61,17 +60,33 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 			case "socialMedias":
 				settings.SocialMedias = s.Value
 			case "sitePhoneNumber":
-				settings.PhoneNumbers = append(settings.PhoneNumbers, s.Value)
+				settings.SitePhoneNumbers = append(settings.SitePhoneNumbers, s.Value)
 			case "articleCategory":
 				settings.ArticleCategories = append(settings.ArticleCategories, s.Value)
+			case "mainpageInMemory":
+				b, err := strconv.ParseBool(s.Value)
+				if err!=nil{
+					utils.LogError(errors.New("invalid mainpageInMemory:"+err.Error()))
+				}
+				if b{
+					settings.MainpageInMemory = b
+				}
 			default:
 				utils.LogError( errors.New("unhandled setting: "+ s.Key+" value:" +s.Value))
 			}
-		}else{
-			return settings, errors.New("empty value key: "+ s.Key)	
+			}else{
+				return settings, errors.New("empty value key: "+ s.Key)	
+			}
 		}
-	}
-
+		log.Println("settings print:")
+		log.Println("tokenExpHours", settings.TokenExpHours)
+		log.Println("pageLength", settings.PageLength)
+		log.Println("imageSaveUrl", settings.ImageSaveUrl)
+		log.Println("socialMedias", settings.SocialMedias)
+		log.Println("sitePhoneNumber", settings.SitePhoneNumbers)
+		log.Println("articleCategory", settings.ArticleCategories)
+		log.Println("mainpageInMemory", settings.MainpageInMemory)
+		
 	return settings, nil
 }
 

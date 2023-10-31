@@ -14,6 +14,7 @@ import (
 
 var DB *gorm.DB
 var Settings models.Settings
+var MainpagesTexts []models.OMainpageText
 
 func Setup() error{
 	var err error
@@ -60,6 +61,13 @@ func Setup() error{
 	}
 	
 	Settings, err = models.SetupSettings(st)
+
+	if Settings.MainpageInMemory{
+		// get mainpages from database and set into array
+		if err:= DB.Model(&models.MainpageText{}).Find(&MainpagesTexts).Error; err!=nil{
+			return err
+		}
+	}
 
 	// create Owner
 	// db.Create(models.User{
