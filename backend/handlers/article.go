@@ -84,7 +84,7 @@ func GetArticle(c *fiber.Ctx) error{
 	titleUrl := c.Params("articleTitleUrl")
 	
 	var article models.OArticle
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.body, articles.tags, articles.short_desc, articles.image_path, articles.time_created, articles.time_modified, articles.views, users.name AS user_name, users.family AS user_family, users.email as user_email, article_categorys.category_english, article_categorys.category_persian").Where(&models.Article{TitleUrl: titleUrl}).Joins("INNER JOIN users ON articles.user_id=users.id").Joins("INNER JOIN article_categorys ON articles.article_category_id=article_categorys.id").Scan(&article).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.body, articles.tags, articles.short_desc, articles.image_path, articles.time_created, articles.time_modified, articles.views, users.name AS user_name, users.family AS user_family, users.email as user_email, article_categories.name AS category_name, article_categories.translated_name AS category_translated_name").Where(&models.Article{TitleUrl: titleUrl}).Joins("INNER JOIN users ON articles.user_id=users.id").Joins("INNER JOIN article_categories ON articles.article_category_id=article_categories.id").Scan(&article).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}
@@ -332,7 +332,7 @@ func CreateArticleCategory(c *fiber.Ctx) error{
 	}
 	
 		// check article category is exist
-		if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{English: al.English}).Error;err!=nil{
+		if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{Name: al.Name}).Error;err!=nil{
 			if err!=gorm.ErrRecordNotFound{
 				return utils.ServerError(c, err)
 			}
@@ -375,7 +375,7 @@ func EditArticleCategory(c *fiber.Ctx) error{
 	}
 	
 	// check article category is exist
-	if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{English: al.English}).Error;err!=nil{
+	if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{Name: al.Name}).Error;err!=nil{
 		if err!=gorm.ErrRecordNotFound{
 			return utils.ServerError(c, err)
 		}
