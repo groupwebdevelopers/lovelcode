@@ -106,6 +106,21 @@ PUT /admin/blog/edit/:articleId      josn(title, body, tags, shortDesc)
 DELETE /admin/blog/delete/:articleId
 
 
+## Blog Category
+
+<b>Public:</b>
+
+GET /blog/get-categories
+
+<b>Admin:</b>
+
+POST /admin/category/create  json(mainCategory, translatedMainCategory, name, translatedName, description, mainOrder, order)
+
+PUT /admin/category/edit/:id  json(mainCategory, translatedMainCategory, name, translatedName, description, mainOrder, order)
+
+DELETE /admin/category/delete/:id
+
+
 ## Portfolio
 
 <b>Public:</b>
