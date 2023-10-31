@@ -99,15 +99,15 @@ func SearchArticle(c *fiber.Ctx) error{
 	q := c.Queries()
 	title, ok := q["title"]
 
-	// check title
-	if err:= utils.IsNotInvalidCharacter(title); err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
-	}
-
+	
 	if ok{
+		// check title
+		if err:= utils.IsNotInvalidCharacter(title); err!=nil{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		}
 		// search by title
 		var articles []models.OArticleTitle
-		if err:= database.DB.Model(&models.Article{}).Where("title=%?%", title).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+		if err:= database.DB.Model(&models.Article{}).Where("title like ?", "%"+title+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
 			if err==gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 			}
@@ -123,13 +123,13 @@ func SearchArticle(c *fiber.Ctx) error{
 	}
 	tags, ok := q["tags"]
 
+	
+	
+	if ok{
 		// check tags
 		if err:= utils.IsNotInvalidCharacter(tags); err!=nil{
-			return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+			return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 		}
-	
-
-	if ok{
 		// search by tags
 		stags := strings.Split(tags, "|")
 
@@ -137,7 +137,7 @@ func SearchArticle(c *fiber.Ctx) error{
 		// have two tag
 		if len(stags) >= 2{
 
-			if err:= database.DB.Model(&models.Article{}).Where("tags=%?% or tags=%?%", stags[0], stags[1]).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+			if err:= database.DB.Model(&models.Article{}).Where("tags like ? and tags like %?%", "%"+stags[0]+"%", "%"+stags[1]+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
 				if err==gorm.ErrRecordNotFound{
 					return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 				}
@@ -145,7 +145,7 @@ func SearchArticle(c *fiber.Ctx) error{
 			}
 			
 		}else{
-			if err:= database.DB.Model(&models.Article{}).Where("tags=%?%", stags[0]).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+			if err:= database.DB.Model(&models.Article{}).Where("tags=?", "%"+stags[0]+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
 				if err==gorm.ErrRecordNotFound{
 					return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 				}
