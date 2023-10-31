@@ -48,6 +48,23 @@ func GetMainPage(c *fiber.Ctx) error{
 	if err:=utils.IsJustLetter(pageName, "-"); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid pageName:"+err.Error()})
 	}
+
+	// get main page from memory
+	if database.Settings.MainpageInMemory{
+		var result []models.OMainpageText
+		result = make([]models.OMainpageText, 0, 10)
+		for _, m := range database.MainpagesTexts{
+			if m.PageName == pageName{
+				result = append(result, m)
+			}
+		}
+
+		if len(result) > 0{
+			return utils.JSONResponse(c, 200, fiber.Map{"data":result, "test":true})
+		}
+	}
+
+	// get main page from database
 	var mpt []models.OMainpageText
 	if err:= database.DB.Model(&models.MainpageText{}).Where(&models.MainpageText{PageName: pageName}).Scan(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
