@@ -37,7 +37,8 @@ func Route(app *fiber.App) {
 	apiV1.Get("/blog/get-all", handlers.GetAllArticlesTitles)
 	apiV1.Get("/blog/get-featured", handlers.GetFeaturedArticlesTitle)
 	apiV1.Get("/blog/get-categories", handlers.GetAllArticleCategories)
-	
+	apiV1.Get("/blog/search", handlers.SearchArticle)
+
 	// portfolio
 	apiV1.Get("/portfolio/get-all", handlers.GetAllPortfolios)
 	apiV1.Get("/portfolio/get-featured", handlers.GetFeaturedPortfolios)

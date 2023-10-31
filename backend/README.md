@@ -94,6 +94,10 @@ GET /blog/get/:articleTitleUrl (articleTitleUrl is in json)
 
 GET /blog/get-featured       <i>(For main page)</i>
 
+GET /blog/search?title="article title"
+
+GET /blog/search?tags="t1|t2"
+
 
 <b>Admin:</b>
 

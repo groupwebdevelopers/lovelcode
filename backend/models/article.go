@@ -20,6 +20,7 @@ type Article struct{
 	ImagePath string `gorm:"size:200"`
 	Views uint64
 	IsFeatured bool
+	Likes uint64
 
 	TimeCreated time.Time
 	TimeModified time.Time
@@ -43,6 +44,7 @@ type OArticle struct{
 	TimeCreated time.Time `json:"timeCreated"`
 	TimeModified time.Time `json:"timeModified"`
 	Views uint64
+	Likes uint64
 
 	UserName string `json:"userName"`
 	UserFamily string `json:"userFamily"`
@@ -50,6 +52,20 @@ type OArticle struct{
 
 	CategoryName string `json:"categoryName"`
 	CategoryTranslatedName string `json:"categoryTranslatedName"`
+}
+
+type OArticleTitle struct{
+	Title string `json:"title"`
+	TitleUrl string `json:"titleUrl"`
+	ShortDesc string `json:"shortDesc"`
+	ImagePath string `json:"imagePath"`
+	TimeCreated time.Time `json:"timeCreated"`
+	TimeModified time.Time `json:"timeModified"`
+	Views uint64
+	Likes uint64
+
+	UserName string `json:"userName"`
+	UserFamily string `json:"userFamily"`
 }
 
 type ArticleCategory struct{

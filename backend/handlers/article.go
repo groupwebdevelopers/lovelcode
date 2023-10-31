@@ -25,57 +25,39 @@ import (
 
 // GET /:page
 func GetAllArticlesTitles(c *fiber.Ctx) error{
-	type Ar struct{
-		Title string
-		TitleUrl string
-		ImagePath string
-		ShortDesc string
-
-		Name string
-		Family string
-	}
+	
 	page, pageLimit, err :=utils.GetPageAndPageLimitFromMap(c.Queries())
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	var articles []Ar
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Scan(&articles).Error; err!=nil{
+	var articles []models.OArticleTitle
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Scan(&articles).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"articles":articles}) //user
+	return utils.JSONResponse(c, 200, fiber.Map{"data":articles}) //user
 }
 
 
 // GET /:page
 func GetFeaturedArticlesTitle(c *fiber.Ctx) error{
-	type Ar struct{
-		Title string
-		TitleUrl string
-		ImagePath string
-		ShortDesc string
-		Views uint64
-
-		Name string
-		Family string
-	}
 
 	page, pageLimit, err :=utils.GetPageAndPageLimitFromMap(c.Queries())
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	var articles []Ar
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views, users.name, users.family").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*pageLimit).Limit(pageLimit).Error; err!=nil{
+	var articles []models.OArticleTitle
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views, users.name AS user_name, users.family AS user_name").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*pageLimit).Limit(pageLimit).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"articles":articles}) //user
+	return utils.JSONResponse(c, 200, fiber.Map{"data":articles}) //user
 }
 
 // GET, /:articleTitleUrl
@@ -112,6 +94,76 @@ func GetArticle(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"data":article})
 	
 }
+
+func SearchArticle(c *fiber.Ctx) error{
+	q := c.Queries()
+	title, ok := q["title"]
+
+	// check title
+	if err:= utils.IsNotInvalidCharacter(title); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+	}
+
+	if ok{
+		// search by title
+		var articles []models.OArticleTitle
+		if err:= database.DB.Model(&models.Article{}).Where("title=%?%", title).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+			if err==gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
+			}
+			return utils.ServerError(c, err)
+		}
+
+		if len(articles) == 0{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no article found"})
+		}
+	
+		return utils.JSONResponse(c, 200, fiber.Map{"data":articles})
+	
+	}
+	tags, ok := q["tags"]
+
+		// check tags
+		if err:= utils.IsNotInvalidCharacter(tags); err!=nil{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":err})
+		}
+	
+
+	if ok{
+		// search by tags
+		stags := strings.Split(tags, "|")
+
+		var articles []models.OArticleTitle
+		// have two tag
+		if len(stags) >= 2{
+
+			if err:= database.DB.Model(&models.Article{}).Where("tags=%?% or tags=%?%", stags[0], stags[1]).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+				if err==gorm.ErrRecordNotFound{
+					return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
+				}
+				return utils.ServerError(c, err)
+			}
+			
+		}else{
+			if err:= database.DB.Model(&models.Article{}).Where("tags=%?%", stags[0]).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+				if err==gorm.ErrRecordNotFound{
+					return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
+				}
+				return utils.ServerError(c, err)
+			}
+		}
+		
+		if len(articles) == 0{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no article found"})
+		}
+
+			return utils.JSONResponse(c, 200, fiber.Map{"data":articles})
+	
+	}
+
+	return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid query"})
+}
+
 
 // ---------- category
 
