@@ -25,7 +25,6 @@ type Settings struct{
 	ImageSaveUrl string
 	SocialMedias string
 	SitePhoneNumbers []string //splited with |
-	ArticleCategories []string // english|persian
 	MainpageInMemory bool
 }
 
@@ -61,8 +60,6 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 				settings.SocialMedias = s.Value
 			case "sitePhoneNumber":
 				settings.SitePhoneNumbers = append(settings.SitePhoneNumbers, s.Value)
-			case "articleCategory":
-				settings.ArticleCategories = append(settings.ArticleCategories, s.Value)
 			case "mainpageInMemory":
 				b, err := strconv.ParseBool(s.Value)
 				if err!=nil{
@@ -84,7 +81,6 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 		log.Println("imageSaveUrl", settings.ImageSaveUrl)
 		log.Println("socialMedias", settings.SocialMedias)
 		log.Println("sitePhoneNumber", settings.SitePhoneNumbers)
-		log.Println("articleCategory", settings.ArticleCategories)
 		log.Println("mainpageInMemory", settings.MainpageInMemory)
 		
 	return settings, nil
