@@ -49,6 +49,7 @@ func Setup() error{
 		&models.Customer{},
 		&models.MainpageText{},
 		&models.Statistic{},
+		&models.ArticleCategory{},
 	)
 
 	if err!=nil{
