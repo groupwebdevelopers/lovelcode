@@ -84,7 +84,7 @@ func GetArticle(c *fiber.Ctx) error{
 	titleUrl := c.Params("articleTitleUrl")
 	
 	var article models.OArticle
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.body, articles.tags, articles.short_desc, articles.image_path, articles.time_created, articles.time_modified, articles.views, users.name AS user_name, users.family AS user_family, users.email as user_email").Where(&models.Article{TitleUrl: titleUrl}).Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&article).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.body, articles.tags, articles.short_desc, articles.image_path, articles.time_created, articles.time_modified, articles.views, users.name AS user_name, users.family AS user_family, users.email as user_email, article_categorys.category_english, article_categorys.category_persian").Where(&models.Article{TitleUrl: titleUrl}).Joins("INNER JOIN users ON articles.user_id=users.id").Joins("INNER JOIN article_categorys ON articles.article_category_id=article_categorys.id").Scan(&article).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}
@@ -112,6 +112,22 @@ func GetArticle(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"data":article})
 	
 }
+
+// ---------- category
+
+func GetAllArticleCategories(c *fiber.Ctx) error{
+	var categories []models.OArticleCategory
+	if err:= database.DB.Model(&models.ArticleCategory{}).Scan(&categories).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"no category found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"data":categories})
+}
+
+
 
 //////////////////  admin  //////////////////////////////
 
@@ -196,7 +212,7 @@ func UploadArticleImage(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"image added"})
 }
 
-// PUT, Auth Required, Admin Required, /:articleId
+// PUT, Auth Required, Admin Required, /:articleTitleUrl
 func EditArticle(c *fiber.Ctx) error{
 	// // get id form params
 	// id := utils.GetIntFromParams(c, "articleId")
@@ -296,4 +312,109 @@ func AddViewArticle(titleUrl string, vtoken string, views uint64){
 		utils.LogError(err)
 		return
 	}	
+}
+
+
+// --------- category
+
+
+// POST, auth required, admin required
+func CreateArticleCategory(c *fiber.Ctx) error{
+	
+	var al models.IArticleCategory
+	if err:= c.BodyParser(&al); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
+	}
+	
+	// check check validation
+	if err:=al.Check(); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
+	}
+	
+		// check article category is exist
+		if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{English: al.English}).Error;err!=nil{
+			if err!=gorm.ErrRecordNotFound{
+				return utils.ServerError(c, err)
+			}
+		}else{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"the article title already exist"})
+		}
+	
+	// create Article category and fill it
+	var category models.ArticleCategory
+	category.Fill(&al)
+	
+	if err:= database.DB.Create(&category).Error; err!=nil{
+		return utils.ServerError(c, err)
+	}
+	return utils.JSONResponse(c, 201, fiber.Map{"msg":"successfully created"})
+}
+
+// PUT, Auth Required, Admin Required, /:categoryId
+func EditArticleCategory(c *fiber.Ctx) error{
+	// get id form params
+	id := utils.GetIDFromParams(c, "articleCategoryId")
+	if id==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the articleCategoryId didn't send or invalid"})
+	}
+
+	// check category is exist
+	var category models.ArticleCategory
+	if err:= database.DB.First(&category, &models.ArticleCategory{ID: id}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article Category not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	
+	// get article category from body
+	var al models.IArticleCategory
+	if err:= c.BodyParser(&al); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
+	}
+	
+	// check article category is exist
+	if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{English: al.English}).Error;err!=nil{
+		if err!=gorm.ErrRecordNotFound{
+			return utils.ServerError(c, err)
+		}
+	}else{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the article category english field already exist"})
+	}
+	
+	// check Article validation
+	if err:=al.Check(); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
+	} 
+
+	// fill the Article
+	category.Fill(&al)
+
+	// modify Article in database
+	if err:= database.DB.Updates(&category).Error; err!=nil{
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfully modified"})
+}
+
+
+// DELETE, /:id
+func DeleteArticleCategory(c *fiber.Ctx) error{
+	
+	id := utils.GetIDFromParams(c, "articleCategoryId")
+	if id==0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the articleCategoryId didn't send or invalid"})
+	}
+
+	
+	if err:= database.DB.Delete(&models.ArticleCategory{}, id).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+	
+	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
 }

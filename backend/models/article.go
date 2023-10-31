@@ -10,6 +10,8 @@ type Article struct{
 	ID uint64 `gorm:"primaryKey"`
 	UserID uint64
 	User User
+	ArticleCategoryID uint64 
+	ArticleCategory ArticleCategory
 	Title string `gorm:"not null,size:100"`
 	TitleUrl string `gorm:"not null,size:100,unique"`
 	Body string `gorm:"not null,size:10000"`
@@ -45,6 +47,33 @@ type OArticle struct{
 	UserName string `json:"userName"`
 	UserFamily string `json:"userFamily"`
 	UserEmail string `json:"userEmail"`
+
+	CategoryEnglish string `json:"categoryEnglish"`
+	CategoryPersian string `json:"categoryPersian"`
+}
+
+type ArticleCategory struct{
+	ID uint64 `gorm:"primaryKey"`
+	MainCategory string `gorm:"size:100"`
+	English string `gorm:"size:100"`
+	Persian string `gorm:"size:100"`
+	Description string `gorm:"size:400"`
+
+}
+
+type IArticleCategory struct{
+	MainCategory string `json:"mainCategory"`
+	English string `json:"english"`
+	Persian string `json:"persian"`
+	Description string `json:"description"`
+}
+
+type OArticleCategory struct{
+	ID uint64 `json:"id"`
+	MainCategory string `json:"mainCategory"`
+	English string `json:"english"`
+	Persian string `json:"persian"`
+	Description string `json:"description"`
 }
 
 // output article for admin
@@ -82,5 +111,26 @@ func (a *IArticle) Check() error{
 		return errors.New("too long shertDesc")
 	}
 	
+	return nil
+}
+
+func (c *ArticleCategory) Fill(i *IArticleCategory){
+	c.English = i.English
+	c.Persian = i.Persian
+	c.Description = i.Description
+
+}
+
+func (i *IArticleCategory) Check() error{
+	if err:=utils.IsJustLetter(i.English, " "); err!=nil{
+		return errors.New("invalid english field: "+err.Error())
+	}
+	if err:= utils.IsNotInvalidCharacter(i.Persian);err!=nil{
+		return errors.New("invalid persian field: "+err.Error())
+	}
+	if err:= utils.IsNotInvalidCharacter(i.Description);err!=nil{
+		return errors.New("invalid desctiption field: "+err.Error())
+	}
+
 	return nil
 }

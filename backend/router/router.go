@@ -36,7 +36,7 @@ func Route(app *fiber.App) {
 	apiV1.Get("/blog/get/:articleTitleUrl", handlers.GetArticle)
 	apiV1.Get("/blog/get-all", handlers.GetAllArticlesTitles)
 	apiV1.Get("/blog/get-featured", handlers.GetFeaturedArticlesTitle)
-	apiV1.Get("/blog/get-categories", handlers.GetArticleCategories)
+	apiV1.Get("/blog/get-categories", handlers.GetAllArticleCategories)
 	
 	// portfolio
 	apiV1.Get("/portfolio/get-all", handlers.GetAllPortfolios)
@@ -87,6 +87,12 @@ func Route(app *fiber.App) {
 	adminArticleReq.Put("/edit/:articleId", handlers.EditArticle)
 	adminArticleReq.Delete("/delete/:articleId", handlers.DeleteArticle)
 	
+	// article category
+	adminArticleCategoryReq := apiV1.Group("/admin/article-category", handlers.AdminRequired)
+	adminArticleCategoryReq.Post("/create", handlers.CreateArticleCategory)
+	adminArticleCategoryReq.Put("/edit/:articleCategoryId", handlers.EditArticleCategory)
+	adminArticleCategoryReq.Delete("/delete/:articleCategoryId", handlers.DeleteArticleCategory)
+
 	
 	// adminReq := authReq.Group("/admin", handlers.AdminRequired)
 	
