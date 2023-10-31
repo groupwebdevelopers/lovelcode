@@ -27,6 +27,17 @@ func GetSiteSocialMedia(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"data":database.Settings.SocialMedias})
 }
 
+
+func GetSitePhoneNumbers(c *fiber.Ctx) error{
+	return utils.JSONResponse(c, 200, fiber.Map{"data":database.Settings.PhoneNumbers})
+}
+
+
+func GetArticleCategories(c *fiber.Ctx) error{
+	return utils.JSONResponse(c, 200, fiber.Map{"data":database.Settings.ArticleCategories})
+}
+
+
 // GET, /:pageName
 func GetMainPage(c *fiber.Ctx) error{
 	pageName := c.Params("pageName", "")

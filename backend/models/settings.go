@@ -24,6 +24,8 @@ type Settings struct{
 	PageLength int
 	ImageSaveUrl string
 	SocialMedias string
+	PhoneNumbers []string //splited with |
+	ArticleCategories []string // english|persian
 }
 
 func SetupSettings(st []SettingsDB) (Settings, error){
@@ -33,6 +35,8 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 	settings.TokenExpHours = 72
 	settings.PageLength = 20
 	settings.ImageSaveUrl = "/../frontend/dist/images/"
+
+
 
 	for _, s := range st{
 		if s.Value != ""{
@@ -56,9 +60,12 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 				settings.ImageSaveUrl = s.Value
 			case "socialMedias":
 				settings.SocialMedias = s.Value
-
+			case "sitePhoneNumber":
+				settings.PhoneNumbers = append(settings.PhoneNumbers, s.Value)
+			case "articleCategory":
+				settings.ArticleCategories = append(settings.ArticleCategories, s.Value)
 			default:
-				return settings, errors.New("unhandled setting: "+ s.Key+" value:" +s.Value)
+				utils.LogError( errors.New("unhandled setting: "+ s.Key+" value:" +s.Value))
 			}
 		}else{
 			return settings, errors.New("empty value key: "+ s.Key)	

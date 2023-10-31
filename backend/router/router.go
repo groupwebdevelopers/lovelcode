@@ -36,14 +36,15 @@ func Route(app *fiber.App) {
 	apiV1.Get("/blog/get/:articleTitleUrl", handlers.GetArticle)
 	apiV1.Get("/blog/get-all", handlers.GetAllArticlesTitles)
 	apiV1.Get("/blog/get-featured", handlers.GetFeaturedArticlesTitle)
-	
+	apiV1.Get("/blog/get-categories", handlers.GetArticleCategories)
 	
 	// portfolio
 	apiV1.Get("/portfolio/get-all", handlers.GetAllPortfolios)
 	apiV1.Get("/portfolio/get-featured", handlers.GetFeaturedPortfolios)
 	
-	// social media
+	// site info
 	apiV1.Get("/site-social-media", handlers.GetSiteSocialMedia)
+	apiV1.Get("/site-phone-numbers", handlers.GetSitePhoneNumbers)
 	
 	// comment
 	apiV1.Get("/comment/get-all-for-article/:articleTitleUrl", handlers.GetAllArticleComments)
