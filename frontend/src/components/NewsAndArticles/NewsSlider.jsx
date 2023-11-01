@@ -14,8 +14,8 @@ const NewsSlider = () => {
         return res.json();
       })
       .then((res) => {
-        setArticles(res.articles);
-        console.log(res.articles)
+        setArticles(res.data);
+        console.log(res.data)
       });
   }, []);
   const swiperRef = useRef(null);
@@ -70,17 +70,17 @@ const NewsSlider = () => {
       >
         {articles.map((item) => {
           return (
-            <SwiperSlide className="w-full h-auto" key={item.Title}>
+            <SwiperSlide className="w-full h-auto" key={item.title}>
               <div className="w-auto h-full bg-white rounded-3xl flex flex-col items-center shadow-md shadow-slate-600">
                 <div className="w-full h-full flex flex-col items-center pt-4 px-4">
                   <img
-                    src={item.ImagePath}
-                    alt={item.Title}
+                    src={item.imagePath}
+                    alt={item.title}
                     className="object-cover xl:w-full xl:h-64 xl:rounded-3xl"
                   />
                   <div className="w-full flex flex-col items-start mt-4 text-second-gray-text-web">
                     <h2 className="font-Ray-ExtraBold text-main-dark-text-web h-12 md:h-8">
-                      {item.Title}
+                      {item.title}
                     </h2>
                     <p className="font-Ray-Medium mt-2 h-32 md:h-28 text-sm md:text-base">
                       {}
