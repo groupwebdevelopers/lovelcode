@@ -94,6 +94,10 @@ GET /blog/get/:articleTitleUrl (articleTitleUrl is in json)
 
 GET /blog/get-featured       <i>(For main page)</i>
 
+GET /blog/search?title="article title"
+
+GET /blog/search?tags="t1|t2"
+
 
 <b>Admin:</b>
 
@@ -104,6 +108,21 @@ POST /admin/upload/blog/image/:articleId (without /api/v1)
 PUT /admin/blog/edit/:articleId      josn(title, body, tags, shortDesc)
 
 DELETE /admin/blog/delete/:articleId
+
+
+## Blog Category
+
+<b>Public:</b>
+
+GET /blog/get-categories
+
+<b>Admin:</b>
+
+POST /admin/category/create  json(mainCategory, translatedMainCategory, name, translatedName, description, mainOrder, order)
+
+PUT /admin/category/edit/:id  json(mainCategory, translatedMainCategory, name, translatedName, description, mainOrder, order)
+
+DELETE /admin/category/delete/:id
 
 
 ## Portfolio
