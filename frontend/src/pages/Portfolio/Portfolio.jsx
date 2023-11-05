@@ -17,20 +17,18 @@ export default function Portfolio() {
     { id: 9, name: "ui/ux", type: "ui" },
   ];
   useEffect(() => {
-    fetch("https://thlearn.iran.liara.run/api/v1/work-sample/get-featured")
+    fetch("https://thlearn.iran.liara.run/api/v1/portfolio/get-all/?page=1")
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        setPortfolios(res.WorkSamples);
+        setPortfolios([...res.data]);
       });
   }, []);
   useEffect(() => {
     SetSelectPortfolio(
       [...Portfolios].filter((item) => item.type === selector)
     );
-    console.log(Portfolios);
-    console.log(selectPortfolio);
   }, [selector]);
 
   return (
@@ -89,7 +87,7 @@ export default function Portfolio() {
               ? Portfolios.map((item) => (
                   <a
                     href="#"
-                    key={item.title}
+                    key={item.id}
                     className="w-[270px] h-[270px] rounded-[25px] bg-white"
                   >
                     <img src={item.imagePath} />
