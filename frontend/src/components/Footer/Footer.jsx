@@ -7,6 +7,7 @@ export default function Footer() {
       .then((res) =>res.json())
       .then((data) =>setData(data.data));
   }, []);
+  console.log(data);
   return (
     <>
       <div className="bg-third-gray-text-web/20 relative">
@@ -43,9 +44,10 @@ export default function Footer() {
                   </div>
                   <div className="font-Ray-Bold text-sm max-w-[249px] lg:max-w-[200px]">
                     <p>
-                      ما یک آژانس دیجیتال مارکتینگ تمام خدمت هستیم که کلیه
-                      خدماتی که کسب و کارشما، برای رشد در فضای دیجیتال به آنها
-                      نیاز دارد را برنامه ریزی و اجرا میکنیم.
+                      {
+                        data.length &&
+                        data[2].body
+                      }
                     </p>
                   </div>
                 </div>
