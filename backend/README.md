@@ -10,60 +10,75 @@ GET /api/v1/
 
 
 ## auth
-
+"""
 POST /signup (json with email, password, name, family(optional))
     password lenght bigger than 8
     email example test@test.com
     name must letter without !@#$%^&*()_+-;'"
-
+"""
+"""
 POST /signin (json with email, password)
-
+"""
 
 ## Project Doing Request
-
+"""
 POST /pdr/create        (admin required)    json(title, description, suggestedPrice(optional))
-
+"""
+"""
 GET /pdr/get/:id        (admin required)
-
+"""
+"""
 GET /pdr/get-all        (admin required)
-
+"""
+"""
 PUT /pdr/edit/:id       (admin required)    json(title, description, suggestedPrice(optional))
-
+"""
+"""
 DELETE /pdr/delete/:id  (admin required)
-
+"""
 
 ## Plan
 
 <b>Public:</b>
-
+"""
 GET /plan/get-all/?page=1&pageLimit=20
-
-GET /plan/get-featured      <i>(For main page)</i>
-
+"""
+"""
+GET /plan/get-featured
+      <i>(For main page)</i>
+"""
 <b>Admin:</b>
-
+"""
 GET	/admin/plan/get-all-plans
-
+"""
 GET	/admin/plan/get-plan/:planId
-
+"""
+"""
 GET	/admin/plan/get-feature/:featureId
-
+"""
 GET	/plan/get-all-features/:planId
-
+"""
+"""
 POST /admin/plan/create                       json(name, price)
-
+"""
+"""
 POST /admin/plan/create-features/:planId      json(name, price, isHave)
-
+"""
+"""
 POST /admin/upload/plan/image/:planId  (Content-Type: multipart/form-data) (with FormData js object) (without /api/v1)
-
+"""
+"""
 PUT /admin/plan/edit/:planId                  json(name, price)
-
+"""
+"""
 PUT	/admin/plan/edit-feature/:featureId       json(name, price, isHave)
-
+"""
+"""
 DELETE /admin/plan/delete-plan/:planId
-
+"""
+"""
 DELETE /admin/plan/delete-feature/:featureId
-
+"""
 
 ## Member
 
