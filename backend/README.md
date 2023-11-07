@@ -60,10 +60,12 @@ GET /plan/get-featured
 ```
 GET	/admin/plan/get-all-plans
 ```
+```
 GET	/admin/plan/get-plan/:planId
 ```
 ```
 GET	/admin/plan/get-feature/:featureId
+```
 ```
 GET	/plan/get-all-features/:planId
 ```

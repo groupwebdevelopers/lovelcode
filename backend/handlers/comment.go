@@ -45,15 +45,23 @@ func CreateComment(c *fiber.Ctx) error{
 
 	if mb.CommentAnswerID != 0{
 		// check comment is exist
-		var commentID uint64
-		if err:= database.DB.Model(&models.Comment{}).Select("id").Where(models.Comment{ID: mb.CommentAnswerID, ArticleID: articleID}).Scan(&commentID).Error;err!=nil{
+		type com struct{
+			ID uint64
+			CommentAnswerID uint64
+		}
+		var comt com
+		if err:= database.DB.Model(&models.Comment{}).Select("id, comment_answer_id").Where(models.Comment{ID: mb.CommentAnswerID, ArticleID: articleID}).Scan(&comt).Error;err!=nil{
 			if err == gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
 			}
 			return utils.ServerError(c, err)
 		}
-		if commentID == 0{
+		if comt.ID == 0{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
+		}
+
+		if comt.CommentAnswerID != 0{
+			return utils.JSONResponse(c, 403, fiber.Map{"error":"can't answer to answer"})
 		}
 
 	}
