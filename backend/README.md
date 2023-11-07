@@ -19,37 +19,44 @@ POST /signup (json with email, password, name, family(optional))
     name must letter without !@#$%^&*()_+-;'"
 ```
 ```
-POST /signin (json with email, password)
+POST /signin
+        (json with email, password)
 ```
 
 ## Project Doing Request
 ```
-POST /pdr/create        (admin required)    json(title, description, suggestedPrice(optional))
+POST /pdr/create
+        json(title, description, suggestedPrice(optional))
 ```
 ```
-GET /pdr/get/:id        (admin required)
+GET /pdr/get/:id
 ```
 ```
-GET /pdr/get-all        (admin required)
+GET /pdr/get-all
 ```
 ```
-PUT /pdr/edit/:id       (admin required)    json(title, description, suggestedPrice(optional))
+PUT /pdr/edit/:id
+        json(title, description, suggestedPrice(optional))
 ```
 ```
-DELETE /pdr/delete/:id  (admin required)
+DELETE /pdr/delete/:id
 ```
 
 ## Plan
 
 <b>Public:</b>
+
+For plan page:
 ```
 GET /plan/get-all/?page=1&pageLimit=20
 ```
+
+For main page:
 ```
 GET /plan/get-featured
-      <i>(For main page)</i>
 ```
 <b>Admin:</b>
+
 ```
 GET	/admin/plan/get-all-plans
 ```
@@ -61,19 +68,25 @@ GET	/admin/plan/get-feature/:featureId
 GET	/plan/get-all-features/:planId
 ```
 ```
-POST /admin/plan/create                       json(name, price)
+POST /admin/plan/create
+                json(name, price)
 ```
 ```
-POST /admin/plan/create-features/:planId      json(name, price, isHave)
+POST /admin/plan/create-features/:planId
+          json(name, price, isHave)
 ```
 ```
-POST /admin/upload/plan/image/:planId  (Content-Type: multipart/form-data) (with FormData js object) (without /api/v1)
+POST /admin/upload/plan/image/:planId
+          (Content-Type: multipart/form-data)
+          (with FormData js object) (without /api/v1)
 ```
 ```
-PUT /admin/plan/edit/:planId                  json(name, price)
+PUT /admin/plan/edit/:planId
+              json(name, price)
 ```
 ```
-PUT	/admin/plan/edit-feature/:featureId       json(name, price, isHave)
+PUT	/admin/plan/edit-feature/:featureId
+             json(name, price, isHave)
 ```
 ```
 DELETE /admin/plan/delete-plan/:planId
@@ -96,7 +109,8 @@ GET /member/get/:memberId
 POST /admin/member/create
 ```
 ```
-POST /admin/upload/member/image/:memberId (without /api/v1)
+POST /admin/upload/member/image/:memberId 
+        (without /api/v1)
 ```
 ```
 Put /admin/member/edit/:memberId
@@ -108,20 +122,30 @@ Delete /admin/member/delete/:memberId
 ## Blog
 
 <b>Public:</b>
+
+For blog page:
 ```
 GET /blog/get-all/?page=1&pageLimit=20
 ```
+
+For single article page:
 ```
-GET /blog/get/:articleTitleUrl (articleTitleUrl is in json)
+GET /blog/get/:articleTitleUrl (articleTitleUrl is in article json)
 ```
+
+For main page:
 ```
-GET /blog/get-featured       <i>(For main page)</i>
+GET /blog/get-featured
 ```
+
+For search by article title:
 ```
 GET /blog/search?title="article title"
 ```
+
+For related articles and search by tag:
 ```
-GET /blog/search?tags="t1|t2"
+GET /blog/search?tags=t1|t2
 ```
 
 <b>Admin:</b>
@@ -158,24 +182,33 @@ DELETE /admin/category/delete/:id
 ## Portfolio
 
 <b>Public:</b>
+
+For portfolio page:
 ```
-GET /portfolio/get-all/?page=1&pageLimit=20   <i>(Get all portfolios)</i>
+GET /portfolio/get-all/?page=1&pageLimit=20
 ```
+
+For main page:
 ```
 GET /portfolio/get-featured       <i>(For main page)</i>
 ```
+
+For get single portfolio
 ```
-GET /admin/portfolio/get/:portfolioId         <i>(Get single portfolio)</i>
+GET /admin/portfolio/get/:portfolioId
 ```
 <b>Admin:</b>
 ```
-POST /admin/portfolio/create              josn(title, imagePath, siteUrl, description, isFeatured)
+POST /admin/portfolio/create
+              josn(title, imagePath, siteUrl, description, isFeatured)
 ```
 ```
-POST /admin/upload/portfolio/image/:portfolioId  (without /api/v1)
+POST /admin/upload/portfolio/image/:portfolioId
+          (without /api/v1)
 ```
 ```
-PUT /admin/portfolio/edit/:articleId          josn(title, imagePath, siteUrl, description, isFeatured)
+PUT /admin/portfolio/edit/:articleId
+          josn(title, imagePath, siteUrl, description, isFeatured)
 ```
 ```
 DELETE /admin/portfolio/delete/:articleId
@@ -184,7 +217,8 @@ DELETE /admin/portfolio/delete/:articleId
 ## Main pages
 ```
 GET /mainpage/site-features/
-
+```
+```
 GET /mainpage/aboutus
 ```
 
@@ -195,10 +229,12 @@ GET /mainpage/aboutus
 GET /comment/get-all-for-article/:articleTitleUrl
 ```
 ```
-POST /comment/create json(body, commentAnswerID(0 if not answer and id of comment for answer it))
+POST /comment/create 
+        json(body, commentAnswerID(0 if not answer and id of comment for answer it))
 ```
 ```
-PUT /comment/edit/:id json(body, commentAnswerID(0 if not answer and id of comment for answer it))
+PUT /comment/edit/:id
+         json(body, commentAnswerID(0 if not answer and id of comment for answer it))
 ```
 ```
 DELETE /comment/delete/:id
@@ -208,7 +244,8 @@ DELETE /comment/delete/:id
 
 <b>Public:</b>
 ```
-POST /contactus/create json(title, body, email, number)
+POST /contactus/create
+        json(title, body, email, number)
 ```
 <b>Admin:</b>
 ```
@@ -228,14 +265,14 @@ DELETE /admin/contactus/delete/:titleUrl
 
 <b>Public:</b>
 ```
-GET /customer/get-all/?page=1&pageLimit=20         <i>(Get all customers)</i>
+GET /customer/get-all/?page=1&pageLimit=20
 ```
 ```
-GET /customer/get-feautred           <i>(For main page)</i>
+GET /customer/get-feautred
 ```
 <b>Admin:</b>
 ```
-GET /admin/customer/get/:customerId           <i>(Get single customer)</i>
+GET /admin/customer/get/:customerId
 ```
 ```
 POST /admin/customer/create json(name, siteUrl, isFeatured)
@@ -261,10 +298,12 @@ GET /statistics/get-public
 GET /admin/statistic/get-all
 ```
 ```
-POST /admin/statistic/create    json(name, name2, number, isPublic)
+POST /admin/statistic/create
+        json(name, name2, number, isPublic)
 ```
 ```
-PUT /admin/statistic/edit/:statisticId json(name, name2, number, isPublic)
+PUT /admin/statistic/edit/:statisticId
+         json(name, name2, number, isPublic)
 ```
 ```
 DELETE /admin/statistic/delete/:statisticId

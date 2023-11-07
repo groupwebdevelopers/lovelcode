@@ -144,7 +144,8 @@ func SearchArticle(c *fiber.Ctx) error{
 				return utils.ServerError(c, err)
 			}
 			
-		}else{
+		}
+		if len(articles) == 0 && len(stags)==1{
 			if err:= database.DB.Model(&models.Article{}).Where("tags=?", "%"+stags[0]+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
 				if err==gorm.ErrRecordNotFound{
 					return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
