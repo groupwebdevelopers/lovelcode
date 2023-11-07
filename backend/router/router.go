@@ -79,6 +79,10 @@ func Route(app *fiber.App) {
 	commentAuthReq.Put("/edit/:commentId", handlers.EditComment)
 	commentAuthReq.Delete("/delete/:commentId", handlers.DeleteComment)
 	
+	// user
+	userAuthReq := apiV1.Group("/user", handlers.AuthRequired)
+	userAuthReq.Get("/get-state", handlers.GetUserState)
+
 	
 	// admin required
 	

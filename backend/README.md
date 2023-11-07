@@ -11,7 +11,7 @@ base url: /api/v1/...
 GET /api/v1/
 ```
 
-## auth
+## User
 ```
 POST /signup (json with email, password, name, family(optional))
     password lenght bigger than 8
@@ -21,6 +21,11 @@ POST /signup (json with email, password, name, family(optional))
 ```
 POST /signin
         (json with email, password)
+```
+
+For dashboard:
+```
+GET /user/get-state
 ```
 
 ## Project Doing Request

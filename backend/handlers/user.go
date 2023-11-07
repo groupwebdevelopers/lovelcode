@@ -128,6 +128,8 @@ func Signup(c *fiber.Ctx) error{
 	user.IsBanned = false
 	user.Token = token
 	user.TokenExp = time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour)
+	user.TimeCreated = time.Now()
+
 
 	if err:= database.DB.Create(&user).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -143,6 +145,29 @@ func Signup(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"msg": "user created. go to signin"})
 
 }
+
+func GetUserState(c *fiber.Ctx) error{
+	
+	user := c.Locals("user").(models.User)
+
+	// get commnets count
+	var commentsCount int
+	if err:= database.DB.Select("count(id)").Where(models.Comment{UserID: user.ID}).Scan(&commentsCount).Error; err!=nil{
+		return utils.ServerError(c, err)
+	}
+	
+	// get project doing request count
+	var pdrCount int
+	if err:= database.DB.Select("count(id)").Where(models.ProjectDoingRequest{UserID: user.ID}).Scan(&pdrCount).Error; err!=nil{
+		return utils.ServerError(c, err)
+	}
+
+	var rt string = utils.ConvertTimeToString(utils.ConvertToPersianTime(user.TimeCreated))
+
+	return utils.JSONResponse(c, 200, fiber.Map{"timeRigistered":rt, "totallComments":commentsCount, "totallProjectDoingRequest": pdrCount})
+}
+
+
 
 // POST, Auth Required, Admin Required, /:id
 func BanUser(c *fiber.Ctx) error{

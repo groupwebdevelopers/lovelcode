@@ -139,3 +139,7 @@ func ConvertStringToTime(t string, loc *time.Location) time.Time{
 	return time.Date(year, time.Month(month), day, 0,0,0,0, loc)
 	
 }
+
+func ConvertTimeToString(t time.Time) string{
+	return strings.Split(t.String(), "T")[0]
+}

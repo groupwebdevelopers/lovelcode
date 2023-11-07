@@ -21,6 +21,8 @@ type User struct {
 	IsBanned bool `gorm:"not null"`
 	Token string `gorm:"unique,size:64"`
 	TokenExp time.Time
+
+	TimeCreated time.Time
 }
 
 type SigninUser struct{
