@@ -143,3 +143,4 @@ func ConvertStringToTime(t string, loc *time.Location) time.Time{
 func ConvertTimeToString(t time.Time) string{
 	return strings.Split(t.String(), "T")[0]
 }
+

@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@liara/cli": "^5.0.0"
+    "@liara/cli": "^5.1.1",
+    "iconv-lite": "^0.6.3"
   }
 }

@@ -38,6 +38,8 @@ func GetAllArticlesTitles(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
+	convertArticleStringTimesForOutput(articles)
+
 	return utils.JSONResponse(c, 200, fiber.Map{"data":articles}) //user
 }
 
@@ -56,6 +58,8 @@ func GetFeaturedArticlesTitle(c *fiber.Ctx) error{
 		}
 		return utils.ServerError(c, err)
 	}
+
+	convertArticleStringTimesForOutput(articles)
 
 	return utils.JSONResponse(c, 200, fiber.Map{"data":articles}) //user
 }
@@ -117,6 +121,9 @@ func SearchArticle(c *fiber.Ctx) error{
 		if len(articles) == 0{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no article found"})
 		}
+
+	convertArticleStringTimesForOutput(articles)
+
 	
 		return utils.JSONResponse(c, 200, fiber.Map{"data":articles})
 	
@@ -157,6 +164,8 @@ func SearchArticle(c *fiber.Ctx) error{
 		if len(articles) == 0{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no article found"})
 		}
+
+	convertArticleStringTimesForOutput(articles)
 
 			return utils.JSONResponse(c, 200, fiber.Map{"data":articles})
 	
@@ -471,3 +480,15 @@ func DeleteArticleCategory(c *fiber.Ctx) error{
 	
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
 }
+
+
+
+func convertArticleStringTimesForOutput(st []models.OArticleTitle)  {
+	for i:= range st{
+
+		st[i].TimeCreated = strings.Split(st[i].TimeCreated, "T")[0]
+		st[i].TimeModified = strings.Split(st[i].TimeModified, "T")[0]
+		
+	}
+}
+

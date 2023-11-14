@@ -59,8 +59,8 @@ type OArticleTitle struct{
 	TitleUrl string `json:"titleUrl"`
 	ShortDesc string `json:"shortDesc"`
 	ImagePath string `json:"imagePath"`
-	TimeCreated time.Time `json:"timeCreated"`
-	TimeModified time.Time `json:"timeModified"`
+	TimeCreated string `json:"timeCreated"`
+	TimeModified string `json:"timeModified"`
 	Views uint64
 	Likes uint64
 
