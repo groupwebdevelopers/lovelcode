@@ -140,6 +140,10 @@ func ConvertStringToTime(t string, loc *time.Location) time.Time{
 	
 }
 
+func ConvertStringTimeToPersianStringTime(s string) string{
+	return ConvertTimeToString(ConvertToPersianTime(ConvertStringToTime(s, time.FixedZone("Tehran", 3.5*60*60))))
+}
+
 func ConvertTimeToString(t time.Time) string{
 	return strings.Split(t.String(), "T")[0]
 }

@@ -31,7 +31,7 @@ func GetAllArticlesTitles(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	var articles []models.OArticleTitle
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Scan(&articles).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.time_created, articles.time_modified, articles.views, articles.likes, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Scan(&articles).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
@@ -52,7 +52,7 @@ func GetFeaturedArticlesTitle(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	var articles []models.OArticleTitle
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views, users.name AS user_name, users.family AS user_name").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*pageLimit).Limit(pageLimit).Error; err!=nil{
+	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views,articles.time_created, articles.time_modified, articles.views, articles.likes, users.name AS user_name, users.family AS user_name").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*pageLimit).Limit(pageLimit).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
@@ -486,8 +486,8 @@ func DeleteArticleCategory(c *fiber.Ctx) error{
 func convertArticleStringTimesForOutput(st []models.OArticleTitle)  {
 	for i:= range st{
 
-		st[i].TimeCreated = strings.Split(st[i].TimeCreated, "T")[0]
-		st[i].TimeModified = strings.Split(st[i].TimeModified, "T")[0]
+		st[i].TimeCreated =strings.Split(utils.ConvertStringTimeToPersianStringTime(st[i].TimeCreated), " ")[0]
+		st[i].TimeModified =utils.ConvertStringTimeToPersianStringTime( strings.Split(st[i].TimeModified, "T")[0])
 		
 	}
 }
