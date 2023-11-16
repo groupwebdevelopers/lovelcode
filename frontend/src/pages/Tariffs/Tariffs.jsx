@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import DesignPlan from "../../components/DesignPlan/DesignPlan";
 import {
@@ -9,7 +9,9 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/react";
+import apiRequests from "../../Services/Axios/configs";
 export default function Tariffs() {
+  
   const boxses = [
     {
       id: 1,
@@ -183,12 +185,18 @@ export default function Tariffs() {
       ],
     },
   ];
+  const [plans , setPlans] = useState([])
+  useEffect(()=>{
+    apiRequests.get('/plan/get-all/')
+    .then(res=>console.log(res))
+  },[])
   return (
     <div>
       <NavBar />
       <div className="container bredcromp"></div>
       <div className="container">
-        <div className="title text-center">
+        <div className="flex">
+        <div className="title">
           <div className=" text-main-dark-text-web">
             <h1 className="font-Ray-ExtraBold text-[30px]">
               قیمت طراحی سایت و فروشگاه اینترنتی
@@ -196,10 +204,18 @@ export default function Tariffs() {
           </div>
           <div className="mt-2">
             <p className="font-Ray-Bold text-xl text-main-green-web">
-              تعرفه و امکانات بسته‌های مختلف پرتال را مقایسه کن و با توجه به
-              نیازهای خودت یکی رو انتخاب کن.{" "}
+            طراحی سایت با قیمت مناسب روز و پکیج های گوناگو
             </p>
           </div>
+          <div className="mt-2">
+            <p className="font-Ray-Bold text-lg ">
+            در اینجا ما لیست قیمت طراحی سایت تمامی حوزه های طراحی سایت لاول کد ر را برای شما آماده کرده ایم. تنها کافیست که شما حوزه مورد نظر خودتان را انتخاب کنید و از هزینه طراحی سایت آن با خبر بشوید. در نظر داشته باشید که این قیمت ها، قیمت پایه هستند و برای طراحی سایت اختصاصی و وجود امکانات بیشتر می توانید با کارشناسان ما در ارتباط باشید.
+            </p>
+          </div>
+        </div>
+        <div>
+          <img src=""/>
+        </div>
         </div>
         <div className="select hidden font-Ray-Bold lg:flex my-12 bg-white w-fit  rounded-xl items-center text-xs lg:text-base">
           <a

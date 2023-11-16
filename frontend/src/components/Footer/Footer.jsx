@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import apiRequests from "../../Services/Axios/configs";
 export default function Footer() {
   const [data, setData] = useState([]);
   useEffect(() => {
-    fetch("https://thlearn.iran.liara.run/api/v1/mainpage/footer")
-      .then((res) => res.json())
-      .then((data) => setData(data.data));
+    apiRequests.get("/mainpage/footer")
+      .then((data) => setData(data.data.data));
   }, []);
   const getOrder = (order) => {
     return data.filter((item) => item.order === order);
@@ -18,7 +18,7 @@ export default function Footer() {
       <div className="bg-third-gray-text-web/20 relative">
         <a
           href="#top"
-          className="hidden absolute -top-3 right-1/2 bg-white w-9 h-9 sm:flex justify-center items-center rounded-full hover:text-white hover:bg-main-blue-web duration-300"
+          className="scroll-smooth hidden absolute -top-3 right-1/2 bg-white w-9 h-9 sm:flex justify-center items-center rounded-full hover:text-white hover:bg-main-blue-web duration-300"
         >
           <i className="bi bi-chevron-up"></i>
         </a>
