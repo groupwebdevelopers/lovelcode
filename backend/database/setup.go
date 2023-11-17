@@ -50,6 +50,7 @@ func Setup() error{
 		&models.MainpageText{},
 		&models.Statistic{},
 		&models.ArticleCategory{},
+		&models.PlanType{},
 	)
 
 	if err!=nil{

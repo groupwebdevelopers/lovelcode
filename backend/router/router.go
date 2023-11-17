@@ -28,6 +28,8 @@ func Route(app *fiber.App) {
 	// plan
 	apiV1.Get("/plan/get-all", handlers.GetAllPlansAndFeatures)
 	apiV1.Get("/plan/get-featured", handlers.GetFeaturedPlans)
+	apiV1.Get("/plan/get-all-plan-types", handlers.GetAllPlanTypes)
+	apiV1.Get("/plan/get-plan-type/:planTypeId", handlers.GetPlanType)
 	
 	// member
 	apiV1.Get("/member/get-all", handlers.GetAllMembers)
@@ -108,15 +110,20 @@ func Route(app *fiber.App) {
 	// Plan
 	planAdminReq := apiV1.Group("/admin/plan", handlers.AdminRequired)
 	planAdminReq.Post("/create", handlers.CreatePlan)
-	planAdminReq.Post("/create-features/:planId", handlers.CreateFeatures)
 	planAdminReq.Put("/edit/:planId", handlers.EditPlan)
-	planAdminReq.Put("/edit-feature/:featureId", handlers.EditFeature)
 	planAdminReq.Delete("/delete-plan/:planId", handlers.DeletePlan) // todo:image must deleted
-	planAdminReq.Delete("/delete-feature/:featureId", handlers.DeleteFeature)
 	planAdminReq.Get("/get-all-plans", handlers.GetAllPlans)
 	planAdminReq.Get("/get-plan/:planId", handlers.GetPlan)
+	// feature
+	planAdminReq.Post("/create-features/:planId", handlers.CreateFeatures)
+	planAdminReq.Put("/edit-feature/:featureId", handlers.EditFeature)
+	planAdminReq.Delete("/delete-feature/:featureId", handlers.DeleteFeature)
 	planAdminReq.Get("/get-all-features/:planId", handlers.GetAllFeatures)
 	planAdminReq.Get("/get-feature/:featureId", handlers.GetFeature)
+	// plan type
+	planAdminReq.Post("/create-plan-type", handlers.CreatePlanType)
+	planAdminReq.Put("/edit-plan-type/:planTypeId", handlers.EditPlanType)
+	planAdminReq.Delete("/delete-plan-type/:planTypeId", handlers.DeletePlanType)
 	
 	
 	// member

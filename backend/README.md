@@ -60,6 +60,13 @@ For main page:
 ```
 GET /plan/get-featured
 ```
+
+
+For plan page (plan types):
+```
+GET /plan/get-all-plan-types
+```
+
 <b>Admin:</b>
 
 ```
