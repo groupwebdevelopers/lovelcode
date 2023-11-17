@@ -581,8 +581,8 @@ func EditPlanType(c *fiber.Ctx) error{
 
 // GET, admin
 func GetAllPlanTypes(c *fiber.Ctx) error{
-	var planTypes []models.PlanType
-	if err:= database.DB.Find(&planTypes).Error; err!=nil{
+	var planTypes []models.OPlanType
+	if err:= database.DB.Model(&models.PlanType{}).Find(&planTypes).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no plan type found"})
 		}
@@ -599,8 +599,8 @@ func GetPlanType(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	var planType models.PlanType
-	if err:= database.DB.First(&planType, &models.PlanType{ID: id}).Error; err!=nil{
+	var planType models.OPlanType
+	if err:= database.DB.Model(&models.PlanType{}).First(&planType, &models.PlanType{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan type not found"})
 		}

@@ -28,7 +28,8 @@ func Route(app *fiber.App) {
 	// plan
 	apiV1.Get("/plan/get-all", handlers.GetAllPlansAndFeatures)
 	apiV1.Get("/plan/get-featured", handlers.GetFeaturedPlans)
-	apiV1.Get("/get-all-plan-types", handlers.GetAllPlanTypes)
+	apiV1.Get("/plan/get-all-plan-types", handlers.GetAllPlanTypes)
+	apiV1.Get("/plan/get-plan-type/:planTypeId", handlers.GetPlanType)
 	
 	// member
 	apiV1.Get("/member/get-all", handlers.GetAllMembers)
@@ -123,7 +124,6 @@ func Route(app *fiber.App) {
 	planAdminReq.Post("/create-plan-type", handlers.CreatePlanType)
 	planAdminReq.Put("/edit-plan-type/:planTypeId", handlers.EditPlanType)
 	planAdminReq.Delete("/delete-plan-type/:planTypeId", handlers.DeletePlanType)
-	planAdminReq.Get("/get-plan-type/:planTypeId", handlers.GetPlanType)
 	
 	
 	// member
