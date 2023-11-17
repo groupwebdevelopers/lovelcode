@@ -71,6 +71,29 @@ type OFeature struct{
 	IsFeatured bool `json:"isFeatured"`
 }
 
+
+type PlanType struct{
+	ID uint64 `gorm:"primaryKey"`
+	Name string `gorm:"not null,size:100,unique"`
+	TranslatedName string
+	// ImagePath string `gorm:"size:200"`
+
+	TimeCreated time.Time `gorm:"not null"`
+	TimeModified time.Time `gorm:"not null"`
+}
+
+type IPlanType struct{
+	Name string `json:"name"`
+	TranslatedName string `json:"translatedName"`
+}
+
+type OPlanType struct{
+	ID uint64 `json:"id"`
+	Name string `json:"name"`
+	TranslatedName string `json:"translatedName"`
+}
+
+
 func (f *IFeature) Check() error{
 	if err:=utils.IsNotInvalidCharacter(f.Name); err!=nil{
 		return errors.New("invalid feature name:"+err.Error())
@@ -128,4 +151,21 @@ func (p *Plan) Fill(ce *IPlan) {
 	p.Type = ce.Type
 	p.IsFeatured = ce.IsFeatured
 	p.IsCompare = ce.IsCompare
+}
+
+func (i *IPlanType) Check() error{
+	if err:= utils.IsNotInvalidCharacter(i.Name); err!=nil{
+		return errors.New("invalid name: "+err.Error())
+	}
+	if err:=utils.IsNotInvalidCharacter(i.TranslatedName); err!=nil{
+		return errors.New("invalid translated name:" +err.Error())
+	}
+
+	return nil
+}
+
+func (t *PlanType) Fill(i *IPlanType){
+	t.Name = i.Name
+	t.TranslatedName = i.TranslatedName
+
 }

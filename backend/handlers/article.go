@@ -487,7 +487,7 @@ func convertArticleStringTimesForOutput(st []models.OArticleTitle)  {
 	for i:= range st{
 
 		st[i].TimeCreated =strings.Split(utils.ConvertStringTimeToPersianStringTime(st[i].TimeCreated), " ")[0]
-		st[i].TimeModified =utils.ConvertStringTimeToPersianStringTime( strings.Split(st[i].TimeModified, "T")[0])
+		st[i].TimeModified =strings.Split(utils.ConvertStringTimeToPersianStringTime(st[i].TimeModified), " ")[0]
 		
 	}
 }
