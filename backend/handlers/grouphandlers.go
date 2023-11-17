@@ -205,7 +205,12 @@ var user models.User
 	if storedToken != nil{
 
 		if token == sess.Get("token"){;fmt.Println("login with session sucesss")
-			return 200, nil, nil
+		user.Name = sess.Get("userName").(string)
+		user.Family = sess.Get("userFamily").(string)
+		user.AdminPermisions = sess.Get("userAdminPermisions").(string)
+		user.ID = sess.Get("userID").(uint64)
+		c.Locals("user", user)
+		return 200, nil, nil
 		}
 		
 	}

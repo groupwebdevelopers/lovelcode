@@ -355,7 +355,7 @@ func AddViewArticle(titleUrl string, vtoken string, views uint64){
 		if err==gorm.ErrRecordNotFound{
 			// add view to article
 			views++
-			if err2:= database.DB.Model(&models.Article{}).Update("views", views).Error;err!=nil{
+			if err2:= database.DB.Model(&models.Article{}).Where(&models.Article{TitleUrl: titleUrl}).Update("views", views).Error;err!=nil{
 				utils.LogError(err2)
 				return
 			}
@@ -374,6 +374,23 @@ func AddViewArticle(titleUrl string, vtoken string, views uint64){
 		utils.LogError(err)
 		return
 	}	
+
+
+	// sess, err:= globalSession.Get(c)
+	// if err!=nil{
+	// 	utils.LogError(err)
+	// 	return
+	// }
+	// defer sess.Save()
+	// vt := sess.Get("vtoken")
+	// if vt == nil{
+	// 	// user don't view until now
+	// 	view++
+	// 	if err2:= database.DB.Model(&models.Article{}).Where(&models.Article{TitleUrl: titleUrl}).Update("views", views).Error;err!=nil{
+	// 		utils.LogError(err2)
+	// 		return
+	// 	}
+//	}
 }
 
 
