@@ -263,7 +263,7 @@ export default function Tariffs() {
               برای مشاهده قیمت، حوزه طراحی سایت خود را انتخاب کنید !
             </h4>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-y-4 gap-x-16 py-9 px-16 bg-white rounded-[30px] mt-7 h-96 md:overflow-scroll md:h-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-y-4 gap-x-16 py-9 px-16 bg-white rounded-[30px] mt-7 h-96 overflow-y-scroll md:overflow-auto md:h-auto">
             {plans.map((item) => (
               <a
                 className="md:px-14 px-4 py-2 font-Ray-Bold text-xs md:text-sm lg:text-base xl:text-lg bg-main-blue-web rounded-xl text-white  "
