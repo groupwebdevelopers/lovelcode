@@ -17,13 +17,13 @@ export default function FormTariffs() {
           }}
         >
           <Form>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-9 gap-x-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-9 gap-x-5 ">
               <div>
                 <Field
                   type="text"
                   name="name"
                   id="name"
-                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web outline-main-blue-web"
+                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web text-sm md:text-base outline-main-blue-web"
                   placeholder="نام ونام خانوادگی"
                 ></Field>
               </div>
@@ -32,7 +32,7 @@ export default function FormTariffs() {
                   type="text"
                   name="pone"
                   id="pone"
-                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web outline-main-blue-web"
+                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web text-sm md:text-base outline-main-blue-web"
                   placeholder="شماره تماس"
                 ></Field>
               </div>
@@ -41,7 +41,7 @@ export default function FormTariffs() {
                   type="text"
                   name="email"
                   id="email"
-                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web outline-main-blue-web"
+                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web text-sm md:text-base outline-main-blue-web"
                   placeholder="ایمیل"
                 ></Field>
               </div>
@@ -50,7 +50,7 @@ export default function FormTariffs() {
                   type="text"
                   name="typeOfWebSite"
                   id="typeOfWebSite"
-                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web outline-main-blue-web"
+                  className="py-3 px-5 w-full rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web text-sm md:text-base outline-main-blue-web"
                   placeholder="قصد راه اندازی چه نوع وبسایتی رو داری؟"
                 ></Field>
               </div>
@@ -59,7 +59,7 @@ export default function FormTariffs() {
                   as="select"
                   name="storage"
                   id="storage"
-                  className=" w-full appearance-none py-3 px-5 rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web outline-main-blue-web text-main-gray-text-web font-Ray-Bold "
+                  className=" w-full appearance-none py-3 px-5 rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web text-sm md:text-base outline-main-blue-web text-main-gray-text-web font-Ray-Bold "
                 >
                   <option value="0">فضای میزبانی</option>
                   <option value="100">100</option>
@@ -75,7 +75,7 @@ export default function FormTariffs() {
                   as="select"
                   name="meet"
                   id="meet"
-                  className="appearance-none  py-3 px-5 rounded-xl w-full placeholder:font-Ray-Bold placeholder:text-main-gray-text-web outline-main-blue-web  text-main-gray-text-web font-Ray-Bold "
+                  className="appearance-none  py-3 px-5 rounded-xl w-full placeholder:font-Ray-Bold placeholder:text-main-gray-text-web text-sm md:text-base outline-main-blue-web  text-main-gray-text-web font-Ray-Bold "
                 >
                   <option value="0">نحوه آشنایی با سایت لاول کد</option>
                   <option value="friends">دوست</option>
@@ -86,13 +86,12 @@ export default function FormTariffs() {
                   <i className="bi bi-chevron-down"></i>
                 </div>
               </div>
-              <div className="col-span-3 ">
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 ">
                 <Field
                   as="textarea"
-                  type="text"
-                  name="typeOfWebSite"
-                  id="typeOfWebSite"
-                  className=" py-3 px-5 w-full h-52 rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web outline-main-blue-web"
+                  name="desc"
+                  id="desc"
+                  className=" py-3 px-5 w-full h-52 rounded-xl placeholder:font-Ray-Bold placeholder:text-main-gray-text-web text-sm md:text-base outline-main-blue-web"
                   placeholder="هر توضیحی که گمان می کنی می تونه به ما توی بررسی پروژه کمک کنه رو برامون بنویس."
                 ></Field>
               </div>

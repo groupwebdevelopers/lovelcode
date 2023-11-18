@@ -301,8 +301,8 @@ export default function Tariffs() {
         </div>
         <div className="form mt-28">
           <div className="text-center">
-            <h2 className="font-Ray-ExtraBold text-3xl text-main-dark-text-web  ">فرم سفارش طراحی سایت</h2>
-            <h4 className="text-main-green-web text-xl font-Ray-Bold">اگه از لیست های بالا نتونسی پلن مورد نظرت رو پیدا کنی با پر کردن فرم پایین و درخواست شخصی سازی سایت خودت رو برامون توضیح بده :)</h4>
+            <h2 className="font-Ray-ExtraBold text-xl md:text-2xl lg:text-3xl text-main-dark-text-web  ">فرم سفارش طراحی سایت</h2>
+            <h4 className="text-main-green-web text-sm md:text-base lg:text-xl font-Ray-Bold">اگه از لیست های بالا نتونسی پلن مورد نظرت رو پیدا کنی با پر کردن فرم پایین و درخواست شخصی سازی سایت خودت رو برامون توضیح بده :)</h4>
           </div>
           <FormTariffs></FormTariffs>
         </div>
