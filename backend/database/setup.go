@@ -51,6 +51,7 @@ func Setup() error{
 		&models.Statistic{},
 		&models.ArticleCategory{},
 		&models.PlanType{},
+		&models.OrderPlan{},
 	)
 
 	if err!=nil{

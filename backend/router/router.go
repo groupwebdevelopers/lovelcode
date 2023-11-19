@@ -65,6 +65,11 @@ func Route(app *fiber.App) {
 	// statistic
 	apiV1.Get("/statistic/get-public", handlers.GetPublicStatistics)
 
+	// order plan
+	apiV1.Post("/order-plan/create", handlers.CreateOrderPlan)
+
+
+
 	// auth required
 	
 	// Project Doing Request
@@ -84,6 +89,12 @@ func Route(app *fiber.App) {
 	// user
 	userAuthReq := apiV1.Group("/user", handlers.AuthRequired)
 	userAuthReq.Get("/get-state", handlers.GetUserState)
+
+	// order plan
+	orderPlanAuthReq := apiV1.Group("/order-plan", handlers.AuthRequired)
+	orderPlanAuthReq.Put("/edit/:orderPlanId", handlers.EditOrderPlan)
+	orderPlanAuthReq.Delete("/delete/:orderPlanId", handlers.DeleteOrderPlan)
+	orderPlanAuthReq.Get("/get-all-user/", handlers.GetAllUserOrderPlans)
 
 	
 	// admin required
@@ -177,7 +188,12 @@ func Route(app *fiber.App) {
 	mainpageAdminReq.Put("/edit/:mainpageTextId", handlers.EditMainpageText)
 	mainpageAdminReq.Delete("/delete/:mainpageTextId", handlers.DeleteMainpageText)
 	mainpageAdminReq.Get("/get-all/", handlers.GetAllMainpageText)
+
+	// order plan
+	orderPlanAdminReq := apiV1.Group("/admin/order-plan", handlers.AdminRequired)
+	orderPlanAdminReq.Get("/get-all-order-plans", handlers.GetAllOrderPlans)
 	
+
 
 	// file upload admin required
 	// apt not found
