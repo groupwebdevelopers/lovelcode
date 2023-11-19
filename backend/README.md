@@ -327,3 +327,30 @@ DELETE /admin/statistic/delete/:statisticId
 ```
 GET /site-social-media
 ```
+
+## order plan
+ ```
+POST /order-plan/create
+```
+
+Auth required:
+```
+PUT /order-plan/edit/:id
+```
+
+Auth required:
+```
+PUT /order-plan/delete/:id
+```
+
+Auth required:
+```
+GET /order-plan/get-all-user?page=1
+```
+
+
+
+Admin required:
+```
+GET /admin/order-plan/get-all?page=1
+```

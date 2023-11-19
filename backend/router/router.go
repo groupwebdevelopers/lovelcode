@@ -191,7 +191,7 @@ func Route(app *fiber.App) {
 
 	// order plan
 	orderPlanAdminReq := apiV1.Group("/admin/order-plan", handlers.AdminRequired)
-	orderPlanAdminReq.Get("/get-all-order-plans", handlers.GetAllOrderPlans)
+	orderPlanAdminReq.Get("/get-all", handlers.GetAllOrderPlans)
 	
 
 
