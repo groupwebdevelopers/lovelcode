@@ -209,7 +209,7 @@ var user models.User
 		user.Family = sess.Get("userFamily").(string)
 		user.AdminPermisions = sess.Get("userAdminPermisions").(string)
 		user.ID = sess.Get("userID").(uint64)
-		user.Email = sess.Get("email")
+		user.Email = sess.Get("email").(string)
 		c.Locals("user", user)
 		return 200, nil, nil
 		}

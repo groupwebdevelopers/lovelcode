@@ -10,8 +10,6 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/models"
-	_ "lovelcode/models/user"
-	_ "lovelcode/models/plan"
 )
 
 var DB *gorm.DB
@@ -53,7 +51,7 @@ func Setup() error{
 		&models.Statistic{},
 		&models.ArticleCategory{},
 		&models.PlanType{},
-		&models.OrderPlan{},
+		&models.PlanOrder{},
 	)
 
 	if err!=nil{

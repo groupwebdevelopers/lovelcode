@@ -3,12 +3,8 @@ package handlers
 import (
 	"errors"	
 	"time"
-	"fmt"
-	"strings"
-	"os"
 	
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	
 	"lovelcode/utils"
@@ -128,27 +124,6 @@ func GetPlanOrder(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"data":PlanOrder})
 	
 }
-
-func GetAllUserPlanOrders(c *fiber.Ctx) error{
-	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
-	if err!=nil{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
-	}
-	
-	var PlanOrders []models.OPlanOrder
-
-	user := c.Locals("user").(models.User)
-	
-	if err:= database.DB.Model(&models.PlanOrder{}).Where(&models.PlanOrder{Email: user.Email}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&PlanOrders).Error; err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return utils.JSONResponse(c, 404, fiber.Map{"error":"no order plan found"})
-		}
-		return utils.ServerError(c, err)
-	}
-	
-	return utils.JSONResponse(c, 200, fiber.Map{"data":PlanOrders})
-}
-
 
 
 // auth req

@@ -65,8 +65,8 @@ func Route(app *fiber.App) {
 	// statistic
 	apiV1.Get("/statistic/get-public", handlers.GetPublicStatistics)
 
-	// order plan
-	apiV1.Post("/order-plan/create", handlers.CreateOrderPlan)
+	// plan order
+	apiV1.Post("/order-plan/create", handlers.CreatePlanOrder)
 
 
 
@@ -90,11 +90,11 @@ func Route(app *fiber.App) {
 	userAuthReq := apiV1.Group("/user", handlers.AuthRequired)
 	userAuthReq.Get("/get-state", handlers.GetUserState)
 
-	// order plan
-	orderPlanAuthReq := apiV1.Group("/order-plan", handlers.AuthRequired)
-	orderPlanAuthReq.Put("/edit/:orderPlanId", handlers.EditOrderPlan)
-	orderPlanAuthReq.Delete("/delete/:orderPlanId", handlers.DeleteOrderPlan)
-	orderPlanAuthReq.Get("/get-all-user/", handlers.GetAllUserOrderPlans)
+	// plan order
+	PlanOrderAuthReq := apiV1.Group("/order-plan", handlers.AuthRequired)
+	PlanOrderAuthReq.Put("/edit/:PlanOrderId", handlers.EditPlanOrder)
+	PlanOrderAuthReq.Delete("/delete/:PlanOrderId", handlers.DeletePlanOrder)
+	PlanOrderAuthReq.Get("/get-all-user/", handlers.GetAllUserPlanOrders)
 
 	
 	// admin required
@@ -189,9 +189,9 @@ func Route(app *fiber.App) {
 	mainpageAdminReq.Delete("/delete/:mainpageTextId", handlers.DeleteMainpageText)
 	mainpageAdminReq.Get("/get-all/", handlers.GetAllMainpageText)
 
-	// order plan
-	orderPlanAdminReq := apiV1.Group("/admin/order-plan", handlers.AdminRequired)
-	orderPlanAdminReq.Get("/get-all", handlers.GetAllOrderPlans)
+	// plan order
+	PlanOrderAdminReq := apiV1.Group("/admin/order-plan", handlers.AdminRequired)
+	PlanOrderAdminReq.Get("/get-all", handlers.GetAllPlanOrders)
 	
 
 
