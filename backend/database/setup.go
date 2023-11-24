@@ -10,6 +10,8 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/models"
+	_ "lovelcode/models/user"
+	_ "lovelcode/models/plan"
 )
 
 var DB *gorm.DB

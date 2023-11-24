@@ -155,6 +155,8 @@ func AddOneRequest(){
 	}
 }
 
+
+// called every request come
 func LogFunction() {
 	AddOneRequest()
 }
