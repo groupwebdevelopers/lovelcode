@@ -3,7 +3,13 @@ import { Field, Form, Formik } from "formik";
 import React from "react";
 import apiRequests from "../../Services/Axios/configs";
 
+// tostify
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function FormTariffs() {
+  const notify = (msg) => toast(msg);
   return (
     <>
       <div className="mt-12">
@@ -17,22 +23,39 @@ export default function FormTariffs() {
             meet: "",
             desc: "",
           }}
-          onSubmit={(value) => {
+          onSubmit={(value , {setSubmitting , resetForm }) => {
             const newRequest = {
               name: value.name,
-              phone: +(value.phone),
+              phone: +value.phone,
               email: value.email,
               typeOfWebSite: value.typeOfWebSite,
-              storage: value.storage,
+              storage: +value.storage,
               meet: value.meet,
               desc: value.desc,
             };
-            console.log(newRequest);
-            apiRequests.post('/order-plan/create' , newRequest)
-            .then(res=>console.log(res))
-            .catch(res=>console.log(res))
+            apiRequests.post("/order-plan/create", newRequest).then((res) => {
+              
+              if (res.data.status === 201) {
+                const nameUser = JSON.parse(res.config.data).name;
+                console.log(nameUser);
+                toast.success(`${nameUser} عزیز درخاست شما با موفقیت ثبت شد`, {
+                  position: "top-left",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  });
+                  // resetForm()
+                  setSubmitting(false)
+                  // setTimeout(() => {
+                  //   setSubmitting(true)
+                  // }, 5000);
 
-            value.name = ''
+              }
+            });
           }}
         >
           {({ values, handleSubmit, handleChange, errors, touched }) => (
@@ -125,6 +148,18 @@ export default function FormTariffs() {
             </Form>
           )}
         </Formik>
+        <ToastContainer
+          position="top-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </>
   );
