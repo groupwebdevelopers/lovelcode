@@ -14,6 +14,8 @@ import (
 
 const requestNumberLimit = 100
 
+////////////////////////// public //////////////////////////////
+
 // GET
 func GetPublicStatistics(c *fiber.Ctx) error{
 	
@@ -28,6 +30,9 @@ func GetPublicStatistics(c *fiber.Ctx) error{
 
 	return utils.JSONResponse(c, 200, fiber.Map{"data":mpt})
 }
+
+///////////////////////// admin ////////////////////////////////
+
 
 
 // POST, auth required, admin required
@@ -121,8 +126,12 @@ func DeleteStatistic(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 200, fiber.Map{"msg":"successfuly deleted"})
 }
 
-// dynamic statistic
+
+
 var requestNumber uint8
+// dynamic statistic
+// cout number of request to server
+// every {requestNumberLimit} request will add to database
 func AddOneRequest(){
 	if requestNumber > requestNumberLimit{
 		// add one request to database

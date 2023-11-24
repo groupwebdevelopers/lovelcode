@@ -72,6 +72,7 @@ func Signin(c *fiber.Ctx) error{
 	sess.Set("userFamily", user.Family)
 	sess.Set("token", user.Token)
 	sess.Set("adminPermisions", user.AdminPermisions)	
+	sess.Set("email", user.Email)
 
 	// set token to cookie
 	c.Cookie(&fiber.Cookie{
