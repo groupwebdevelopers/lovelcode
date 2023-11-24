@@ -1,16 +1,9 @@
-package models
-
-import (
-	"time"
-	"errors"
-
-	"lovelcode/utils"
-)
 
 
 
 
-type OrderPlan struct{
+
+type PlanOrder struct{
 	ID uint64 `gorm:"primaryKey"`
 	Name string `gorm:"not null, size:100"`
 	Phone uint64 `gorm:"not null"`
@@ -25,7 +18,7 @@ type OrderPlan struct{
 }
 
 
-type IOrderPlan struct{
+type IPlanOrder struct{
 	Name string `json:"name"`
 	Phone uint64 `json:"phone"`
 	Email string `json:"email"`
@@ -36,7 +29,7 @@ type IOrderPlan struct{
 }
 
 
-type OOrderPlan struct{
+type OPlanOrder struct{
 	ID uint64 `json:"id"`
 	Name string `json:"name"`
 	Phone uint64 `json:"phone"`
@@ -50,7 +43,7 @@ type OOrderPlan struct{
 	TimeModified time.Time `json:"timeModified"`
 }
 
-func (i *IOrderPlan) Check() error{
+func (i *IPlanOrder) Check() error{
 	if err:= utils.IsNotInvalidCharacter(i.Name); err!=nil{
 		return errors.New("invalid name: "+err.Error())
 	}
@@ -76,7 +69,7 @@ func (i *IOrderPlan) Check() error{
 	return nil
 }
 
-func (o *OrderPlan) Fill(i *IOrderPlan) {
+func (o *PlanOrder) Fill(i *IPlanOrder) {
 	o.Name = i.Name
 	o.Email = i.Email
 	o.Phone = i.Phone

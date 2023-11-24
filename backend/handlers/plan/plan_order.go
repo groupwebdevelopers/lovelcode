@@ -21,10 +21,10 @@ import (
 
 
 // POST
-func CreateOrderPlan(c *fiber.Ctx) error{
+func CreatePlanOrder(c *fiber.Ctx) error{
 	
 	
-	var pl models.IOrderPlan
+	var pl models.IPlanOrder
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -35,7 +35,7 @@ func CreateOrderPlan(c *fiber.Ctx) error{
 	}
 	
 	// create order plan and fill it
-	var op models.OrderPlan
+	var op models.PlanOrder
 	op.Fill(&pl)
 	op.TimeCreated = time.Now()
 	op.TimeModified = time.Now()
@@ -47,16 +47,16 @@ func CreateOrderPlan(c *fiber.Ctx) error{
 }
 
 // PUT, /:planTypeId
-func EditOrderPlan(c *fiber.Ctx) error{
+func EditPlanOrder(c *fiber.Ctx) error{
 	// get id form params
-	id := utils.GetIDFromParams(c, "orderPlanId")
+	id := utils.GetIDFromParams(c, "PlanOrderId")
 	if id==0{
-		return utils.JSONResponse(c, 400, fiber.Map{"error":"the orderPlanId didn't send"})
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"the PlanOrderId didn't send"})
 	}
 	
 	// check plan is exist
-	var orderPlan models.OrderPlan
-	if err:= database.DB.First(&orderPlan, &models.OrderPlan{ID: id}).Error; err!=nil{
+	var PlanOrder models.PlanOrder
+	if err:= database.DB.First(&PlanOrder, &models.PlanOrder{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"order plan not found"})
 		}
@@ -64,7 +64,7 @@ func EditOrderPlan(c *fiber.Ctx) error{
 	}
 
 	// get order plan from body
-	var pl models.IOrderPlan
+	var pl models.IPlanOrder
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -75,11 +75,11 @@ func EditOrderPlan(c *fiber.Ctx) error{
 		} 
 		
 		// fill the order plan
-	orderPlan.Fill(&pl)
-	orderPlan.TimeModified = time.Now()
+	PlanOrder.Fill(&pl)
+	PlanOrder.TimeModified = time.Now()
 	
 	// modify order plan in database
-	if err:= database.DB.Updates(&orderPlan).Error; err!=nil{
+	if err:= database.DB.Updates(&PlanOrder).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 	
@@ -89,7 +89,7 @@ func EditOrderPlan(c *fiber.Ctx) error{
 
 
 // auth req
-func GetAllUserOrderPlans(c *fiber.Ctx) error{
+func GetAllUserPlanOrders(c *fiber.Ctx) error{
 	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
@@ -98,67 +98,67 @@ func GetAllUserOrderPlans(c *fiber.Ctx) error{
 	if user.Email == ""{
 		return utils.ServerError(c, errors.New("invalid email saved in session"))
 	}
-	var orderPlans []models.OOrderPlan
-	if err:= database.DB.Model(&models.OrderPlan{}).Where(&models.OrderPlan{Email: user.Email}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&orderPlans).Error; err!=nil{
+	var PlanOrders []models.OPlanOrder
+	if err:= database.DB.Model(&models.PlanOrder{}).Where(&models.PlanOrder{Email: user.Email}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&PlanOrders).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no order plan found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":orderPlans})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":PlanOrders})
 }
 
 // auth req
-func GetOrderPlan(c *fiber.Ctx) error{
+func GetPlanOrder(c *fiber.Ctx) error{
 	
-	id := utils.GetIDFromParams(c, "orderPlanId")
+	id := utils.GetIDFromParams(c, "PlanOrderId")
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	var orderPlan models.OOrderPlan
-	if err:= database.DB.Model(&models.OrderPlan{}).First(&orderPlan, &models.OrderPlan{ID: id}).Error; err!=nil{
+	var PlanOrder models.OPlanOrder
+	if err:= database.DB.Model(&models.PlanOrder{}).First(&PlanOrder, &models.PlanOrder{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"order plan not found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":orderPlan})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":PlanOrder})
 	
 }
 
-func GetAllUserOrderPlans(c *fiber.Ctx) error{
+func GetAllUserPlanOrders(c *fiber.Ctx) error{
 	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
 	}
 	
-	var orderPlans []models.OOrderPlan
+	var PlanOrders []models.OPlanOrder
 
 	user := c.Locals("user").(models.User)
 	
-	if err:= database.DB.Model(&models.OrderPlan{}).Where(&models.OrderPlan{Email: user.Email}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&orderPlans).Error; err!=nil{
+	if err:= database.DB.Model(&models.PlanOrder{}).Where(&models.PlanOrder{Email: user.Email}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&PlanOrders).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no order plan found"})
 		}
 		return utils.ServerError(c, err)
 	}
 	
-	return utils.JSONResponse(c, 200, fiber.Map{"data":orderPlans})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":PlanOrders})
 }
 
 
 
 // auth req
-func DeleteOrderPlan(c *fiber.Ctx) error{
-	id := utils.GetIDFromParams(c, "orderPlanId")
+func DeletePlanOrder(c *fiber.Ctx) error{
+	id := utils.GetIDFromParams(c, "PlanOrderId")
 	if id==0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	if err:= database.DB.Delete(&models.OrderPlan{}, id).Error; err!=nil{
+	if err:= database.DB.Delete(&models.PlanOrder{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"order plan not found"})
 		}
@@ -170,20 +170,20 @@ func DeleteOrderPlan(c *fiber.Ctx) error{
 /////////////////// admin /////////////////////////
 
 // GET, admin
-func GetAllOrderPlans(c *fiber.Ctx) error{
+func GetAllPlanOrders(c *fiber.Ctx) error{
 	page, pageLimit, err := utils.GetPageAndPageLimitFromMap(c.Queries())
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
 	}
 	
-	var orderPlans []models.OOrderPlan
+	var PlanOrders []models.OPlanOrder
 	
-	if err:= database.DB.Model(&models.OrderPlan{}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&orderPlans).Error; err!=nil{
+	if err:= database.DB.Model(&models.PlanOrder{}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&PlanOrders).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no order plan found"})
 		}
 		return utils.ServerError(c, err)
 	}
 	
-	return utils.JSONResponse(c, 200, fiber.Map{"data":orderPlans})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":PlanOrders})
 }
