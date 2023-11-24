@@ -290,21 +290,35 @@ export default function Tariffs() {
           ))}
         </div>
         <div>
-          <h2 className="font-Ray-ExtraBold text-xl lg:text-3xl text-center mt-24">مزیت ها و تفاوت های <span className="text-main-blue-web">لاول کد</span> با سایر شرکت ها</h2>
+          <h2 className="font-Ray-ExtraBold text-xl lg:text-3xl text-center mt-24">
+            مزیت ها و تفاوت های{" "}
+            <span className="text-main-blue-web">لاول کد</span> با سایر شرکت ها
+          </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-10 gap-5">
-          {
-            benefits.map((item , index)=>(
-              <Benefits bg={item.bg} desc={item.desc} icon={item.icon} title={item.title} key={index}></Benefits>
-            ))
-          }
+          {benefits.map((item, index) => (
+            <Benefits
+              bg={item.bg}
+              desc={item.desc}
+              icon={item.icon}
+              title={item.title}
+              key={index}
+            ></Benefits>
+          ))}
         </div>
         <div className="form mt-28">
           <div className="text-center">
-            <h2 className="font-Ray-ExtraBold text-xl md:text-2xl lg:text-3xl text-main-dark-text-web  ">فرم سفارش طراحی سایت</h2>
-            <h4 className="text-main-green-web text-sm md:text-base lg:text-xl font-Ray-Bold">اگه از لیست های بالا نتونسی پلن مورد نظرت رو پیدا کنی با پر کردن فرم پایین و درخواست شخصی سازی سایت خودت رو برامون توضیح بده :)</h4>
+            <h2 className="font-Ray-ExtraBold text-xl md:text-2xl lg:text-3xl text-main-dark-text-web  ">
+              فرم سفارش طراحی سایت
+            </h2>
+            <h4 className="text-main-green-web text-sm md:text-base lg:text-xl font-Ray-Bold">
+              اگه از لیست های بالا نتونسی پلن مورد نظرت رو پیدا کنی با پر کردن
+              فرم پایین و درخواست شخصی سازی سایت خودت رو برامون توضیح بده :)
+            </h4>
           </div>
-          <FormTariffs></FormTariffs>
+          <div className="mb-20">
+            <FormTariffs></FormTariffs>
+          </div>
         </div>
       </div>
     </div>
