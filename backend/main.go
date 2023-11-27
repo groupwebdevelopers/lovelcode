@@ -12,6 +12,7 @@ import (
 	"lovelcode/database"
 	"lovelcode/utils/token"
 	"lovelcode/utils"
+	"lovelcode/utils/s3"
 	"lovelcode/handlers"
 )
 
@@ -20,6 +21,9 @@ func main(){
 
 	token.Setup()
 	utils.Setup(handlers.LogFunction)
+	if err := s3.Init(); err!=nil{
+		log.Println("cant create s3.")
+	}
 	// engine := html.New("../frontend", ".html")
 	
 	app:= fiber.New()//fiber.Config{

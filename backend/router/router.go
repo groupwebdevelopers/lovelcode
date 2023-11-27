@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"lovelcode/handlers"
+	"lovelcode/utils"
 )
 
 
@@ -193,12 +194,13 @@ func Route(app *fiber.App) {
 	PlanOrderAdminReq := apiV1.Group("/admin/order-plan", handlers.AdminRequired)
 	PlanOrderAdminReq.Get("/get-all", handlers.GetAllPlanOrders)
 	
-
+	// todo: must remove in production
+	apiV1.Get("/routes", func (c *fiber.Ctx)error{return utils.JSONResponse(c, 200, fiber.Map{"routes":app.GetRoutes()})})
 
 	// file upload admin required
 	// apt not found
 	apiOnly.Use(func (c *fiber.Ctx) error{
-		return c.Status(404).JSON(fiber.Map{"error":"page not found","routes":app.GetRoutes()})
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"API not found."})
 	})
 	
 	// Static
@@ -208,7 +210,7 @@ func Route(app *fiber.App) {
 
 	// static not found
 	app.Use(func (c *fiber.Ctx) error{
-		return c.SendStatus(404)
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"Page not found."})
 	})
 	
 
