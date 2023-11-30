@@ -243,13 +243,14 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
+	err = s3.PutObject(file, fmt.Sprintf("/images/plan/%s", image))
+	// err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
 
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
 	
-	imageURL := fmt.Sprintf("/images/%s", image)
+	imageURL := fmt.Sprintf("/images/plan/%s", image)
 
 	if err = database.DB.Model(&models.Plan{}).Where(&models.Plan{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)

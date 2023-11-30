@@ -244,13 +244,15 @@ func UploadArticleImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))
+
+	err = s3.PutObject(file, fmt.Sprintf("/images/article/%s", image))
+	// err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))
 
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
 	
-	imageURL := fmt.Sprintf("/images/%s", image)
+	imageURL := fmt.Sprintf("/images/article/%s", image)
 
 	if err = database.DB.Model(&models.Article{}).Where(&models.Article{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
