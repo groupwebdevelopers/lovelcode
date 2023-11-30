@@ -2,197 +2,199 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"lovelcode/handlers"
+	ahandlers "lovelcode/handlers/article"
+	cohandlers "lovelcode/handlers/contactus"
+	cuhandlers "lovelcode/handlers/customer"
+	ghandlers "lovelcode/handlers/grouphandlers"
+	mhandlers "lovelcode/handlers/mainpage"
+	phandlers "lovelcode/handlers/plan"
+	pfhandlers "lovelcode/handlers/portfolio"
+	shandlers "lovelcode/handlers/settings"
+	sshandlers "lovelcode/handlers/statistics"
+	uhandlers "lovelcode/handlers/user"
 	"lovelcode/utils"
 )
 
 
 func Route(app *fiber.App) {
-	apiOnly := app.Group("/api", handlers.ApiOnly)
+	apiOnly := app.Group("/api", ghandlers.ApiOnly)
 	apiV1 := apiOnly.Group("/v1")
-	apiV1.Get("/", handlers.Home)
+	apiV1.Get("/", mhandlers.Home)
 	
 	// fileUploadAuthReq := app.Group("/api/v1/upload", handlers.AuthRequired)
-	fileUploadAdminReq := app.Group("/admin/upload", handlers.AdminUploadImage)
-	fileUploadAdminReq.Post("/plan/image/:planId", handlers.UploadPlanImage)
-	fileUploadAdminReq.Post("/member/image/:memberId", handlers.UploadMemberImage)
-	fileUploadAdminReq.Post("/blog/image/:articleId", handlers.UploadArticleImage)
-	fileUploadAdminReq.Post("/customer/image/:customerId", handlers.UploadCustomerImage)
-	fileUploadAdminReq.Post("/portfolio/image/:portfolioId", handlers.UploadPortfolioImage)
+	fileUploadAdminReq := app.Group("/admin/upload", ghandlers.AdminUploadImage)
+	fileUploadAdminReq.Post("/plan/image/:planId", phandlers.UploadPlanImage)
+	fileUploadAdminReq.Post("/member/image/:memberId", uhandlers.UploadMemberImage)
+	fileUploadAdminReq.Post("/blog/image/:articleId", ahandlers.UploadArticleImage)
+	fileUploadAdminReq.Post("/customer/image/:customerId", cuhandlers.UploadCustomerImage)
+	fileUploadAdminReq.Post("/portfolio/image/:portfolioId", pfhandlers.UploadPortfolioImage)
 	
 	// auth not required
 	
 	// auth
-	apiV1.Post("/signin", handlers.Signin)
-	apiV1.Post("/signup", handlers.Signup)
+	apiV1.Post("/signin", uhandlers.Signin)
+	apiV1.Post("/signup", uhandlers.Signup)
 	
 	// plan
-	apiV1.Get("/plan/get-all", handlers.GetAllPlansAndFeatures)
-	apiV1.Get("/plan/get-featured", handlers.GetFeaturedPlans)
-	apiV1.Get("/plan/get-all-plan-types", handlers.GetAllPlanTypes)
-	apiV1.Get("/plan/get-plan-type/:planTypeId", handlers.GetPlanType)
+	apiV1.Get("/plan/get-all", phandlers.GetAllPlansAndFeatures)
+	apiV1.Get("/plan/get-featured", phandlers.GetFeaturedPlans)
+	apiV1.Get("/plan/get-all-plan-types", phandlers.GetAllPlanTypes)
+	apiV1.Get("/plan/get-plan-type/:planTypeId", phandlers.GetPlanType)
 	
 	// member
-	apiV1.Get("/member/get-all", handlers.GetAllMembers)
+	apiV1.Get("/member/get-all", uhandlers.GetAllMembers)
 	
 	// article
-	apiV1.Get("/blog/get/:articleTitleUrl", handlers.GetArticle)
-	apiV1.Get("/blog/get-all", handlers.GetAllArticlesTitles)
-	apiV1.Get("/blog/get-featured", handlers.GetFeaturedArticlesTitle)
-	apiV1.Get("/blog/get-categories", handlers.GetAllArticleCategories)
-	apiV1.Get("/blog/search", handlers.SearchArticle)
+	apiV1.Get("/blog/get/:articleTitleUrl", ahandlers.GetArticle)
+	apiV1.Get("/blog/get-all", ahandlers.GetAllArticlesTitles)
+	apiV1.Get("/blog/get-featured", ahandlers.GetFeaturedArticlesTitle)
+	apiV1.Get("/blog/get-categories", ahandlers.GetAllArticleCategories)
+	apiV1.Get("/blog/search", ahandlers.SearchArticle)
 
 	// portfolio
-	apiV1.Get("/portfolio/get-all", handlers.GetAllPortfolios)
-	apiV1.Get("/portfolio/get-featured", handlers.GetFeaturedPortfolios)
+	apiV1.Get("/portfolio/get-all", pfhandlers.GetAllPortfolios)
+	apiV1.Get("/portfolio/get-featured", pfhandlers.GetFeaturedPortfolios)
 	
 	// site info
-	apiV1.Get("/site-social-media", handlers.GetSiteSocialMedia)
-	apiV1.Get("/site-phone-numbers", handlers.GetSitePhoneNumbers)
+	apiV1.Get("/site-social-media", mhandlers.GetSiteSocialMedia)
+	apiV1.Get("/site-phone-numbers", mhandlers.GetSitePhoneNumbers)
 	
 	// comment
-	apiV1.Get("/comment/get-all-for-article/:articleTitleUrl", handlers.GetAllArticleComments)
+	apiV1.Get("/comment/get-all-for-article/:articleTitleUrl", ahandlers.GetAllArticleComments)
 	
 	// contact us
-	apiV1.Post("/contactus/create", handlers.CreateContactUs)
+	apiV1.Post("/contactus/create", cohandlers.CreateContactUs)
 	
 	// customer
-	apiV1.Get("/customer/get-all", handlers.GetAllCustomers)
-	apiV1.Get("/customer/get-featured", handlers.GetFeaturedCustomers)
+	apiV1.Get("/customer/get-all", cuhandlers.GetAllCustomers)
+	apiV1.Get("/customer/get-featured", cuhandlers.GetFeaturedCustomers)
 	
 	// main pages
-	apiV1.Get("/mainpage/:pageName", handlers.GetMainPage)
+	apiV1.Get("/mainpage/:pageName", mhandlers.GetMainPage)
 	
 	// statistic
-	apiV1.Get("/statistic/get-public", handlers.GetPublicStatistics)
+	apiV1.Get("/statistic/get-public", sshandlers.GetPublicStatistics)
 
 	// plan order
-	apiV1.Post("/order-plan/create", handlers.CreatePlanOrder)
+	apiV1.Post("/order-plan/create", phandlers.CreatePlanOrder)
 
 
 
 	// auth required
 	
-	// Project Doing Request
-	pdrAuthReq := apiV1.Group("/pdr", handlers.AuthRequired)
-	pdrAuthReq.Post("/create", handlers.CreateProjectDoingRequest)
-	pdrAuthReq.Get("/get/:id", handlers.GetProjectDoingRequest)
-	pdrAuthReq.Get("/get-all", handlers.GetAllProjectDoingRequests)
-	pdrAuthReq.Put("/edit/:id", handlers.EditProjectDoingRequest)
-	pdrAuthReq.Delete("/delete/:id", handlers.DeleteProjectDoingRequest)
 	
 	// comment
-	commentAuthReq := apiV1.Group("/comment", handlers.AuthRequired)
-	commentAuthReq.Post("/create/:articleTitleUrl", handlers.CreateComment)
-	commentAuthReq.Put("/edit/:commentId", handlers.EditComment)
-	commentAuthReq.Delete("/delete/:commentId", handlers.DeleteComment)
+	commentAuthReq := apiV1.Group("/comment", ghandlers.AuthRequired)
+	commentAuthReq.Post("/create/:articleTitleUrl", ahandlers.CreateComment)
+	commentAuthReq.Put("/edit/:commentId", ahandlers.EditComment)
+	commentAuthReq.Delete("/delete/:commentId", ahandlers.DeleteComment)
 	
 	// user
-	userAuthReq := apiV1.Group("/user", handlers.AuthRequired)
-	userAuthReq.Get("/get-state", handlers.GetUserState)
+	userAuthReq := apiV1.Group("/user", ghandlers.AuthRequired)
+	userAuthReq.Get("/get-state", uhandlers.GetUserState)
 
 	// plan order
-	PlanOrderAuthReq := apiV1.Group("/order-plan", handlers.AuthRequired)
-	PlanOrderAuthReq.Put("/edit/:PlanOrderId", handlers.EditPlanOrder)
-	PlanOrderAuthReq.Delete("/delete/:PlanOrderId", handlers.DeletePlanOrder)
-	PlanOrderAuthReq.Get("/get-all-user/", handlers.GetAllUserPlanOrders)
+	PlanOrderAuthReq := apiV1.Group("/order-plan", ghandlers.AuthRequired)
+	PlanOrderAuthReq.Put("/edit/:PlanOrderId", phandlers.EditPlanOrder)
+	PlanOrderAuthReq.Delete("/delete/:PlanOrderId", phandlers.DeletePlanOrder)
+	PlanOrderAuthReq.Get("/get-all-user/", phandlers.GetAllUserPlanOrders)
 
 	
 	// admin required
 	
 	// article
-	adminArticleReq := apiV1.Group("/admin/blog", handlers.AdminArticleRequired)
-	adminArticleReq.Post("/create", handlers.CreateArticle)
-	adminArticleReq.Put("/edit/:articleId", handlers.EditArticle)
-	adminArticleReq.Delete("/delete/:articleId", handlers.DeleteArticle)
+	adminArticleReq := apiV1.Group("/admin/blog", ghandlers.AdminArticleRequired)
+	adminArticleReq.Post("/create", ahandlers.CreateArticle)
+	adminArticleReq.Put("/edit/:articleId", ahandlers.EditArticle)
+	adminArticleReq.Delete("/delete/:articleId", ahandlers.DeleteArticle)
 	
 	// article category
-	adminArticleCategoryReq := apiV1.Group("/admin/article-category", handlers.AdminRequired)
-	adminArticleCategoryReq.Post("/create", handlers.CreateArticleCategory)
-	adminArticleCategoryReq.Put("/edit/:articleCategoryId", handlers.EditArticleCategory)
-	adminArticleCategoryReq.Delete("/delete/:articleCategoryId", handlers.DeleteArticleCategory)
+	adminArticleCategoryReq := apiV1.Group("/admin/article-category", ghandlers.AdminRequired)
+	adminArticleCategoryReq.Post("/create", ahandlers.CreateArticleCategory)
+	adminArticleCategoryReq.Put("/edit/:articleCategoryId", ahandlers.EditArticleCategory)
+	adminArticleCategoryReq.Delete("/delete/:articleCategoryId", ahandlers.DeleteArticleCategory)
 
 	
 	// adminReq := authReq.Group("/admin", handlers.AdminRequired)
 	
 	// user
-	userAdminReq := apiV1.Group("/admin/user", handlers.AdminRequired)
-	userAdminReq.Post("/ban/:id", handlers.BanUser)
+	userAdminReq := apiV1.Group("/admin/user", ghandlers.AdminRequired)
+	userAdminReq.Post("/ban/:id", uhandlers.BanUser)
 	
 	// Plan
-	planAdminReq := apiV1.Group("/admin/plan", handlers.AdminRequired)
-	planAdminReq.Post("/create", handlers.CreatePlan)
-	planAdminReq.Put("/edit/:planId", handlers.EditPlan)
-	planAdminReq.Delete("/delete-plan/:planId", handlers.DeletePlan) // todo:image must deleted
-	planAdminReq.Get("/get-all-plans", handlers.GetAllPlans)
-	planAdminReq.Get("/get-plan/:planId", handlers.GetPlan)
+	planAdminReq := apiV1.Group("/admin/plan", ghandlers.AdminRequired)
+	planAdminReq.Post("/create", phandlers.CreatePlan)
+	planAdminReq.Put("/edit/:planId", phandlers.EditPlan)
+	planAdminReq.Delete("/delete-plan/:planId", phandlers.DeletePlan) // todo:image must deleted
+	planAdminReq.Get("/get-all-plans", phandlers.GetAllPlans)
+	planAdminReq.Get("/get-plan/:planId", phandlers.GetPlan)
 	// feature
-	planAdminReq.Post("/create-features/:planId", handlers.CreateFeatures)
-	planAdminReq.Put("/edit-feature/:featureId", handlers.EditFeature)
-	planAdminReq.Delete("/delete-feature/:featureId", handlers.DeleteFeature)
-	planAdminReq.Get("/get-all-features/:planId", handlers.GetAllFeatures)
-	planAdminReq.Get("/get-feature/:featureId", handlers.GetFeature)
+	planAdminReq.Post("/create-features/:planId", phandlers.CreateFeatures)
+	planAdminReq.Put("/edit-feature/:featureId", phandlers.EditFeature)
+	planAdminReq.Delete("/delete-feature/:featureId", phandlers.DeleteFeature)
+	planAdminReq.Get("/get-all-features/:planId", phandlers.GetAllFeatures)
+	planAdminReq.Get("/get-feature/:featureId", phandlers.GetFeature)
 	// plan type
-	planAdminReq.Post("/create-plan-type", handlers.CreatePlanType)
-	planAdminReq.Put("/edit-plan-type/:planTypeId", handlers.EditPlanType)
-	planAdminReq.Delete("/delete-plan-type/:planTypeId", handlers.DeletePlanType)
+	planAdminReq.Post("/create-plan-type", phandlers.CreatePlanType)
+	planAdminReq.Put("/edit-plan-type/:planTypeId", phandlers.EditPlanType)
+	planAdminReq.Delete("/delete-plan-type/:planTypeId", phandlers.DeletePlanType)
 	
 	
 	// member
-	memberAdminReq := apiV1.Group("/admin/member", handlers.AdminRequired)
-	memberAdminReq.Post("/create/:userId", handlers.CreateMember)
-	memberAdminReq.Put("/edit/:memberId", handlers.EditMember)
-	memberAdminReq.Delete("/delete/:memberId", handlers.DeleteMember)
-	memberAdminReq.Get("/get/:memberId", handlers.GetMember)
+	memberAdminReq := apiV1.Group("/admin/member", ghandlers.AdminRequired)
+	memberAdminReq.Post("/create/:userId", uhandlers.CreateMember)
+	memberAdminReq.Put("/edit/:memberId", uhandlers.EditMember)
+	memberAdminReq.Delete("/delete/:memberId", uhandlers.DeleteMember)
+	memberAdminReq.Get("/get/:memberId", uhandlers.GetMember)
 	
 	// settings
-	settingsAdminReq := apiV1.Group("/admin/settings", handlers.AdminRequired)
-	settingsAdminReq.Post("/create", handlers.CreateSetting)
-	settingsAdminReq.Put("/edit/:settingId", handlers.EditSetting)
-	settingsAdminReq.Delete("/delete/:settingId", handlers.DeleteSetting)
-	settingsAdminReq.Get("/get-all", handlers.GetAllSettings)
+	settingsAdminReq := apiV1.Group("/admin/settings", ghandlers.AdminRequired)
+	settingsAdminReq.Post("/create", shandlers.CreateSetting)
+	settingsAdminReq.Put("/edit/:settingId", shandlers.EditSetting)
+	settingsAdminReq.Delete("/delete/:settingId", shandlers.DeleteSetting)
+	settingsAdminReq.Get("/get-all", shandlers.GetAllSettings)
 	
 	// customer
-	customerAdminReq := apiV1.Group("/admin/customer", handlers.AdminRequired)
-	customerAdminReq.Post("/create", handlers.CreateCustomer)
-	customerAdminReq.Put("/edit/:customerId", handlers.EditCustomer)
-	customerAdminReq.Delete("/delete/:customerId", handlers.DeleteCustomer)
-	customerAdminReq.Get("/get/:customerId", handlers.GetCustomer)
+	customerAdminReq := apiV1.Group("/admin/customer", ghandlers.AdminRequired)
+	customerAdminReq.Post("/create", cuhandlers.CreateCustomer)
+	customerAdminReq.Put("/edit/:customerId", cuhandlers.EditCustomer)
+	customerAdminReq.Delete("/delete/:customerId", cuhandlers.DeleteCustomer)
+	customerAdminReq.Get("/get/:customerId", cuhandlers.GetCustomer)
 	
 	// portfolio
-	adminPortfolioReq := apiV1.Group("/admin/portfolio", handlers.AdminRequired)
-	adminPortfolioReq.Post("/create", handlers.CreatePortfolio)
-	adminPortfolioReq.Put("/edit/:portfolioId", handlers.EditPortfolio)
-	adminPortfolioReq.Delete("/delete/:portfolioId", handlers.DeletePortfolio)
-	adminPortfolioReq.Get("/get/:portfolioId", handlers.GetPortfolio)
+	adminPortfolioReq := apiV1.Group("/admin/portfolio", ghandlers.AdminRequired)
+	adminPortfolioReq.Post("/create", pfhandlers.CreatePortfolio)
+	adminPortfolioReq.Put("/edit/:portfolioId", pfhandlers.EditPortfolio)
+	adminPortfolioReq.Delete("/delete/:portfolioId", pfhandlers.DeletePortfolio)
+	adminPortfolioReq.Get("/get/:portfolioId", pfhandlers.GetPortfolio)
 	
 	
 	// contactus
-	contactusAdminReq := apiV1.Group("/admin/contactus", handlers.AdminRequired)
+	// contactusAuthReq := apiV1.Group("/admin/contactus", ghandlers.AuthRequired)
 	
 	// contactus
-	contactusAuthReq := apiV1.Group("/admin/contactus", handlers.AdminRequired)
-	contactusAuthReq.Get("/get/:contactusId", handlers.GetContactUs)
-	contactusAuthReq.Delete("/delete/:contactusId", handlers.DeleteContactUs)
-	contactusAdminReq.Get("/get-all/", handlers.GetAllContactUss) // with query
+	contactusAdminReq := apiV1.Group("/admin/contactus", ghandlers.AdminRequired)
+	contactusAdminReq.Get("/get/:contactusId", cohandlers.GetContactUs)
+	contactusAdminReq.Delete("/delete/:contactusId", cohandlers.DeleteContactUs)
+	contactusAdminReq.Get("/get-all/", cohandlers.GetAllContactUss) // with query
 	
 	// member
-	statisticAdminReq := apiV1.Group("/admin/statistic", handlers.AdminRequired)
-	statisticAdminReq.Post("/create/:statisticId", handlers.CreateStatistic)
-	statisticAdminReq.Put("/edit/:statisticId", handlers.EditStatistic)
-	statisticAdminReq.Delete("/delete/:statisticId", handlers.DeleteStatistic)
-	statisticAdminReq.Get("/get-all/", handlers.GetAllStatistics)
+	statisticAdminReq := apiV1.Group("/admin/statistic", ghandlers.AdminRequired)
+	statisticAdminReq.Post("/create/:statisticId", sshandlers.CreateStatistic)
+	statisticAdminReq.Put("/edit/:statisticId", sshandlers.EditStatistic)
+	statisticAdminReq.Delete("/delete/:statisticId", sshandlers.DeleteStatistic)
+	statisticAdminReq.Get("/get-all/", sshandlers.GetAllStatistics)
 	
 	// mainpage
-	mainpageAdminReq := apiV1.Group("/admin/mainpage", handlers.AdminRequired)
-	mainpageAdminReq.Post("/create/:mainpageTextId", handlers.CreateMainpageTexts)
-	mainpageAdminReq.Put("/edit/:mainpageTextId", handlers.EditMainpageText)
-	mainpageAdminReq.Delete("/delete/:mainpageTextId", handlers.DeleteMainpageText)
-	mainpageAdminReq.Get("/get-all/", handlers.GetAllMainpageText)
+	mainpageAdminReq := apiV1.Group("/admin/mainpage", ghandlers.AdminRequired)
+	mainpageAdminReq.Post("/create/:mainpageTextId", mhandlers.CreateMainpageTexts)
+	mainpageAdminReq.Put("/edit/:mainpageTextId", mhandlers.EditMainpageText)
+	mainpageAdminReq.Delete("/delete/:mainpageTextId", mhandlers.DeleteMainpageText)
+	mainpageAdminReq.Get("/get-all/", mhandlers.GetAllMainpageText)
 
 	// plan order
-	PlanOrderAdminReq := apiV1.Group("/admin/order-plan", handlers.AdminRequired)
-	PlanOrderAdminReq.Get("/get-all", handlers.GetAllPlanOrders)
+	PlanOrderAdminReq := apiV1.Group("/admin/order-plan", ghandlers.AdminRequired)
+	PlanOrderAdminReq.Get("/get-all", phandlers.GetAllPlanOrders)
 	
 	// todo: must remove in production
 	apiV1.Get("/routes", func (c *fiber.Ctx)error{return utils.JSONResponse(c, 200, fiber.Map{"routes":app.GetRoutes()})})
@@ -205,7 +207,9 @@ func Route(app *fiber.App) {
 	
 	// Static
 	app.Static("/", "../frontend/dist")
+	app.Static("/", "/frontend/dist")
 	app.Static("*", "../frontend/dist/index.html")
+	app.Static("*", "/frontend/dist/index.html")
 
 
 	// static not found

@@ -1,4 +1,4 @@
-package handlers
+package plan
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 	
 	"lovelcode/utils"
-	"lovelcode/models"
+	pmodels "lovelcode/models/plan"
 	"lovelcode/database"
 )
 
@@ -16,8 +16,8 @@ import (
 
 // GET
 func GetAllPlanTypes(c *fiber.Ctx) error{
-	var planTypes []models.OPlanType
-	if err:= database.DB.Model(&models.PlanType{}).Find(&planTypes).Error; err!=nil{
+	var planTypes []pmodels.OPlanType
+	if err:= database.DB.Model(&pmodels.PlanType{}).Find(&planTypes).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no plan type found"})
 		}
@@ -33,7 +33,7 @@ func GetAllPlanTypes(c *fiber.Ctx) error{
 func CreatePlanType(c *fiber.Ctx) error{
 
 	
-	var pl models.IPlanType
+	var pl pmodels.IPlanType
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -44,7 +44,7 @@ func CreatePlanType(c *fiber.Ctx) error{
 	}
 	
 	// create plan type and fill it
-	var planType models.PlanType
+	var planType pmodels.PlanType
 	planType.Fill(&pl)
 	planType.TimeCreated = time.Now()
 	planType.TimeModified = time.Now()
@@ -64,8 +64,8 @@ func EditPlanType(c *fiber.Ctx) error{
 	}
 
 	// check plan is exist
-	var planType models.PlanType
-	if err:= database.DB.First(&planType, &models.PlanType{ID: id}).Error; err!=nil{
+	var planType pmodels.PlanType
+	if err:= database.DB.First(&planType, &pmodels.PlanType{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan type not found"})
 		}
@@ -73,7 +73,7 @@ func EditPlanType(c *fiber.Ctx) error{
 	}
 
 	// get plan type from body
-	var pl models.IPlanType
+	var pl pmodels.IPlanType
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -104,8 +104,8 @@ func GetPlanType(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	var planType models.OPlanType
-	if err:= database.DB.Model(&models.PlanType{}).First(&planType, &models.PlanType{ID: id}).Error; err!=nil{
+	var planType pmodels.OPlanType
+	if err:= database.DB.Model(&pmodels.PlanType{}).First(&planType, &pmodels.PlanType{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan type not found"})
 		}
@@ -122,7 +122,7 @@ func DeletePlanType(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	if err:= database.DB.Delete(&models.PlanType{}, id).Error; err!=nil{
+	if err:= database.DB.Delete(&pmodels.PlanType{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan type not found"})
 		}

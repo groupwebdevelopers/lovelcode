@@ -2,8 +2,7 @@ package s3
 
 import (
 	"io"
-	"strings"
-	 "fmt"
+	"errors"
 	
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -36,8 +35,10 @@ func Init() error {
 
 	s3Client = s3.New(newSession)
 
-	fmt.Printf("#%s\n", s3Client)
-	PutObject(strings.NewReader("hello i'm working"))
+	if s3Client == nil{
+		return errors.New("can't create s3 client")
+	}
+
 	return nil
 	// cred := credentials.NewStaticCredentialsProvider(accessKey, secretKey, "")
 

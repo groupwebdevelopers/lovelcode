@@ -9,7 +9,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 
-	"lovelcode/models"
+	umodels "lovelcode/models/user"
 )
 
 func Setup(){
@@ -17,7 +17,7 @@ func Setup(){
 }
 
 
-func CreateJWTToken(user models.User, tokenExpHours uint16) (string, error){
+func CreateJWTToken(user umodels.User, tokenExpHours uint16) (string, error){
 
 
 
@@ -41,7 +41,7 @@ func CreateJWTToken(user models.User, tokenExpHours uint16) (string, error){
 
 // todo: send token with expared time
 // verify token
-func VerifyJWTToken(tokenString string) (models.User, error){
+func VerifyJWTToken(tokenString string) (umodels.User, error){
 	secret := os.Getenv("secret") + "se"
 
 	
@@ -53,19 +53,19 @@ func VerifyJWTToken(tokenString string) (models.User, error){
 	})
 
 	if err!=nil{
-		return models.User{}, err
+		return umodels.User{}, err
 	}
 
 	claims, ok:=token.Claims.(jwt.MapClaims)
 	if ok && token.Valid{
-		user := models.User{
+		user := umodels.User{
 			Email: claims["email"].(string),
 			Name: claims["name"].(string),
 			Family: claims["family"].(string),
 		}
 		return user, nil
 	}
-	return models.User{}, errors.New("invalid token")
+	return umodels.User{}, errors.New("invalid token")
 
 }
 

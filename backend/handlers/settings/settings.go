@@ -1,8 +1,8 @@
-package handlers
+package settings
 
 import (
 	"lovelcode/database"
-	"lovelcode/models"
+	smodels "lovelcode/models/settings"
 	"lovelcode/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +11,7 @@ import (
 
 func CreateSetting(c *fiber.Ctx) error{
 	
-	var st models.ISettingsDB
+	var st smodels.ISettingsDB
 	if err:= c.BodyParser(&st); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -20,7 +20,7 @@ func CreateSetting(c *fiber.Ctx) error{
 	if err:=st.Check(); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	var setting models.SettingsDB
+	var setting smodels.SettingsDB
 	setting.Fill(&st)
 	if err:= database.DB.Create(&setting).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -39,8 +39,8 @@ func EditSetting(c *fiber.Ctx) error{
 	}
 
 	// check setting is exist
-	var setting models.SettingsDB
-	if err:= database.DB.First(&setting, &models.SettingsDB{ID: id}).Error; err!=nil{
+	var setting smodels.SettingsDB
+	if err:= database.DB.First(&setting, &smodels.SettingsDB{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}
@@ -48,7 +48,7 @@ func EditSetting(c *fiber.Ctx) error{
 	}
 	
 	// get setting from body
-	var st models.ISettingsDB
+	var st smodels.ISettingsDB
 	if err:= c.BodyParser(&st); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -73,7 +73,7 @@ func EditSetting(c *fiber.Ctx) error{
 // GET , admin required
 func GetAllSettings(c *fiber.Ctx) error{
 
-	var settings []models.SettingsDB
+	var settings []smodels.SettingsDB
 	if err:= database.DB.Find(&settings).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no settings found"})
@@ -92,8 +92,8 @@ func GetSetting(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the settingId didn't send or invalid"})
 	}
 	
-	var setting models.SettingsDB
-	if err:= database.DB.First(&setting, &models.SettingsDB{ID: id}).Error; err!=nil{
+	var setting smodels.SettingsDB
+	if err:= database.DB.First(&setting, &smodels.SettingsDB{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Setting not found"})
 		}
@@ -111,7 +111,7 @@ func DeleteSetting(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	if err:= database.DB.Delete(&models.SettingsDB{}, id).Error; err!=nil{
+	if err:= database.DB.Delete(&smodels.SettingsDB{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}

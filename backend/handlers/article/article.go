@@ -1,4 +1,4 @@
-package handlers
+package article
 
 import (
 	"errors"
@@ -12,9 +12,12 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/database"
-	"lovelcode/models"
+	amodels "lovelcode/models/article"
+	umodels "lovelcode/models/user"
+	tmodels "lovelcode/models/temp"
 	"lovelcode/utils"
 	utilstoken "lovelcode/utils/token"
+	"lovelcode/utils/s3"
 )
 
 
@@ -30,8 +33,8 @@ func GetAllArticlesTitles(c *fiber.Ctx) error{
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	var articles []models.OArticleTitle
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.time_created, articles.time_modified, articles.views, articles.likes, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Scan(&articles).Error; err!=nil{
+	var articles []amodels.OArticleTitle
+	if err:= database.DB.Model(&amodels.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.time_created, articles.time_modified, articles.views, articles.likes, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Scan(&articles).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
@@ -51,8 +54,8 @@ func GetFeaturedArticlesTitle(c *fiber.Ctx) error{
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	var articles []models.OArticleTitle
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views,articles.time_created, articles.time_modified, articles.views, articles.likes, users.name AS user_name, users.family AS user_name").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&models.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*pageLimit).Limit(pageLimit).Error; err!=nil{
+	var articles []amodels.OArticleTitle
+	if err:= database.DB.Model(&amodels.Article{}).Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, articles.views,articles.time_created, articles.time_modified, articles.views, articles.likes, users.name AS user_name, users.family AS user_name").Joins("INNER JOIN users ON articles.user_id=users.id").Where(&amodels.Article{IsFeatured: true}).Scan(&articles).Offset((int(page)-1)*pageLimit).Limit(pageLimit).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 		}
@@ -69,8 +72,8 @@ func GetArticle(c *fiber.Ctx) error{
 	
 	titleUrl := c.Params("articleTitleUrl")
 	
-	var article models.OArticle
-	if err:= database.DB.Model(&models.Article{}).Select("articles.title, articles.body, articles.tags, articles.short_desc, articles.image_path, articles.time_created, articles.time_modified, articles.views, users.name AS user_name, users.family AS user_family, users.email as user_email, article_categories.name AS category_name, article_categories.translated_name AS category_translated_name").Where(&models.Article{TitleUrl: titleUrl}).Joins("INNER JOIN users ON articles.user_id=users.id").Joins("INNER JOIN article_categories ON articles.article_category_id=article_categories.id").Scan(&article).Error; err!=nil{
+	var article amodels.OArticle
+	if err:= database.DB.Model(&amodels.Article{}).Select("articles.title, articles.body, articles.tags, articles.short_desc, articles.image_path, articles.time_created, articles.time_modified, articles.views, users.name AS user_name, users.family AS user_family, users.email as user_email, article_categories.name AS category_name, article_categories.translated_name AS category_translated_name").Where(&amodels.Article{TitleUrl: titleUrl}).Joins("INNER JOIN users ON articles.user_id=users.id").Joins("INNER JOIN article_categories ON articles.article_category_id=article_categories.id").Scan(&article).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}
@@ -86,7 +89,7 @@ func GetArticle(c *fiber.Ctx) error{
 	if viewToken == ""{
 		// add view token
 		viewToken = utilstoken.CreateRandomToken()
-		viewToken = hash(viewToken)
+		viewToken = utils.Hash(viewToken)
 		c.Cookie(&fiber.Cookie{
 			Name: "Vtoken",
 			Value: viewToken,
@@ -110,8 +113,8 @@ func SearchArticle(c *fiber.Ctx) error{
 			return utils.JSONResponse(c, 400, fiber.Map{"error":err})
 		}
 		// search by title
-		var articles []models.OArticleTitle
-		if err:= database.DB.Model(&models.Article{}).Where("title like ?", "%"+title+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+		var articles []amodels.OArticleTitle
+		if err:= database.DB.Model(&amodels.Article{}).Where("title like ?", "%"+title+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
 			if err==gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 			}
@@ -140,11 +143,11 @@ func SearchArticle(c *fiber.Ctx) error{
 		// search by tags
 		stags := strings.Split(tags, "|")
 
-		var articles []models.OArticleTitle
+		var articles []amodels.OArticleTitle
 		// have two tag
 		if len(stags) >= 2{
 
-			if err:= database.DB.Model(&models.Article{}).Where("tags like ? and tags like %?%", "%"+stags[0]+"%", "%"+stags[1]+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+			if err:= database.DB.Model(&amodels.Article{}).Where("tags like ? and tags like %?%", "%"+stags[0]+"%", "%"+stags[1]+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
 				if err==gorm.ErrRecordNotFound{
 					return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 				}
@@ -153,7 +156,7 @@ func SearchArticle(c *fiber.Ctx) error{
 			
 		}
 		if len(articles) == 0 && len(stags)==1{
-			if err:= database.DB.Model(&models.Article{}).Where("tags=?", "%"+stags[0]+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
+			if err:= database.DB.Model(&amodels.Article{}).Where("tags=?", "%"+stags[0]+"%").Select("articles.title, articles.title_url, articles.image_path, articles.short_desc, users.name AS user_name, users.family AS user_family").Joins("INNER JOIN users ON articles.user_id=users.id").Scan(&articles).Error; err!=nil{
 				if err==gorm.ErrRecordNotFound{
 					return utils.JSONResponse(c, 404, fiber.Map{"error":"no Article found"})
 				}
@@ -182,7 +185,7 @@ func SearchArticle(c *fiber.Ctx) error{
 // POST, auth required, admin required
 func CreateArticle(c *fiber.Ctx) error{
 	
-	var al models.IArticle
+	var al amodels.IArticle
 	if err:= c.BodyParser(&al); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -193,7 +196,7 @@ func CreateArticle(c *fiber.Ctx) error{
 	}
 	
 		// check article is exist
-		if err:=database.DB.First(&models.Article{}, &models.Article{TitleUrl: utils.ConvertToUrl(al.Title)}).Error;err!=nil{
+		if err:=database.DB.First(&amodels.Article{}, &amodels.Article{TitleUrl: utils.ConvertToUrl(al.Title)}).Error;err!=nil{
 			if err!=gorm.ErrRecordNotFound{
 				return utils.ServerError(c, err)
 			}
@@ -202,9 +205,9 @@ func CreateArticle(c *fiber.Ctx) error{
 		}
 	
 	// create Article and fill it
-	var article models.Article
+	var article amodels.Article
 	article.Fill(al)
-	article.UserID = c.Locals("user").(models.User).ID
+	article.UserID = c.Locals("user").(umodels.User).ID
 	article.TimeCreated = time.Now()
 	article.TimeModified = time.Now()
 	article.TitleUrl = utils.ConvertToUrl(article.Title)
@@ -226,8 +229,8 @@ func UploadArticleImage(c *fiber.Ctx) error{
 	
 	
 	// check Article is exist
-	var article models.Article
-	if err:=database.DB.First(&article, &models.Article{ID: id}).Error;err!=nil{
+	var article amodels.Article
+	if err:=database.DB.First(&article, &amodels.Article{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}
@@ -245,7 +248,11 @@ func UploadArticleImage(c *fiber.Ctx) error{
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
 
-	err = s3.PutObject(file, fmt.Sprintf("/images/article/%s", image))
+	fl, err := file.Open()
+	defer fl.Close()
+
+
+	err = s3.PutObject(fl, fmt.Sprintf("/images/article/%s", image))
 	// err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))
 
 	if err!=nil{
@@ -254,7 +261,7 @@ func UploadArticleImage(c *fiber.Ctx) error{
 	
 	imageURL := fmt.Sprintf("/images/article/%s", image)
 
-	if err = database.DB.Model(&models.Article{}).Where(&models.Article{ID: id}).Update("image_path", imageURL).Error; err!=nil{
+	if err = database.DB.Model(&amodels.Article{}).Where(&amodels.Article{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
@@ -270,25 +277,25 @@ func EditArticle(c *fiber.Ctx) error{
 	// }
 
 	// // check article is exist
-	// var article models.Article
-	// if err:= database.DB.First(&article, &models.Article{ID: id}).Error; err!=nil{
+	// var article amodels.Article
+	// if err:= database.DB.First(&article, &amodels.Article{ID: id}).Error; err!=nil{
 	// 	if err==gorm.ErrRecordNotFound{
 	// 		return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 	// 	}
 	// 	return utils.ServerError(c, err)
 	// }
 
-	article := c.Locals("article").(models.Article)
+	article := c.Locals("article").(amodels.Article)
 
 	
 	// get article from body
-	var al models.IArticle
+	var al amodels.IArticle
 	if err:= c.BodyParser(&al); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 	
 	// check article is exist
-	if err:=database.DB.First(&models.Article{}, &models.Article{TitleUrl: utils.ConvertToUrl(al.Title)}).Error;err!=nil{
+	if err:=database.DB.First(&amodels.Article{}, &amodels.Article{TitleUrl: utils.ConvertToUrl(al.Title)}).Error;err!=nil{
 		if err!=gorm.ErrRecordNotFound{
 			return utils.ServerError(c, err)
 		}
@@ -317,7 +324,7 @@ func EditArticle(c *fiber.Ctx) error{
 // DELETE, /:articleTitleUrl
 func DeleteArticle(c *fiber.Ctx) error{
 	
-	article := c.Locals("article").(models.Article)
+	article := c.Locals("article").(amodels.Article)
 	
 	if err:= database.DB.Delete(&article).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
@@ -338,16 +345,16 @@ func DeleteArticle(c *fiber.Ctx) error{
 }
 
 func AddViewArticle(titleUrl string, vtoken string, views uint64){
-	if err:= database.DB.Model(&models.Temp{}).First(&models.Temp{}, &models.Temp{String1f: titleUrl, String2f: vtoken}).Error; err!=nil{
+	if err:= database.DB.Model(&tmodels.Temp{}).First(&tmodels.Temp{}, &tmodels.Temp{String1f: titleUrl, String2f: vtoken}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			// add view to article
 			views++
-			if err2:= database.DB.Model(&models.Article{}).Where(&models.Article{TitleUrl: titleUrl}).Update("views", views).Error;err!=nil{
+			if err2:= database.DB.Model(&amodels.Article{}).Where(&amodels.Article{TitleUrl: titleUrl}).Update("views", views).Error;err!=nil{
 				utils.LogError(err2)
 				return
 			}
 			// add titleUrl and vtoken to temp table
-			ctemp := models.Temp{String1f: titleUrl, String2f: vtoken, EndTime: time.Now().Add(24*time.Hour)}
+			ctemp := tmodels.Temp{String1f: titleUrl, String2f: vtoken, EndTime: time.Now().Add(24*time.Hour)}
 			if err2:= database.DB.Create(&ctemp).Error;err!=nil{
 				utils.LogError(err2)
 				return
@@ -373,7 +380,7 @@ func AddViewArticle(titleUrl string, vtoken string, views uint64){
 	// if vt == nil{
 	// 	// user don't view until now
 	// 	view++
-	// 	if err2:= database.DB.Model(&models.Article{}).Where(&models.Article{TitleUrl: titleUrl}).Update("views", views).Error;err!=nil{
+	// 	if err2:= database.DB.Model(&amodels.Article{}).Where(&amodels.Article{TitleUrl: titleUrl}).Update("views", views).Error;err!=nil{
 	// 		utils.LogError(err2)
 	// 		return
 	// 	}

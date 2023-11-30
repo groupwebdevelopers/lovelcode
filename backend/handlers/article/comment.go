@@ -1,4 +1,4 @@
-package handlers
+package article
 
 import (
 	// "errors"
@@ -12,7 +12,9 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/database"
-	"lovelcode/models"
+	amodels "lovelcode/models/article"
+	umodels "lovelcode/models/user"
+	uhandlers "lovelcode/handlers/user"
 	"lovelcode/utils"
 )
 
@@ -24,16 +26,16 @@ func CreateComment(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"article title url didn't sent"})
 	}
 
-	user := c.Locals("user").(models.User)
+	user := c.Locals("user").(umodels.User)
 
-	var mb models.IComment
+	var mb amodels.IComment
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 
 	// check article is exist
 	var articleID uint64
-	if err:= database.DB.Model(&models.Article{}).Select("id").Where(models.Article{TitleUrl: articleTitleUrl}).Scan(&articleID).Error;err!=nil{
+	if err:= database.DB.Model(&amodels.Article{}).Select("id").Where(amodels.Article{TitleUrl: articleTitleUrl}).Scan(&articleID).Error;err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"article not found"})
 		}
@@ -50,7 +52,7 @@ func CreateComment(c *fiber.Ctx) error{
 			CommentAnswerID uint64
 		}
 		var comt com
-		if err:= database.DB.Model(&models.Comment{}).Select("id, comment_answer_id").Where(models.Comment{ID: mb.CommentAnswerID, ArticleID: articleID}).Scan(&comt).Error;err!=nil{
+		if err:= database.DB.Model(&amodels.Comment{}).Select("id, comment_answer_id").Where(amodels.Comment{ID: mb.CommentAnswerID, ArticleID: articleID}).Scan(&comt).Error;err!=nil{
 			if err == gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
 			}
@@ -72,7 +74,7 @@ func CreateComment(c *fiber.Ctx) error{
 	}
 	
 	// create Comment and fill it
-	var Comment models.Comment
+	var Comment amodels.Comment
 	Comment.Fill(&mb)
 	Comment.UserID = user.ID
 	Comment.ArticleID = articleID
@@ -94,8 +96,8 @@ func EditComment(c *fiber.Ctx) error{
 	}
 
 	// check Comment is exist
-	var Comment models.Comment
-	if err:= database.DB.First(&Comment, &models.Comment{ID: id}).Error; err!=nil{
+	var Comment amodels.Comment
+	if err:= database.DB.First(&Comment, &amodels.Comment{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Comment not found"})
 		}
@@ -103,7 +105,7 @@ func EditComment(c *fiber.Ctx) error{
 	}
 
 	// get Comment from body
-	var mb models.IComment
+	var mb amodels.IComment
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -116,7 +118,7 @@ func EditComment(c *fiber.Ctx) error{
 	if mb.CommentAnswerID != 0{
 		// check comment is exist
 		var commentID uint64
-		if err:= database.DB.Model(&models.Comment{}).Select("id").Where(models.Comment{ID: mb.CommentAnswerID}).Scan(&commentID).Error;err!=nil{
+		if err:= database.DB.Model(&amodels.Comment{}).Select("id").Where(amodels.Comment{ID: mb.CommentAnswerID}).Scan(&commentID).Error;err!=nil{
 			if err == gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"comment not found"})
 			}
@@ -151,8 +153,8 @@ func GetAllArticleComments(c *fiber.Ctx) error{
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	var Comments []models.OComment
-	if err:= database.DB.Model(&models.Comment{}).Select("comments.body, users.name, users.family").Joins("INNER JOIN users ON comments.user_id=users.id").Offset((page-1)*pageLimit).Limit(pageLimit).Scan(&Comments).Error; err!=nil{
+	var Comments []amodels.OComment
+	if err:= database.DB.Model(&amodels.Comment{}).Select("comments.body, users.name, users.family").Joins("INNER JOIN users ON comments.user_id=users.id").Offset((page-1)*pageLimit).Limit(pageLimit).Scan(&Comments).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Comment found"})
 		}
@@ -171,8 +173,8 @@ func GetComment(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	var Comment models.Comment
-	if err:= database.DB.First(&Comment, &models.Comment{ID: id}).Error; err!=nil{
+	var Comment amodels.Comment
+	if err:= database.DB.First(&Comment, &amodels.Comment{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Comment not found"})
 		}
@@ -192,26 +194,23 @@ func DeleteComment(c *fiber.Ctx) error{
 
 	isHavePermison := false
 
-	userID, adminPermisions, err := getUserIDAndAdminPermisionsFromSession(c)
-	if err!=nil{
-		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
-	}
+	user := c.Locals("user").(umodels.User)
 	
-	var Comment models.Comment
-	if err:= database.DB.First(&Comment, models.Comment{ID: id}).Error; err!=nil{
+	var Comment amodels.Comment
+	if err:= database.DB.First(&Comment, amodels.Comment{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Comment not found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	if Comment.UserID == userID{
+	if Comment.UserID == user.ID{
 		isHavePermison = true
 	}else{
-		p:=utils.CheckAdminPermision(adminPermisions, "deleteComment")
+		p:=utils.CheckAdminPermision(user.AdminPermisions, "deleteComment")
 		if p!=1{
 			if p==3{
-				hban(userID)
+				uhandlers.Hban(user.ID)
 			}
 		}else{
 			isHavePermison = true

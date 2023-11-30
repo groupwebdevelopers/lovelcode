@@ -1,31 +1,33 @@
-package handlers
+package user
 
 import (
 	"time"	
-	"crypto/sha256"
-	"encoding/base64"
+
 	
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
-	"lovelcode/models"
+	umodels "lovelcode/models/user"
+	amodels "lovelcode/models/article"
+	pmodels "lovelcode/models/plan"
 	"lovelcode/database"
 	"lovelcode/utils"
 	utilstoken "lovelcode/utils/token"
+	"lovelcode/session"
 )
 
 
 func Signin(c *fiber.Ctx) error{
 
-	sess, err := globalSession.Get(c)
+	sess, err := session.GlobalSession.Get(c)
 	if err!=nil{
 		return utils.ServerError(c, err)
 	}
 	defer sess.Save()
 	
 	// check json and extract data from it
-	var ss models.SigninUser
+	var ss umodels.SigninUser
 	if err:= c.BodyParser(&ss); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"}, err.Error())
 	}
@@ -37,10 +39,10 @@ func Signin(c *fiber.Ctx) error{
 	}
 
 	// hash password
-	ss.Password = hash(ss.Password)
+	ss.Password = utils.Hash(ss.Password)
 	
 	// check user already exist
-	var user models.User
+	var user umodels.User
 	if err:= database.DB.First(&user, "email=? and password=?", ss.Email, ss.Password).Error; err==gorm.ErrRecordNotFound{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"user not found"})
 	}else if err!=nil{
@@ -58,7 +60,7 @@ func Signin(c *fiber.Ctx) error{
 		// return utils.ServerError(c, err)
 	// }
 	token := utilstoken.CreateRandomToken()
-	token = hash(token)
+	token = utils.Hash(token)
 	user.Token = token
 	user.TokenExp = time.Now().Add(time.Duration(database.Settings.TokenExpHours) * time.Hour)
 	// update database token
@@ -88,7 +90,7 @@ func Signin(c *fiber.Ctx) error{
 func Signup(c *fiber.Ctx) error{
 	
 	// check json and extract data from it
-	var ss models.SignupUser
+	var ss umodels.SignupUser
 	if err:= c.BodyParser(&ss); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -99,11 +101,11 @@ func Signup(c *fiber.Ctx) error{
 	}
 	
 	// hash password
-	ss.Password = hash(ss.Password)
+	ss.Password = utils.Hash(ss.Password)
 	
 	// check user already exist
-	var user models.User
-	query := models.User{Email: ss.Email}
+	var user umodels.User
+	query := umodels.User{Email: ss.Email}
 	if err:= database.DB.First(&user, &query).Error; err==nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"user already exist"})
 	}else if err!=gorm.ErrRecordNotFound{
@@ -117,7 +119,7 @@ func Signup(c *fiber.Ctx) error{
 		// return utils.ServerError(c, err)
 	// }
 	token := utilstoken.CreateRandomToken()
-	token = hash(token)
+	token = utils.Hash(token)
 	// create user
 	user.Email = ss.Email
 	user.Password = ss.Password
@@ -149,23 +151,23 @@ func Signup(c *fiber.Ctx) error{
 
 func GetUserState(c *fiber.Ctx) error{
 	
-	user := c.Locals("user").(models.User)
+	user := c.Locals("user").(umodels.User)
 
 	// get commnets count
 	var commentsCount int
-	if err:= database.DB.Select("count(id)").Where(models.Comment{UserID: user.ID}).Scan(&commentsCount).Error; err!=nil{
+	if err:= database.DB.Select("count(id)").Where(amodels.Comment{UserID: user.ID}).Scan(&commentsCount).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
-	
-	// get project doing request count
-	var pdrCount int
-	if err:= database.DB.Select("count(id)").Where(models.ProjectDoingRequest{UserID: user.ID}).Scan(&pdrCount).Error; err!=nil{
+	// todo: change email if phone number added
+	// get plan order count
+	var planOrderCount int
+	if err:= database.DB.Select("count(id)").Where(pmodels.PlanOrder{Email: user.Email}).Scan(&planOrderCount).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
 	var rt string = utils.ConvertTimeToString(utils.ConvertToPersianTime(user.TimeCreated))
 
-	return utils.JSONResponse(c, 200, fiber.Map{"timeRigistered":rt, "totallComments":commentsCount, "totallProjectDoingRequest": pdrCount})
+	return utils.JSONResponse(c, 200, fiber.Map{"timeRigistered":rt, "totallComments":commentsCount, "totallProjectDoingRequest": planOrderCount})
 }
 
 
@@ -180,8 +182,8 @@ func BanUser(c *fiber.Ctx) error{
 
 	// user have permisoin and should ban target user
 
-		var targetUser models.User
-		if err:= database.DB.First(&targetUser, &models.User{ID: id}).Error;err!=nil{
+		var targetUser umodels.User
+		if err:= database.DB.First(&targetUser, &umodels.User{ID: id}).Error;err!=nil{
 			if err== gorm.ErrRecordNotFound{
 				return utils.JSONResponse(c, 404, fiber.Map{"error":"user not found"})
 			}else{
@@ -209,7 +211,7 @@ func BanUser(c *fiber.Ctx) error{
 func GetUsersPaged(c *fiber.Ctx) error{
 
 	page := utils.GetIDFromParams(c, "id")
-	var users []models.User
+	var users []umodels.User
 	if err:=database.DB.Limit(10).Offset(int(page*10)).Find(&users).Error;err!=nil{
 		if err == gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"not found"})
@@ -222,13 +224,9 @@ func GetUsersPaged(c *fiber.Ctx) error{
 }
 
 
-func hash(s string) string{
-	h:= sha256.New()
-	h.Write([]byte(s))
-	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
-}
 
-func hban(userID uint64) {
-	err := database.DB.Model(&models.User{}).Where("id=?", userID).Update("isBanned", true).Error
+
+func Hban(userID uint64) {
+	err := database.DB.Model(&umodels.User{}).Where("id=?", userID).Update("isBanned", true).Error
 	utils.LogError(err)
 }

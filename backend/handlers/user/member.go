@@ -1,4 +1,4 @@
-package handlers
+package user
 
 import (
 	"errors"
@@ -12,8 +12,9 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/database"
-	"lovelcode/models"
+	umodels "lovelcode/models/user"
 	"lovelcode/utils"
+	"lovelcode/utils/s3"
 )
 
 /////////////////////   public   ///////////////////////////////
@@ -22,8 +23,8 @@ import (
 
 // GET
 func GetAllMembers(c *fiber.Ctx) error{
-	var members []models.OMember
-	if err:= database.DB.Model(&models.Member{}).Select("members.id, members.job_title, members.image_path, members.work_exp, members.contact, users.name, users.family, users.email").Joins("INNER JOIN users ON members.user_id=users.id").Scan(&members).Error; err!=nil{
+	var members []umodels.OMember
+	if err:= database.DB.Model(&umodels.Member{}).Select("members.id, members.job_title, members.image_path, members.work_exp, members.contact, users.name, users.family, users.email").Joins("INNER JOIN users ON members.user_id=users.id").Scan(&members).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no member found"})
 		}
@@ -45,15 +46,15 @@ func CreateMember(c *fiber.Ctx) error{
 	}
 
 	// check user is exist
-	var user models.User
-	if err:=database.DB.First(&user, &models.User{ID: id}).Error;err!=nil{
+	var user umodels.User
+	if err:=database.DB.First(&user, &umodels.User{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"User not found"})
 		}
 	}
 
 
-	var mb models.IMember
+	var mb umodels.IMember
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -64,7 +65,7 @@ func CreateMember(c *fiber.Ctx) error{
 	}
 	
 	// create member and fill it
-	var member models.Member
+	var member umodels.Member
 	member.Fill(&mb)
 	member.UserID = id
 	member.TimeCreated = time.Now()
@@ -87,8 +88,8 @@ func UploadMemberImage(c *fiber.Ctx) error{
 	
 	
 	// check member is exist
-	var member models.Member
-	if err:=database.DB.First(&member, &models.Member{ID: id}).Error;err!=nil{
+	var member umodels.Member
+	if err:=database.DB.First(&member, &umodels.Member{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Member not found"})
 		}
@@ -117,7 +118,11 @@ func UploadMemberImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = s3.PutObject(file, fmt.Sprintf("/images/member/%s", image))
+
+	fl, err := file.Open()
+	defer fl.Close()
+
+	err = s3.PutObject(fl, fmt.Sprintf("/images/member/%s", image))
 	// err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
 
 	if err!=nil{
@@ -126,7 +131,7 @@ func UploadMemberImage(c *fiber.Ctx) error{
 	
 	imageURL := fmt.Sprintf("/images/member/%s", image)
 
-	if err = database.DB.Model(&models.Member{}).Where(&models.Member{ID: id}).Update("image_path", imageURL).Error; err!=nil{
+	if err = database.DB.Model(&umodels.Member{}).Where(&umodels.Member{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
@@ -142,8 +147,8 @@ func EditMember(c *fiber.Ctx) error{
 	}
 
 	// check member is exist
-	var member models.Member
-	if err:= database.DB.First(&member, &models.Member{ID: id}).Error; err!=nil{
+	var member umodels.Member
+	if err:= database.DB.First(&member, &umodels.Member{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"member not found"})
 		}
@@ -151,7 +156,7 @@ func EditMember(c *fiber.Ctx) error{
 	}
 
 	// get member from body
-	var mb models.IMember
+	var mb umodels.IMember
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -182,8 +187,8 @@ func GetMember(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	var member models.Member
-	if err:= database.DB.First(&member, &models.Member{ID: id}).Error; err!=nil{
+	var member umodels.Member
+	if err:= database.DB.First(&member, &umodels.Member{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"member not found"})
 		}
@@ -201,8 +206,8 @@ func DeleteMember(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	var member models.Member
-	if err:= database.DB.First(&member, &models.Member{ID: id}).Delete(&member).Error; err!=nil{
+	var member umodels.Member
+	if err:= database.DB.First(&member, &umodels.Member{ID: id}).Delete(&member).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"member not found"})
 		}

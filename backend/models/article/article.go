@@ -1,15 +1,17 @@
-package models
+package article
 
 import (
 	"errors"
-	"lovelcode/utils"
 	"time"
+
+	umodels "lovelcode/models/user"
+	"lovelcode/utils"
 )
 
 type Article struct{
 	ID uint64 `gorm:"primaryKey"`
 	UserID uint64
-	User User
+	User umodels.User
 	ArticleCategoryID uint64 
 	ArticleCategory ArticleCategory
 	Title string `gorm:"not null,size:100"`

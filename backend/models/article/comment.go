@@ -1,15 +1,17 @@
-package models
+package article
 
 import (
 	"errors"
-	"lovelcode/utils"
 	"time"
+
+	umodels "lovelcode/models/user"
+	"lovelcode/utils"
 )
 
 type Comment struct{
 	ID uint64 `gorm:"primaryKey"`
 	UserID uint64
-	User User
+	User umodels.User
 	ArticleID uint64
 	Article Article
 	CommentAnswerID uint64

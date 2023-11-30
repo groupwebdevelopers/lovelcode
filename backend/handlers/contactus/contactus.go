@@ -1,4 +1,4 @@
-package handlers
+package contactus
 
 import (
 	// "errors"
@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/database"
-	"lovelcode/models"
+	comodels "lovelcode/models/contactus"
 	"lovelcode/utils"
 )
 
@@ -21,7 +21,7 @@ import (
 // POST
 func CreateContactUs(c *fiber.Ctx) error{
 
-	var mb models.IContactUs
+	var mb comodels.IContactUs
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -32,7 +32,7 @@ func CreateContactUs(c *fiber.Ctx) error{
 	}
 	
 	// create ContactUs and fill it
-	var ContactUs models.ContactUs
+	var ContactUs comodels.ContactUs
 	ContactUs.Fill(&mb)
 	ContactUs.TimeCreated = time.Now()
 
@@ -52,8 +52,8 @@ func GetAllUnseenContactUss(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid query:"+err.Error()})
 	}
 
-	var ContactUss []models.OContactUs
-	if err:= database.DB.Model(&models.ContactUs{}).Where(&models.ContactUs{IsSeen: true}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&ContactUss).Error; err!=nil{
+	var ContactUss []comodels.OContactUs
+	if err:= database.DB.Model(&comodels.ContactUs{}).Where(&comodels.ContactUs{IsSeen: true}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&ContactUss).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no ContactUs found"})
 		}
@@ -72,8 +72,8 @@ func GetAllContactUss(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid query:"+err.Error()})
 	}
 
-	var ContactUss []models.OContactUs
-	if err:= database.DB.Model(&models.ContactUs{}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&ContactUss).Error; err!=nil{
+	var ContactUss []comodels.OContactUs
+	if err:= database.DB.Model(&comodels.ContactUs{}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&ContactUss).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no ContactUs found"})
 		}
@@ -91,8 +91,8 @@ func GetContactUs(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	var ContactUs models.ContactUs
-	if err:= database.DB.First(&ContactUs, &models.ContactUs{ID: id}).Error; err!=nil{
+	var ContactUs comodels.ContactUs
+	if err:= database.DB.First(&ContactUs, &comodels.ContactUs{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"ContactUs not found"})
 		}
@@ -111,7 +111,7 @@ func DeleteContactUs(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	if err:= database.DB.Delete(&models.ContactUs{}, id).Error; err!=nil{
+	if err:= database.DB.Delete(&comodels.ContactUs{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"ContactUs not found"})
 		}

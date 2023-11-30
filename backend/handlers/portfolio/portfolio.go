@@ -1,4 +1,4 @@
-package handlers
+package portfolio
 
 import (
 	"errors"
@@ -12,9 +12,10 @@ import (
 	"gorm.io/gorm"
 	
 	"lovelcode/database"
-	"lovelcode/models"
+	pfmodels "lovelcode/models/portfolio"
 	"lovelcode/utils"
-)	
+	"lovelcode/utils/s3"
+	)	
 
 ///////////////////   public   /////////////////////////////
 
@@ -25,8 +26,8 @@ func GetAllPortfolios(c *fiber.Ctx) error{
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
-	var Portfolios []models.OPortfolio
-	if err:= database.DB.Model(&models.Portfolio{}).Order("id DESC").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Find(&Portfolios).Error; err!=nil{
+	var Portfolios []pfmodels.OPortfolio
+	if err:= database.DB.Model(&pfmodels.Portfolio{}).Order("id DESC").Offset((int(page)-1)*pageLimit).Limit(pageLimit).Find(&Portfolios).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Portfolio found"})
 		}
@@ -45,8 +46,8 @@ func GetAllPortfolios(c *fiber.Ctx) error{
 // GET
 func GetFeaturedPortfolios(c *fiber.Ctx) error{
 
-	var Portfolios []models.OPortfolio
-	if err:= database.DB.Model(&models.Portfolio{}).Where(&models.Portfolio{IsFeatured: true}).Find(&Portfolios).Error; err!=nil{
+	var Portfolios []pfmodels.OPortfolio
+	if err:= database.DB.Model(&pfmodels.Portfolio{}).Where(&pfmodels.Portfolio{IsFeatured: true}).Find(&Portfolios).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Portfolio found"})
 		}
@@ -67,7 +68,7 @@ func GetFeaturedPortfolios(c *fiber.Ctx) error{
 	// POST, auth required, admin required
 func CreatePortfolio(c *fiber.Ctx) error{
 	
-	var al models.IPortfolio
+	var al pfmodels.IPortfolio
 	if err:= c.BodyParser(&al); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}	
@@ -78,7 +79,7 @@ func CreatePortfolio(c *fiber.Ctx) error{
 	}	
 	
 	// create Portfolio and fill it
-	var Portfolio models.Portfolio
+	var Portfolio pfmodels.Portfolio
 	Portfolio.Fill(&al)
 
 	if err:= database.DB.Create(&Portfolio).Error; err!=nil{
@@ -98,8 +99,8 @@ func UploadPortfolioImage(c *fiber.Ctx) error{
 	
 	
 	// check Portfolio is exist
-	var Portfolio models.Portfolio
-	if err:=database.DB.First(&Portfolio, &models.Portfolio{ID: id}).Error;err!=nil{
+	var Portfolio pfmodels.Portfolio
+	if err:=database.DB.First(&Portfolio, &pfmodels.Portfolio{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Portfolio not found"})
 		}	
@@ -130,7 +131,11 @@ func UploadPortfolioImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = s3.PutObject(file, fmt.Sprintf("/images/portfolio/%s", image))
+
+	fl, err := file.Open()
+	defer fl.Close()
+
+	err = s3.PutObject(fl, fmt.Sprintf("/images/portfolio/%s", image))
 	// err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
 
 	if err!=nil{
@@ -139,7 +144,7 @@ func UploadPortfolioImage(c *fiber.Ctx) error{
 	
 	imageURL := fmt.Sprintf("/images/portfolio/%s", image)
 
-	if err = database.DB.Model(&models.Portfolio{}).Where(&models.Portfolio{ID: id}).Update("image_path", imageURL).Error; err!=nil{
+	if err = database.DB.Model(&pfmodels.Portfolio{}).Where(&pfmodels.Portfolio{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}	
 
@@ -155,8 +160,8 @@ func EditPortfolio(c *fiber.Ctx) error{
 	}	
 
 	// check Portfolio is exist
-	var Portfolio models.Portfolio
-	if err:= database.DB.First(&Portfolio, &models.Portfolio{ID: id}).Error; err!=nil{
+	var Portfolio pfmodels.Portfolio
+	if err:= database.DB.First(&Portfolio, &pfmodels.Portfolio{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Portfolio not found"})
 		}	
@@ -164,7 +169,7 @@ func EditPortfolio(c *fiber.Ctx) error{
 	}	
 	
 	// get Portfolio from body
-	var al models.IPortfolio
+	var al pfmodels.IPortfolio
 	if err:= c.BodyParser(&al); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}	
@@ -196,8 +201,8 @@ func GetPortfolio(c *fiber.Ctx) error{
 	}
 
 	
-	var Portfolio models.Portfolio
-	if err:= database.DB.First(&Portfolio, &models.Portfolio{ID: id}).Error; err!=nil{
+	var Portfolio pfmodels.Portfolio
+	if err:= database.DB.First(&Portfolio, &pfmodels.Portfolio{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Portfolio not found"})
 		}
@@ -215,9 +220,9 @@ func DeletePortfolio(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	var Portfolio models.Portfolio
+	var Portfolio pfmodels.Portfolio
 	
-	if err:= database.DB.First(&Portfolio, &models.Portfolio{ID: id}).Delete(&models.Portfolio{}, id).Error; err!=nil{
+	if err:= database.DB.First(&Portfolio, &pfmodels.Portfolio{ID: id}).Delete(&pfmodels.Portfolio{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Portfolio not found"})
 		}

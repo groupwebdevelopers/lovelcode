@@ -1,11 +1,11 @@
-package handlers
+package statistics
 
 import (
 
 	"gorm.io/gorm"
 
 	"lovelcode/database"
-	"lovelcode/models"
+	ssmodels "lovelcode/models/statistics"
 	"lovelcode/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,8 +19,8 @@ const requestNumberLimit = 100
 // GET
 func GetPublicStatistics(c *fiber.Ctx) error{
 	
-	var mpt []models.OStatistic
-	if err:= database.DB.Model(&models.Statistic{}).Where(&models.Statistic{IsPublic: true}).Scan(&mpt).Error; err!=nil{
+	var mpt []ssmodels.OStatistic
+	if err:= database.DB.Model(&ssmodels.Statistic{}).Where(&ssmodels.Statistic{IsPublic: true}).Scan(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
@@ -38,7 +38,7 @@ func GetPublicStatistics(c *fiber.Ctx) error{
 // POST, auth required, admin required
 func CreateStatistic(c *fiber.Ctx) error{
 
-	var mb models.IStatistic
+	var mb ssmodels.IStatistic
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -49,7 +49,7 @@ func CreateStatistic(c *fiber.Ctx) error{
 	}
 	
 	// create Statistics and fill it
-	var mpt models.Statistic
+	var mpt ssmodels.Statistic
 	mpt.Fill(&mb)
 	if err:= database.DB.Create(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -66,8 +66,8 @@ func EditStatistic(c *fiber.Ctx) error{
 	}
 
 	// check Statistics is exist
-	var mpt models.Statistic
-	if err:= database.DB.First(&mpt, &models.Statistic{ID: id}).Error; err!=nil{
+	var mpt ssmodels.Statistic
+	if err:= database.DB.First(&mpt, &ssmodels.Statistic{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Statistics not found"})
 		}
@@ -75,7 +75,7 @@ func EditStatistic(c *fiber.Ctx) error{
 	}
 
 	// get Statistics from body
-	var mb models.IStatistic
+	var mb ssmodels.IStatistic
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -98,8 +98,8 @@ func EditStatistic(c *fiber.Ctx) error{
 
 // GET, admin required
 func GetAllStatistics(c *fiber.Ctx) error{
-	var Statisticss []models.Statistic
-	if err:= database.DB.Model(&models.Statistic{}).Scan(&Statisticss).Error; err!=nil{
+	var Statisticss []ssmodels.Statistic
+	if err:= database.DB.Model(&ssmodels.Statistic{}).Scan(&Statisticss).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Statistics found"})
 		}
@@ -116,7 +116,7 @@ func DeleteStatistic(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	if err:= database.DB.Delete(&models.Statistic{}, id).Error; err!=nil{
+	if err:= database.DB.Delete(&ssmodels.Statistic{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Statistic not found"})
 		}
@@ -136,16 +136,16 @@ func AddOneRequest(){
 	if requestNumber > requestNumberLimit{
 		// add one request to database
 		var n uint64
-		if err:= database.DB.Model(&models.Statistic{}).Select("number").Where(&models.Statistic{Name: "requestNumber"}).Scan(&n).Error;err!=nil{
+		if err:= database.DB.Model(&ssmodels.Statistic{}).Select("number").Where(&ssmodels.Statistic{Name: "requestNumber"}).Scan(&n).Error;err!=nil{
 			if err== gorm.ErrRecordNotFound{
-				database.DB.Create(&models.Statistic{Name: "requestNumber", Name2:"request number", Number: float64(requestNumber), IsPublic: false})
+				database.DB.Create(&ssmodels.Statistic{Name: "requestNumber", Name2:"request number", Number: float64(requestNumber), IsPublic: false})
 				return
 			}else{
 				utils.LogError(err)
 				return
 			}
 		}
-		if err:= database.DB.Model(&models.Statistic{}).Where(&models.Statistic{Name: "requestNumber"}).Update("number", uint64(requestNumber)+n).Error; err!=nil{
+		if err:= database.DB.Model(&ssmodels.Statistic{}).Where(&ssmodels.Statistic{Name: "requestNumber"}).Update("number", uint64(requestNumber)+n).Error; err!=nil{
 			utils.LogError(err)
 			return
 		}

@@ -1,4 +1,4 @@
-package handlers
+package mainpage
 
 import (
 	// "time"
@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/database"
-	"lovelcode/models"
+	mmodels "lovelcode/models/mainpage"
 	"lovelcode/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -46,8 +46,8 @@ func GetMainPage(c *fiber.Ctx) error{
 
 	// get main page from memory
 	if database.Settings.MainpageInMemory{
-		var result []models.OMainpageText
-		result = make([]models.OMainpageText, 0, 10)
+		var result []mmodels.OMainpageText
+		result = make([]mmodels.OMainpageText, 0, 10)
 		for _, m := range database.MainpagesTexts{
 			if m.PageName == pageName{
 				result = append(result, m)
@@ -60,8 +60,8 @@ func GetMainPage(c *fiber.Ctx) error{
 	}
 
 	// get main page from database
-	var mpt []models.OMainpageText
-	if err:= database.DB.Model(&models.MainpageText{}).Where(&models.MainpageText{PageName: pageName}).Scan(&mpt).Error; err!=nil{
+	var mpt []mmodels.OMainpageText
+	if err:= database.DB.Model(&mmodels.MainpageText{}).Where(&mmodels.MainpageText{PageName: pageName}).Scan(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
@@ -76,7 +76,7 @@ func GetMainPage(c *fiber.Ctx) error{
 // POST, auth required, admin required
 func CreateMainpageTexts(c *fiber.Ctx) error{
 
-	var mb models.IMainpageText
+	var mb mmodels.IMainpageText
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -87,7 +87,7 @@ func CreateMainpageTexts(c *fiber.Ctx) error{
 	}
 	
 	// create MainpageText and fill it
-	var mpt models.MainpageText
+	var mpt mmodels.MainpageText
 	mpt.Fill(&mb)
 	if err:= database.DB.Create(&mpt).Error; err!=nil{
 		return utils.ServerError(c, err)
@@ -106,8 +106,8 @@ func UploadMainpageTextImage(c *fiber.Ctx) error{
 	
 	
 	// check MainpageText is exist
-	var mpt models.MainpageText
-	if err:=database.DB.First(&mpt, &models.MainpageText{ID: id}).Error;err!=nil{
+	var mpt mmodels.MainpageText
+	if err:=database.DB.First(&mpt, &mmodels.MainpageText{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpageText not found"})
 		}
@@ -131,7 +131,7 @@ func UploadMainpageTextImage(c *fiber.Ctx) error{
 	
 	imageURL := fmt.Sprintf("/images/%s", image)
 
-	if err = database.DB.Model(&models.MainpageText{}).Where(&models.MainpageText{ID: id}).Update("image_path", imageURL).Error; err!=nil{
+	if err = database.DB.Model(&mmodels.MainpageText{}).Where(&mmodels.MainpageText{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
@@ -147,8 +147,8 @@ func EditMainpageText(c *fiber.Ctx) error{
 	}
 
 	// check MainpageText is exist
-	var mpt models.MainpageText
-	if err:= database.DB.First(&mpt, &models.MainpageText{ID: id}).Error; err!=nil{
+	var mpt mmodels.MainpageText
+	if err:= database.DB.First(&mpt, &mmodels.MainpageText{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpageText not found"})
 		}
@@ -156,7 +156,7 @@ func EditMainpageText(c *fiber.Ctx) error{
 	}
 
 	// get MainpageText from body
-	var mb models.IMainpageText
+	var mb mmodels.IMainpageText
 	if err:= c.BodyParser(&mb); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -179,8 +179,8 @@ func EditMainpageText(c *fiber.Ctx) error{
 
 // GET, admin required
 func GetAllMainpageText(c *fiber.Ctx) error{
-	var MainpageTexts []models.MainpageText
-	if err:= database.DB.Model(&models.MainpageText{}).Scan(&MainpageTexts).Error; err!=nil{
+	var MainpageTexts []mmodels.MainpageText
+	if err:= database.DB.Model(&mmodels.MainpageText{}).Scan(&MainpageTexts).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no MainpageText found"})
 		}
@@ -197,8 +197,8 @@ func DeleteMainpageText(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	var mpt models.MainpageText
-	if err:= database.DB.First(&mpt, &models.MainpageText{ID: id}).Delete(&mpt).Error; err!=nil{
+	var mpt mmodels.MainpageText
+	if err:= database.DB.First(&mpt, &mmodels.MainpageText{ID: id}).Delete(&mpt).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"MainpageText not found"})
 		}

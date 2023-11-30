@@ -7,6 +7,8 @@ import (
 	"strings"
 	"errors"
 	"math"
+	"crypto/sha256"
+	"encoding/base64"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -148,3 +150,8 @@ func ConvertTimeToString(t time.Time) string{
 	return strings.Split(t.String(), "T")[0]
 }
 
+func Hash(s string) string{
+	h:= sha256.New()
+	h.Write([]byte(s))
+	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
+}

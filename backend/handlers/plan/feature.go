@@ -1,4 +1,4 @@
-package handlers
+package plan
 
 import (
 	"time"
@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 	
 	"lovelcode/utils"
-	"lovelcode/models"
+	pmodels "lovelcode/models/plan"
 	"lovelcode/database"
 )
 
@@ -28,8 +28,8 @@ func CreateFeatures(c *fiber.Ctx) error{
 	}
 	
 	// check plan is exist
-	var plan models.Plan
-	if err:=database.DB.First(&plan, &models.Plan{ID: id}).Error;err!=nil{
+	var plan pmodels.Plan
+	if err:=database.DB.First(&plan, &pmodels.Plan{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Plan not found"})
 		}
@@ -38,7 +38,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 	
 	
 	// get features from body
-	var ft []models.IFeature
+	var ft []pmodels.IFeature
 		if err:= c.BodyParser(&ft); err!=nil{
 			fmt.Println(err)
 			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
@@ -51,7 +51,7 @@ func CreateFeatures(c *fiber.Ctx) error{
 	}
 
 	// create features and fill its
-	features := make([]models.Feature, len(ft))
+	features := make([]pmodels.Feature, len(ft))
 	for i:= range features{
 		features[i].Fill(&ft[i])
 		features[i].TimeCreated = time.Now()
@@ -75,22 +75,22 @@ func EditFeature(c *fiber.Ctx) error{
 	}
 	
 	// check feature is exist
-	var feature models.Feature
-	if err:=database.DB.First(&feature, &models.Feature{ID: id}).Error;err!=nil{
+	var feature pmodels.Feature
+	if err:=database.DB.First(&feature, &pmodels.Feature{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Feature not found"})
 		}
 	}
 	
 	// get feature from body
-	var ft models.IFeature
+	var ft pmodels.IFeature
 	if err:= c.BodyParser(&ft); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 	
 	// check plan is exist
-	var plan models.Plan
-	if err:=database.DB.First(&plan, &models.Plan{ID: id}).Error;err!=nil{
+	var plan pmodels.Plan
+	if err:=database.DB.First(&plan, &pmodels.Plan{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Plan not found"})
 		}
@@ -120,8 +120,8 @@ func GetFeature(c *fiber.Ctx) error{
 	if id == 0{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
-	var feature models.Feature
-	if err:= database.DB.First(&feature, &models.Feature{ID: id}).Error; err!=nil{
+	var feature pmodels.Feature
+	if err:= database.DB.First(&feature, &pmodels.Feature{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
 		}
@@ -132,7 +132,7 @@ func GetFeature(c *fiber.Ctx) error{
 }
 
 func GetAllFeatures(c *fiber.Ctx) error{
-	var features []models.Feature
+	var features []pmodels.Feature
 
 	if err:= database.DB.Find(&features).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
@@ -152,7 +152,7 @@ func DeleteFeature(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	if err:= database.DB.Delete(&models.Feature{}, id).Error; err!=nil{
+	if err:= database.DB.Delete(&pmodels.Feature{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"feature not found"})
 		}

@@ -13,14 +13,14 @@ import (
 	"lovelcode/utils/token"
 	"lovelcode/utils"
 	"lovelcode/utils/s3"
-	"lovelcode/handlers"
+	shandlers "lovelcode/handlers/statistics"
 )
 
 
 func main(){
 
 	token.Setup()
-	utils.Setup(handlers.LogFunction)
+	utils.Setup(shandlers.LogFunction)
 	if err := s3.Init(); err!=nil{
 		log.Println("cant create s3.")
 	}

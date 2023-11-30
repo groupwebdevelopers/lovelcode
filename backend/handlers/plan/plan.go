@@ -1,4 +1,4 @@
-package handlers
+package plan
 
 import (
 	"errors"	
@@ -12,8 +12,9 @@ import (
 	"gorm.io/gorm"
 	
 	"lovelcode/utils"
-	"lovelcode/models"
+	pmodels "lovelcode/models/plan"
 	"lovelcode/database"
+	"lovelcode/utils/s3"
 )
 
 /////////////////////  public /////////////////////
@@ -22,7 +23,7 @@ import (
 
 func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	type Result struct{
-		models.OPlan
+		pmodels.OPlan
 		Name string
 		Value string
 		IsHave bool
@@ -35,7 +36,7 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	}
 
 	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Offset((page-1)*pageLimit).Limit(pageLimit).Scan(&result).Error; err!=nil{
+	if err:= database.DB.Model(&pmodels.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Offset((page-1)*pageLimit).Limit(pageLimit).Scan(&result).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
 		}
@@ -43,8 +44,8 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	}
 
 	type Result2 struct{
-		models.OPlan
-		Features []models.OFeature
+		pmodels.OPlan
+		Features []pmodels.OFeature
 	}
 	
 	var result2 []Result2
@@ -73,7 +74,7 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 	}
 	
 	for _, r := range result{
-		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
+		feature := pmodels.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
 		for i, r2 := range result2{
 			if r2.Title == r.Title{
 				result2[i].Features = append(result2[i].Features, feature)
@@ -89,7 +90,7 @@ func GetAllPlansAndFeatures(c *fiber.Ctx) error{
 
 func GetFeaturedPlans(c *fiber.Ctx) error{
 	type Result struct{
-		models.OPlan
+		pmodels.OPlan
 		Name string
 		Value string
 		IsHave bool
@@ -97,7 +98,7 @@ func GetFeaturedPlans(c *fiber.Ctx) error{
 	}
 
 	var result []Result
-	if err:= database.DB.Model(&models.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Where(&models.Plan{IsFeatured: true}).Scan(&result).Error; err!=nil{
+	if err:= database.DB.Model(&pmodels.Plan{}).Select("plans.id, plans.title, plans.price, plans.image_path, plans.type, plans.is_featured, plans.is_compare, features.name, features.value, features.is_have, features.is_featured as feature_is_featured").Joins("INNER JOIN features ON plans.id=features.plan_id").Where(&pmodels.Plan{IsFeatured: true}).Scan(&result).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no record found"})
 		}
@@ -105,9 +106,9 @@ func GetFeaturedPlans(c *fiber.Ctx) error{
 	}
 
 	type Result2 struct{
-		models.OPlan
+		pmodels.OPlan
 		
-		Features []models.OFeature
+		Features []pmodels.OFeature
 	}
 	
 	var result2 []Result2
@@ -138,7 +139,7 @@ func GetFeaturedPlans(c *fiber.Ctx) error{
 	}
 	
 	for _, r := range result{
-		feature := models.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
+		feature := pmodels.OFeature{Name: r.Name, Value: r.Value, IsHave: r.IsHave, IsFeatured: r.FeatureIsFeatured}
 		for i, r2 := range result2{
 			if r2.Title == r.Title{
 				result2[i].Features = append(result2[i].Features, feature)
@@ -157,7 +158,7 @@ func GetFeaturedPlans(c *fiber.Ctx) error{
 func SearchPlan(c *fiber.Ctx) error{
 // q := c.Queries()
 // type Result struct{
-// 	models.OPlan
+// 	pmodels.OPlan
 
 // }
 // if title, ok := q["title"]; ok{
@@ -180,7 +181,7 @@ return nil
 func CreatePlan(c *fiber.Ctx) error{
 
 	// plan and features
-	var pl models.IPlan
+	var pl pmodels.IPlan
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -191,7 +192,7 @@ func CreatePlan(c *fiber.Ctx) error{
 	}
 	
 	// create plan and fill it
-	var plan models.Plan
+	var plan pmodels.Plan
 	plan.Fill(&pl)
 	plan.TimeCreated = time.Now()
 	plan.TimeModified = time.Now()
@@ -213,8 +214,8 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	
 	
 	// check plan is exist
-	var plan models.Plan
-	if err:=database.DB.First(&plan, &models.Plan{ID: id}).Error;err!=nil{
+	var plan pmodels.Plan
+	if err:=database.DB.First(&plan, &pmodels.Plan{ID: id}).Error;err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Plan not found"})
 		}
@@ -243,7 +244,11 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	filename := strings.Replace(uniqueId.String(), "-", "", -1)
 	fileExt	:= strings.Split(file.Filename, ".")[1]
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
-	err = s3.PutObject(file, fmt.Sprintf("/images/plan/%s", image))
+
+	fl, err := file.Open()
+	defer fl.Close()
+
+	err = s3.PutObject(fl, fmt.Sprintf("/images/plan/%s", image))
 	// err = c.SaveFile(file, database.Settings.ImageSaveUrl+image)
 
 	if err!=nil{
@@ -252,7 +257,7 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	
 	imageURL := fmt.Sprintf("/images/plan/%s", image)
 
-	if err = database.DB.Model(&models.Plan{}).Where(&models.Plan{ID: id}).Update("image_path", imageURL).Error; err!=nil{
+	if err = database.DB.Model(&pmodels.Plan{}).Where(&pmodels.Plan{ID: id}).Update("image_path", imageURL).Error; err!=nil{
 		return utils.ServerError(c, err)
 	}
 
@@ -268,8 +273,8 @@ func EditPlan(c *fiber.Ctx) error{
 	}
 
 	// check plan is exist
-	var plan models.Plan
-	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Error; err!=nil{
+	var plan pmodels.Plan
+	if err:= database.DB.First(&plan, &pmodels.Plan{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
 		}
@@ -277,7 +282,7 @@ func EditPlan(c *fiber.Ctx) error{
 	}
 
 	// get plan from body
-	var pl models.IPlan
+	var pl pmodels.IPlan
 	if err:= c.BodyParser(&pl); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -303,7 +308,7 @@ func EditPlan(c *fiber.Ctx) error{
 
 // GET, admin
 func GetAllPlans(c *fiber.Ctx) error{
-	var plans []models.Plan
+	var plans []pmodels.Plan
 	if err:= database.DB.Find(&plans).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no plan found"})
@@ -321,8 +326,8 @@ func GetPlan(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 	
-	var plan models.Plan
-	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Error; err!=nil{
+	var plan pmodels.Plan
+	if err:= database.DB.First(&plan, &pmodels.Plan{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
 		}
@@ -339,15 +344,15 @@ func DeletePlan(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
 	}
 
-	if err:= database.DB.Delete(&models.Feature{}, &models.Feature{PlanID: id}).Error; err!=nil{
+	if err:= database.DB.Delete(&pmodels.Feature{}, &pmodels.Feature{PlanID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"feature not found"})
 		}
 		return utils.ServerError(c, err)
 	}
 
-	var plan models.Plan
-	if err:= database.DB.First(&plan, &models.Plan{ID: id}).Delete(&plan).Error; err!=nil{
+	var plan pmodels.Plan
+	if err:= database.DB.First(&plan, &pmodels.Plan{ID: id}).Delete(&plan).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"plan not found"})
 		}

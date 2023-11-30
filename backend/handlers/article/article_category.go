@@ -1,4 +1,4 @@
-package handlers
+package article
 
 import (
 	"strings"
@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"lovelcode/database"
-	"lovelcode/models"
+	amodels "lovelcode/models/article"
 	"lovelcode/utils"
 )
 
@@ -17,8 +17,8 @@ import (
 
 
 func GetAllArticleCategories(c *fiber.Ctx) error{
-	var categories []models.OArticleCategory
-	if err:= database.DB.Model(&models.ArticleCategory{}).Scan(&categories).Error; err!=nil{
+	var categories []amodels.OArticleCategory
+	if err:= database.DB.Model(&amodels.ArticleCategory{}).Scan(&categories).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no category found"})
 		}
@@ -35,7 +35,7 @@ func GetAllArticleCategories(c *fiber.Ctx) error{
 // POST, auth required, admin required
 func CreateArticleCategory(c *fiber.Ctx) error{
 	
-	var al models.IArticleCategory
+	var al amodels.IArticleCategory
 	if err:= c.BodyParser(&al); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
@@ -46,7 +46,7 @@ func CreateArticleCategory(c *fiber.Ctx) error{
 	}
 	
 		// check article category is exist
-		if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{Name: al.Name}).Error;err!=nil{
+		if err:=database.DB.First(&amodels.ArticleCategory{}, &amodels.ArticleCategory{Name: al.Name}).Error;err!=nil{
 			if err!=gorm.ErrRecordNotFound{
 				return utils.ServerError(c, err)
 			}
@@ -55,7 +55,7 @@ func CreateArticleCategory(c *fiber.Ctx) error{
 		}
 	
 	// create Article category and fill it
-	var category models.ArticleCategory
+	var category amodels.ArticleCategory
 	category.Fill(&al)
 	
 	if err:= database.DB.Create(&category).Error; err!=nil{
@@ -73,8 +73,8 @@ func EditArticleCategory(c *fiber.Ctx) error{
 	}
 
 	// check category is exist
-	var category models.ArticleCategory
-	if err:= database.DB.First(&category, &models.ArticleCategory{ID: id}).Error; err!=nil{
+	var category amodels.ArticleCategory
+	if err:= database.DB.First(&category, &amodels.ArticleCategory{ID: id}).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article Category not found"})
 		}
@@ -83,13 +83,13 @@ func EditArticleCategory(c *fiber.Ctx) error{
 
 	
 	// get article category from body
-	var al models.IArticleCategory
+	var al amodels.IArticleCategory
 	if err:= c.BodyParser(&al); err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
 	}
 	
 	// check article category is exist
-	if err:=database.DB.First(&models.ArticleCategory{}, &models.ArticleCategory{Name: al.Name}).Error;err!=nil{
+	if err:=database.DB.First(&amodels.ArticleCategory{}, &amodels.ArticleCategory{Name: al.Name}).Error;err!=nil{
 		if err!=gorm.ErrRecordNotFound{
 			return utils.ServerError(c, err)
 		}
@@ -123,7 +123,7 @@ func DeleteArticleCategory(c *fiber.Ctx) error{
 	}
 
 	
-	if err:= database.DB.Delete(&models.ArticleCategory{}, id).Error; err!=nil{
+	if err:= database.DB.Delete(&amodels.ArticleCategory{}, id).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"Article not found"})
 		}
@@ -135,7 +135,7 @@ func DeleteArticleCategory(c *fiber.Ctx) error{
 
 
 
-func convertArticleStringTimesForOutput(st []models.OArticleTitle)  {
+func convertArticleStringTimesForOutput(st []amodels.OArticleTitle)  {
 	for i:= range st{
 
 		st[i].TimeCreated =strings.Split(utils.ConvertStringTimeToPersianStringTime(st[i].TimeCreated), " ")[0]
