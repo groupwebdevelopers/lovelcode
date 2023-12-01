@@ -83,7 +83,7 @@ func (a *IArticle) Check() error{
 		return errors.New("invalid titile:" + err.Error())
 	}
 	// body and short desctiption must converted to base64
-	if err:= utils.IsNotInvalidCharacter(a.Tags, "/!@#$%^&*()_+-=][{}:?><.,]"); err!=nil{
+	if err:= utils.IsNotInvalidCharacter(a.Tags, "/!@#$%^&*()_+-=][{}:?><.,] "); err!=nil{
 		return errors.New("invalid tags:"+err.Error())
 	}
 

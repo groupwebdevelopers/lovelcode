@@ -21,6 +21,7 @@ func main(){
 
 	token.Setup()
 	utils.Setup(shandlers.LogFunction)
+	utils.Init()
 	if err := s3.Init(); err!=nil{
 		log.Println("cant create s3.")
 	}

@@ -1,7 +1,6 @@
 package article
 
 import (
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -16,6 +15,7 @@ import (
 //////////////////  public  //////////////////////////////
 
 
+// GET
 func GetAllArticleCategories(c *fiber.Ctx) error{
 	var categories []amodels.OArticleCategory
 	if err:= database.DB.Model(&amodels.ArticleCategory{}).Scan(&categories).Error; err!=nil{
@@ -32,7 +32,7 @@ func GetAllArticleCategories(c *fiber.Ctx) error{
 //////////////////  admin  //////////////////////////////
 
 
-// POST, auth required, admin required
+// POST, Admin Required
 func CreateArticleCategory(c *fiber.Ctx) error{
 	
 	var al amodels.IArticleCategory
@@ -64,7 +64,8 @@ func CreateArticleCategory(c *fiber.Ctx) error{
 	return utils.JSONResponse(c, 201, fiber.Map{"msg":"successfully created"})
 }
 
-// PUT, Auth Required, Admin Required, /:categoryId
+
+// PUT, Admin Required, /:id
 func EditArticleCategory(c *fiber.Ctx) error{
 	// get id form params
 	id := utils.GetIDFromParams(c, "articleCategoryId")
@@ -135,12 +136,4 @@ func DeleteArticleCategory(c *fiber.Ctx) error{
 
 
 
-func convertArticleStringTimesForOutput(st []amodels.OArticleTitle)  {
-	for i:= range st{
-
-		st[i].TimeCreated =strings.Split(utils.ConvertStringTimeToPersianStringTime(st[i].TimeCreated), " ")[0]
-		st[i].TimeModified =strings.Split(utils.ConvertStringTimeToPersianStringTime(st[i].TimeModified), " ")[0]
-		
-	}
-}
 

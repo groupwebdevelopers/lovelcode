@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
+
 	
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -15,6 +15,7 @@ import (
 	pfmodels "lovelcode/models/portfolio"
 	"lovelcode/utils"
 	"lovelcode/utils/s3"
+	"lovelcode/utils/hutils"
 	)	
 
 ///////////////////   public   /////////////////////////////
@@ -34,10 +35,7 @@ func GetAllPortfolios(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	for i := range Portfolios{
-		date := strings.Split(Portfolios[i].DoneTime, "T")[0]
-		Portfolios[i].DoneTime = strings.Split(utils.ConvertToPersianTime(utils.ConvertStringToTime(date, time.UTC)).String(), " ")[0]
-	}
+	hutils.ConvertPortfolioStringTimesForOutput(Portfolios)
 
 	return utils.JSONResponse(c, 200, fiber.Map{"data":Portfolios}) //user
 }
@@ -54,11 +52,7 @@ func GetFeaturedPortfolios(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
-	
-	for i := range Portfolios{
-		date := strings.Split(Portfolios[i].DoneTime, "T")[0]
-		Portfolios[i].DoneTime = strings.Split(utils.ConvertToPersianTime(utils.ConvertStringToTime(date, time.UTC)).String(), " ")[0]
-	}
+	hutils.ConvertPortfolioStringTimesForOutput(Portfolios)
 
 	return utils.JSONResponse(c, 200, fiber.Map{"data":Portfolios}) //user
 }

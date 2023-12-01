@@ -164,7 +164,7 @@ GET /blog/search?tags=t1|t2
 
 <b>Admin:</b>
 ```
-POST /admin/article/create              josn(title, body, tags, shortDesc) (tags splited with | example: 'test|art')
+POST /admin/blog/create              josn(title, body, tags, shortDesc) (tags splited with | example: 'test|art')
 ```
 ```
 POST /admin/upload/blog/image/:articleId (without /api/v1)

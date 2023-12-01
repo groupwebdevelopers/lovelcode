@@ -50,8 +50,13 @@ func (w *Portfolio) Fill(i *IPortfolio){
 	w.Description = i.Description
 	w.SiteUrl = i.SiteUrl
 	w.IsFeatured = i.IsFeatured
-	w.DoneTime = utils.ConvertToMiladiTime(utils.ConvertStringToTime(i.DoneTime, time.FixedZone("Tehran", 3.5 * 60 *60)))
+	t, err := utils.ConvertStringToTime(i.DoneTime, time.FixedZone("Tehran", 3.5 * 60 *60))
+	w.DoneTime = utils.ConvertToMiladiTime(t)
 	w.Type = i.Type
+
+	if err!=nil{
+		utils.LogError(err)
+	}
 }
 
 func (a *IPortfolio) Check() error{

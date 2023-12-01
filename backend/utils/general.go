@@ -7,11 +7,16 @@ import (
 	"strings"
 	"errors"
 	"math"
+	"math/rand"
 	"crypto/sha256"
 	"encoding/base64"
 
 	"github.com/gofiber/fiber/v2"
 )
+
+func Init(){
+	rand.Seed(time.Now().UnixNano())
+}
 
 func GetIntFromString(sid string, name string) int{
 
@@ -133,17 +138,26 @@ func ConvertToMiladiTime(t time.Time) time.Time{
 }
 
 // t format is year-month-day
-func ConvertStringToTime(t string, loc *time.Location) time.Time{
+func ConvertStringToTime(t string, loc *time.Location) (time.Time, error){
 	splited := strings.Split(t, "-")
-	year, _ := strconv.Atoi(splited[0])
-	month, _ := strconv.Atoi(splited[1])
-	day, _ := strconv.Atoi(splited[2])
-	return time.Date(year, time.Month(month), day, 0,0,0,0, loc)
-	
+	if len(splited) < 3{
+		return time.Date(1000, 1, 1, 0,0,0,0, loc),errors.New("general.go: ConvertStringToTime:invalid string parameter: "+t+"\nmust splited with -")
+	}
+	year, err1 := strconv.Atoi(splited[0])
+	month, err2 := strconv.Atoi(splited[1])
+	day, err3 := strconv.Atoi(splited[2])
+
+	var err error
+	if err1!=nil{err=err1}
+	if err2!=nil{err=err2}
+	if err3!=nil{err=err3}
+
+	return time.Date(year, time.Month(month), day, 0,0,0,0, loc), err	
 }
 
-func ConvertStringTimeToPersianStringTime(s string) string{
-	return ConvertTimeToString(ConvertToPersianTime(ConvertStringToTime(s, time.FixedZone("Tehran", 3.5*60*60))))
+func ConvertStringTimeToPersianStringTime(s string) (string, error){
+	t, err := ConvertStringToTime(s, time.FixedZone("Tehran", 3.5*60*60))
+	return ConvertTimeToString(ConvertToPersianTime(t)), err
 }
 
 func ConvertTimeToString(t time.Time) string{
@@ -154,4 +168,11 @@ func Hash(s string) string{
 	h:= sha256.New()
 	h.Write([]byte(s))
 	return string(base64.URLEncoding.EncodeToString(h.Sum(nil)))
+}
+
+func GetRandInt(min, max int) (int, error) {
+	if max <= min {
+		return 0, errors.New("invalid min and max")
+	}
+	return (rand.Intn(max - min) + min), nil
 }
