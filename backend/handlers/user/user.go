@@ -2,7 +2,7 @@ package user
 
 import (
 	"time"	
-
+	"fmt"
 	
 
 	"github.com/gofiber/fiber/v2"
@@ -118,8 +118,8 @@ func Signup(c *fiber.Ctx) error{
 	// if err!=nil{
 		// return utils.ServerError(c, err)
 	// }
-	token := utilstoken.CreateRandomToken()
-	token = utils.Hash(token)
+	// token := utilstoken.CreateRandomToken()
+	// token = utils.Hash(token)
 	// create user
 	user.Email = ss.Email
 	user.Password = ss.Password
@@ -129,7 +129,7 @@ func Signup(c *fiber.Ctx) error{
 	user.AdminPermisions = ""
 	user.IsDeleted = false
 	user.IsBanned = false
-	user.Token = token
+	// user.Token = token
 	user.TokenExp = time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour)
 	user.TimeCreated = time.Now()
 
@@ -168,6 +168,184 @@ func GetUserState(c *fiber.Ctx) error{
 	var rt string = utils.ConvertTimeToString(utils.ConvertToPersianTime(user.TimeCreated))
 
 	return utils.JSONResponse(c, 200, fiber.Map{"timeRigistered":rt, "totallComments":commentsCount, "totallProjectDoingRequest": planOrderCount})
+}
+
+
+// POST, Auth Required
+func ChangePassword(c *fiber.Ctx) error{
+	type passwords struct{
+		OldPassword string `json:"oldPassword"`
+		NewPassword string `json:"newPassword"`
+	}
+
+	var pw passwords
+	if err:= c.BodyParser(&pw); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json"})
+	}
+
+	if len(pw.NewPassword) < 8{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"small password ( < 8)."})
+	}
+
+	pw.OldPassword = utils.Hash(pw.OldPassword)
+	pw.NewPassword = utils.Hash(pw.NewPassword)
+
+	
+	user := c.Locals("user").(umodels.User)
+
+	// because password not exist in the user must reget user from database
+	if err:= database.DB.First(&user, umodels.User{ID: user.ID}).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 404, fiber.Map{"error":"user not found please signin again."})
+		}
+
+		return utils.ServerError(c, err)
+	}
+
+	if pw.OldPassword != user.Password {
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"The old password is not match."})
+	}
+
+	user.Password = pw.NewPassword
+
+	if err:= database.DB.Updates(&user).Error; err!=nil{
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"msg":"Successfully changed."})
+
+}
+
+
+// POST
+func ResetPassword(c *fiber.Ctx) error{
+	type resetpw struct{
+		Email string `json:"email"`
+		Code int64 `json:"code"`
+		Password string `json:"passwrod"`
+	}	
+	
+	
+	var rp resetpw
+	if err:= c.BodyParser(&rp); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid json (put code into josn even if it is empty)"})
+	}
+	
+	if err:= utils.CheckEmail(rp.Email); err!=nil{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid email"})
+	}
+	
+	// a code and a password and number of tries saved int the session
+	sess, err := session.GlobalSession.Get(c)
+	if err!=nil{
+		return utils.ServerError(c, err)
+	}
+	defer sess.Save()
+	
+	if rp.Code != 0 {
+		
+		code := sess.Get("code")
+		if code == nil{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"First request to send code (code must be 0)"})
+		}
+		
+		// var tp tmodels.Temp
+		// if err:= database.DB.First(&tp, tmodels.Temp{String1f: email}).Error; err!=nil{
+		// 	if err==gorm.ErrRecordNotFound{
+			// 	return utils.JSONResponse(c, 400, fiber.Map{"error":"First request to send code (code must be 0)"})
+		// 	}// check expaired
+		
+		// 	return utils.ServerError(c, err)
+		// }
+
+		if sess.Get("numberTries").(int) > 5 {
+			sess.Destroy()
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"The number of tries is full. Please request for new code"})
+		}
+		
+		if code.(int64) != rp.Code{
+			// save number of tries
+			// tp.Int2f++
+			// if err := database.DB.Updates(&tp).Error; err!=nil{
+				// utils.LogError(err)
+				// }
+				
+				sess.Set("numberTries", sess.Get("numberTries").(int)+1)
+			
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"The code is not match"})
+		}
+
+		// check passwrod
+		if len(rp.Password) <8{
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"small password ( < 8)"})
+		}
+		
+		rp.Password = utils.Hash(rp.Password)
+		
+		// save new password
+		if err:= database.DB.Model(umodels.User{}).Where(umodels.User{Email: rp.Email}).Update("password", rp.Password).Error; err!=nil{
+			return utils.ServerError(c, err)
+		}
+		sess.Destroy()
+		return utils.JSONResponse(c, 200, fiber.Map{"msg":"Successfully changed."})
+		
+
+	}else{
+			
+	
+		
+		
+		// check the reset password request is send before
+		// 	var tp tmodels.Temp
+		// if err:= database.DB.First(&tp, tmodels.Temp{String1f: email}).Error; err!=nil{
+			// 	if err!=gorm.ErrRecordNotFound{
+				// 		return utils.ServerError(c, err)
+				// 	}
+				// }
+				
+				code := sess.Get("code")
+				if code != nil{
+					// the code sent before
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"You send request before. Please wait 5 minutes"})
+		}
+		
+		// // check if found
+		// if tp.String1f == email{
+			// 	// check is expaired
+		// 	if tp.TimeExp > time.Now(){
+		// 		// is not expaired
+		// 		return utils.JSONResponse(c, 400, fiber.Map{"error":"You send request before. Please wait some minutes"})
+		// 	}else{
+			// 		// the last request is expaired; must delete from database
+			// 		if err:= database.DB.Delete(&tmodels.Temp{}, &tmodels.Temp{String1f: email}).Error; err !=nil{
+				// 			return utils.ServerError(c, err)
+				// 		}
+				// 	}
+				// }
+				
+				
+		rCode, err := utils.GetRandInt(10000, 999999)
+		if err!=nil{
+			return utils.ServerError(c, err)
+		}
+				
+				
+				// save randInt and email to temp
+				// tp := tmodels.Temp{String1f: email, Int: randInt}
+				// if err:= database.DB.Create(&tp).Error; err!=nil{
+					// 	return utils.ServerError(c, err)
+					//		}
+					
+			sess.Set("code", rCode)
+			sess.Set("numberTries", 0)
+			sess.SetExpiry(5 * time.Minute)
+					
+			// todo: send email to user
+			fmt.Println("randInt: ", rCode)
+
+		return utils.JSONResponse(c, 200, fiber.Map{"msg":"We send email to you check your email inbox"})
+	}
+
 }
 
 
