@@ -9,8 +9,9 @@ import (
 	
 	"lovelcode/utils"
 	pmodels "lovelcode/models/plan"
-	umodels "lovelcode/models/user"
+	// umodels "lovelcode/models/user"
 	"lovelcode/database"
+	"lovelcode/session"
 )
 
 /////////////////// public /////////////////////////
@@ -91,7 +92,12 @@ func GetAllUserPlanOrders(c *fiber.Ctx) error{
 	if err!=nil{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid page"})
 	}
-	user:=c.Locals("user").(umodels.User)
+	// user:=c.Locals("user").(umodels.User)
+	user, err := session.GetUserFromSession(c)
+	if err != nil {
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"Auth Required"})
+	}
+
 	if user.Email == ""{
 		return utils.ServerError(c, errors.New("invalid email saved in session"))
 	}

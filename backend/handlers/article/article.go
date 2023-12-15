@@ -13,12 +13,13 @@ import (
 
 	"lovelcode/database"
 	amodels "lovelcode/models/article"
-	umodels "lovelcode/models/user"
+	// umodels "lovelcode/models/user"
 	tmodels "lovelcode/models/temp"
 	"lovelcode/utils"
 	"lovelcode/utils/hutils"
 	utilstoken "lovelcode/utils/token"
 	"lovelcode/utils/s3"
+	"lovelcode/session"
 )
 
 
@@ -196,7 +197,7 @@ func SearchArticle(c *fiber.Ctx) error{
 
 // POST, Admin Required
 func CreateArticle(c *fiber.Ctx) error{
-	
+	fmt.Println("article...")
 	// get article from request body
 	var al amodels.IArticle
 	if err:= c.BodyParser(&al); err!=nil{
@@ -216,11 +217,16 @@ func CreateArticle(c *fiber.Ctx) error{
 	}else{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"the article title already exist"})
 	}
+
+	user, err := session.GetUserFromSession(c)
+	if err != nil {
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"Auth Required"})
+	}
 	
 	// create Article and fill it
 	var article amodels.Article
 	article.Fill(al)
-	article.UserID = c.Locals("user").(umodels.User).ID
+	article.UserID = user.ID
 	article.TimeCreated = time.Now()
 	article.TimeModified = time.Now()
 	article.TitleUrl = utils.ConvertToUrl(article.Title)
@@ -262,6 +268,9 @@ func UploadArticleImage(c *fiber.Ctx) error{
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
 
 	fl, err := file.Open()
+	if err != nil {
+		return utils.ServerError(c, err)
+	}
 	defer fl.Close()
 
 

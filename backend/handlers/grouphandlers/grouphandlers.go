@@ -4,7 +4,7 @@ import (
 	"fmt"
 	// "strconv"
 	"strings"
-	"time"
+	// "time"
 	// "errors"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +13,7 @@ import (
 	"lovelcode/utils"
 	// utilstoken "lovelcode/utils/token"
 	"lovelcode/database"
-	umodels "lovelcode/models/user"
+	// umodels "lovelcode/models/user"
 	amodels "lovelcode/models/article"
 	uhandlers "lovelcode/handlers/user"
 	"lovelcode/session"
@@ -55,8 +55,8 @@ func AdminRequired(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, status, mp)
 	}
 	
-	// user := c.Locals("user").(gmodels.User)
-	user := c.Locals("user").(umodels.User)
+	// user := c.Locals("user").(umodels.User)
+	user, err := session.GetUserFromSession(c)
 	if err!=nil{
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
 	}
@@ -98,7 +98,8 @@ func AdminUploadImage(c *fiber.Ctx) error{
 		// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
 		// }
 		
-	user := c.Locals("user").(umodels.User)
+	// user := c.Locals("user").(umodels.User)
+	user, err := session.GetUserFromSession(c)
 	if err!=nil{
 		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
 	}
@@ -130,9 +131,10 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 	}
 
 	
-	user := c.Locals("user").(umodels.User)
+	// user := c.Locals("user").(umodels.User)
+	user, err := session.GetUserFromSession(c)
 	if err!=nil{
-		return utils.JSONResponse(c, 401, fiber.Map{"error":"auth required"})
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"Auth Required"})
 	}
 	
 	
@@ -185,13 +187,13 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 func authRequired(c *fiber.Ctx) (int, fiber.Map, error){
 // auth required
 
-token := c.Cookies("token", "")
-if token==""{
-	return 401, fiber.Map{"error":"authentication required"}, nil
-}
-var user umodels.User
-// user, err := utilstoken.VerifyJWTToken(token)
-// if err!=nil{
+	token := c.Cookies("token", "")
+	if token==""{
+		return 401, fiber.Map{"error":"authentication required"}, nil
+	}
+	// var user umodels.User
+	// user, err := utilstoken.VerifyJWTToken(token)
+	// if err!=nil{
 	// return utils.JSONResponse(c, 401, fiber.Map{"error":"token invalid"})
 	// }
 	// var user gmodels.User = gmodels.User{Token: token}
@@ -207,34 +209,37 @@ var user umodels.User
 	if storedToken != nil{
 
 		if token == sess.Get("token"){;fmt.Println("login with session sucesss")
-		user, err := session.GetUserFromSession(c)
+		_, err := session.GetUserFromSession(c)
 		if err !=nil{
 			return 403, fiber.Map{"error":"you must signin! s"}, err
 		}
-		c.Locals("user", user)
+		// c.Locals("user", user)
 		return 200, nil, nil
 		}
 		
 	}
+
+
+
 	
-	if err:=database.DB.First(&user, &umodels.User{Token: token}).Error;err!=nil{
-		if err==gorm.ErrRecordNotFound{
-			return 401, fiber.Map{"error":"authentication required"},nil
-		}
-		return 500, fiber.Map{}, err
-	}
+	// if err:=database.DB.First(&user, &umodels.User{Token: token}).Error;err!=nil{
+	// 	if err==gorm.ErrRecordNotFound{
+	// 		return 401, fiber.Map{"error":"authentication required"},nil
+	// 	}
+	// 	return 500, fiber.Map{}, err
+	// }
 
-	// check banned
-	if user.IsBanned{
-		return 403, fiber.Map{"error":"you are banned!"}, nil
-	}
+	// // check banned
+	// if user.IsBanned{
+	// 	return 403, fiber.Map{"error":"you are banned!"}, nil
+	// }
 
-	// check token
-	if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
-		return 401, fiber.Map{"error":"authentication required"}, nil
-	}
+	// // check token
+	// if token != user.Token || user.TokenExp.Unix() < time.Now().Unix(){
+	// 	return 401, fiber.Map{"error":"authentication required"}, nil
+	// }
 
-	c.Locals("user", user)
+	// c.Locals("user", user)
 
 		
 	return 200, nil, nil

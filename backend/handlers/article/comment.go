@@ -13,9 +13,10 @@ import (
 
 	"lovelcode/database"
 	amodels "lovelcode/models/article"
-	umodels "lovelcode/models/user"
+	// umodels "lovelcode/models/user"
 	uhandlers "lovelcode/handlers/user"
 	"lovelcode/utils"
+	"lovelcode/session"
 )
 
 // POST, auth required /:articleTitleUrl
@@ -26,7 +27,12 @@ func CreateComment(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"article title url didn't sent"})
 	}
 
-	user := c.Locals("user").(umodels.User)
+	// user := c.Locals("user").(umodels.User)
+
+	user, err := session.GetUserFromSession(c)
+	if err != nil {
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"Auth Required"})
+	}
 
 	var mb amodels.IComment
 	if err:= c.BodyParser(&mb); err!=nil{
@@ -194,7 +200,12 @@ func DeleteComment(c *fiber.Ctx) error{
 
 	isHavePermison := false
 
-	user := c.Locals("user").(umodels.User)
+	// user := c.Locals("user").(umodels.User)
+
+	user, err := session.GetUserFromSession(c)
+	if err != nil {
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"Auth Required"})
+	}
 	
 	var Comment amodels.Comment
 	if err:= database.DB.First(&Comment, amodels.Comment{ID: id}).Error; err!=nil{

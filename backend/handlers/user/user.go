@@ -130,7 +130,7 @@ func Signup(c *fiber.Ctx) error{
 	user.IsDeleted = false
 	user.IsBanned = false
 	// user.Token = token
-	user.TokenExp = time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour)
+	// user.TokenExp = time.Now().Add(time.Duration(database.Settings.TokenExpHours)*time.Hour)
 	user.TimeCreated = time.Now()
 
 
@@ -151,7 +151,12 @@ func Signup(c *fiber.Ctx) error{
 
 func GetUserState(c *fiber.Ctx) error{
 	
-	user := c.Locals("user").(umodels.User)
+	// user := c.Locals("user").(umodels.User)
+
+	user, err := session.GetUserFromSession(c)
+	if err != nil {
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"Auth Required"})
+	}
 
 	// get commnets count
 	var commentsCount int
@@ -191,7 +196,12 @@ func ChangePassword(c *fiber.Ctx) error{
 	pw.NewPassword = utils.Hash(pw.NewPassword)
 
 	
-	user := c.Locals("user").(umodels.User)
+	// user := c.Locals("user").(umodels.User)
+
+	user, err := session.GetUserFromSession(c)
+	if err != nil {
+		return utils.JSONResponse(c, 401, fiber.Map{"error":"Auth Required"})
+	}
 
 	// because password not exist in the user must reget user from database
 	if err:= database.DB.First(&user, umodels.User{ID: user.ID}).Error; err!=nil{

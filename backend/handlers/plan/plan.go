@@ -246,6 +246,9 @@ func UploadPlanImage(c *fiber.Ctx) error{
 	image := fmt.Sprintf("%s.%s", filename, fileExt)
 
 	fl, err := file.Open()
+	if err != nil {
+		return utils.ServerError(c, err)
+	}
 	defer fl.Close()
 
 	err = s3.PutObject(fl, fmt.Sprintf("/images/plan/%s", image))
