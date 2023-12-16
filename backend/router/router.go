@@ -14,7 +14,7 @@ import (
 	uhandlers "lovelcode/handlers/user"
 	"lovelcode/utils"
 )
-
+//todo: image file size limit
 
 func Route(app *fiber.App) {
 	apiOnly := app.Group("/api", ghandlers.ApiOnly)

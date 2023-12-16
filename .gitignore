@@ -26,3 +26,4 @@ dist-ssr
 
 go.sum
 liara
+__debug_*

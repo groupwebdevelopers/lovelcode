@@ -3,6 +3,7 @@ package article
 import (
 	"errors"
 	"time"
+	"strconv"
 
 	umodels "lovelcode/models/user"
 	"lovelcode/utils"
@@ -18,7 +19,7 @@ type Article struct{
 	TitleUrl string `gorm:"not null,size:100,unique"`
 	Body string `gorm:"not null,size:10000"`
 	Tags string `gorm:"size:200"` // split with |
-	ShortDesc string `gorm:"not null,size:100"` // short description
+	ShortDesc string `gorm:"not null,size:200"` // short description
 	ImagePath string `gorm:"size:200"`
 	Views uint64
 	IsFeatured bool
@@ -96,8 +97,8 @@ func (a *IArticle) Check() error{
 	if len(a.Tags) > 200{
 		return errors.New("too long tags")
 	}
-	if len(a.ShortDesc) > 100{
-		return errors.New("too long shertDesc")
+	if len(a.ShortDesc) > 200{
+		return errors.New("too long shertDesc ("+ strconv.Itoa(len(a.ShortDesc))+">120)")
 	}
 	
 	return nil
