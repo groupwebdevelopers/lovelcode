@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/mail"
 	"strings"
+	// "encoding/hex"
 )
 
 
@@ -55,6 +56,17 @@ func IsNotInvalidCharacter(s string, disallows... string) error{
 	return nil
 }
 
-func ConvertToUrl(s string) string{
-	return strings.Replace(s, " ", "-", -1)
-}
+// func ConvertToUrl(s string) string{
+// 	replaced :=  strings.Replace(s, " ", "-", -1)
+// 	hexed := hex.EncodeToString([]byte(replaced))
+// 	result := "%"
+// 	for i, v := range hexed{
+// 		if (i+1)%2==0{
+// 			result += "%"
+// 		}
+// 		if v!= '-'
+// 		result += string(v)
+// 	}
+
+// 	return result
+// }

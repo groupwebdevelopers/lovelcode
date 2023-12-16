@@ -34,10 +34,12 @@ type IArticle struct{
 	Tags string `json:"tags"`
 	ShortDesc string `json:"shortDesc"`
 	IsFeatured bool `json:"isFeatured"`
+	CategoryID uint64 `json:"categoryId"`
 }
 
 // output article for user
 type OArticle struct{
+	ID uint64 `json:"i"`
 	Title string `json:"title"`
 	Body string `json:"body"`
 	Tags string `json:"tags"`
@@ -76,6 +78,7 @@ func (a *Article) Fill(i IArticle){
 	a.Tags = i.Tags
 	a.ShortDesc = i.ShortDesc
 	a.IsFeatured = i.IsFeatured
+	a.ArticleCategoryID = i.CategoryID
 }
 
 func (a *IArticle) Check() error{

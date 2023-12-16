@@ -21,7 +21,7 @@ func GetUserFromSession(c *fiber.Ctx) (umodels.User, error) {
 		utils.LogError(err)
 		return user, err
 	}
-	iAdminPermisions := sess.Get("adminPermsions")
+	iAdminPermisions := sess.Get("adminPermisions")
 	iUserID := sess.Get("userID")
 	iUserName := sess.Get("userName")
 	iUserFamily := sess.Get("userFamily")

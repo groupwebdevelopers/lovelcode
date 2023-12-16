@@ -201,14 +201,14 @@ func authRequired(c *fiber.Ctx) (int, fiber.Map, error){
 
 	sess, err := session.GlobalSession.Get(c)
 	if err!=nil{
-		return 403, fiber.Map{"error":"you must signin! s"}, err
+		return 403, fiber.Map{"error":"you must signin! s"}, nil
 	}
 	defer sess.Save()
 
 	storedToken := sess.Get("token")
 	if storedToken != nil{
 
-		if token == sess.Get("token"){;fmt.Println("login with session sucesss")
+		if token == storedToken.(string){;fmt.Println("login with session sucesss")
 		_, err := session.GetUserFromSession(c)
 		if err !=nil{
 			return 403, fiber.Map{"error":"you must signin! s"}, err
@@ -221,6 +221,7 @@ func authRequired(c *fiber.Ctx) (int, fiber.Map, error){
 
 
 
+	return 401, fiber.Map{"error":"Auth Required"}, nil
 	
 	// if err:=database.DB.First(&user, &umodels.User{Token: token}).Error;err!=nil{
 	// 	if err==gorm.ErrRecordNotFound{
@@ -242,6 +243,5 @@ func authRequired(c *fiber.Ctx) (int, fiber.Map, error){
 	// c.Locals("user", user)
 
 		
-	return 200, nil, nil
 }
 

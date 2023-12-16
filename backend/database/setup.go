@@ -29,7 +29,7 @@ var MainpagesTexts []mmodels.OMainpageText
 func Setup() error{
 	var err error
 	var db *gorm.DB
-	if os.Getenv("dev") == "true" || runtime.GOOS == "windows"{
+	if _, err1:=os.Stat("/home/mohammadamin"); !os.IsNotExist(err1) || runtime.GOOS == "windows"{
 		dsn := "mohammadamin:M@85mmohammadamin@tcp(127.0.0.1:3306)/lovelcode?charset=utf8mb4&parseTime=True&loc=Local"
 		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		

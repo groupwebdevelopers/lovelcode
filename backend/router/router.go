@@ -104,9 +104,9 @@ func Route(app *fiber.App) {
 	
 	// article
 	adminArticleReq := apiV1.Group("/admin/blog", ghandlers.AdminArticleRequired)
-	adminArticleReq.Post("/create", ahandlers.CreateArticle)
-	adminArticleReq.Put("/edit/:articleId", ahandlers.EditArticle)
-	adminArticleReq.Delete("/delete/:articleId", ahandlers.DeleteArticle)
+	adminArticleReq.Post("/create/:titleUrl", ahandlers.CreateArticle)
+	adminArticleReq.Put("/edit/:titleUrl", ahandlers.EditArticle)
+	adminArticleReq.Delete("/delete/:titleUrl", ahandlers.DeleteArticle)
 	
 	// article category
 	adminArticleCategoryReq := apiV1.Group("/admin/article-category", ghandlers.AdminRequired)

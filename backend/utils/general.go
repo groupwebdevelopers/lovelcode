@@ -113,7 +113,10 @@ func CheckAdminPermision(permisions string, p string) uint8{
 		return (permisions[11]-'0')
 	case "mainpage":
 		return (permisions[12]-'0')
+	case "article-category":
+		return (permisions[13]-'0')
 	}
+
 
 	return 3
 }
