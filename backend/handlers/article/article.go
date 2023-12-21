@@ -3,7 +3,7 @@ package article
 import (
 	"errors"
 	"fmt"
-
+	"path"
 	"slices"
 	"strings"
 	"time"
@@ -292,14 +292,17 @@ func UploadArticleImage(c *fiber.Ctx) error {
 	}
 	defer fl.Close()
 
-	err = s3.PutObject(fl, fmt.Sprintf("/images/article/%s", image))
+	imageURL := path.Join(fmt.Sprintf(database.Settings.ImageSaveUrl,"/article/%s", image))
+
+	err = s3.PutObject(fl, imageURL)
 	// err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))
 
 	if err != nil {
 		return utils.ServerError(c, err)
 	}
 
-	imageURL := fmt.Sprintf("/images/article/%s", image)
+	imageURL = path.Join(database.Settings.ImageUrlSubdomain, imageURL)
+
 
 	if err = database.DB.Model(&amodels.Article{}).Where(&amodels.Article{ID: article.ID}).Update("image_path", imageURL).Error; err != nil {
 		return utils.ServerError(c, err)

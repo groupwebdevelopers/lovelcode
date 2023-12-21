@@ -26,6 +26,7 @@ type Settings struct{
 	SocialMedias string
 	SitePhoneNumbers []string //splited with |
 	MainpageInMemory bool
+	ImageUrlSubdomain string
 }
 
 func SetupSettings(st []SettingsDB) (Settings, error){
@@ -34,8 +35,9 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 	// set default
 	settings.TokenExpHours = 72
 	settings.PageLength = 20
-	settings.ImageSaveUrl = "/../frontend/dist/images/"
-
+	settings.ImageSaveUrl = "/images/"
+	settings.ImageUrlSubdomain = "https://thlearn.storage.iran.liara.space/"
+	
 	
 	for _, s := range st{
 		if s.Value != ""{
@@ -55,6 +57,8 @@ func SetupSettings(st []SettingsDB) (Settings, error){
 				}
 				settings.PageLength = i
 			case "imageSaveUrl":
+				settings.ImageSaveUrl = s.Value
+			case "imageUrlSubdomain":
 				settings.ImageSaveUrl = s.Value
 			case "socialMedias":
 				settings.SocialMedias = s.Value

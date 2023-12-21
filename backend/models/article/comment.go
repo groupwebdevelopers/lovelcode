@@ -13,7 +13,7 @@ type Comment struct{
 	UserID uint64
 	User umodels.User
 	ArticleID uint64
-	Article Article
+	Article Article `gorm:"OnDelete:CASCADE;"`
 	CommentAnswerID uint64
 
 	Body string `gorm:"size:100"`
