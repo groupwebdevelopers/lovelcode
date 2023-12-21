@@ -15,8 +15,8 @@ type Article struct{
 	User umodels.User
 	ArticleCategoryID uint64 
 	ArticleCategory ArticleCategory
-	Title string `gorm:"not null,size:100"`
-	TitleUrl string `gorm:"not null,size:100,unique"`
+	Title string `gorm:"not null,size:200"`
+	TitleUrl string `gorm:"not null,size:1000,unique"`
 	Body string `gorm:"not null,size:10000"`
 	Tags string `gorm:"size:200"` // split with |
 	ShortDesc string `gorm:"not null,size:200"` // short description

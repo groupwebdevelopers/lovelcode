@@ -25,7 +25,7 @@ func Route(app *fiber.App) {
 	fileUploadAdminReq := app.Group("/admin/upload", ghandlers.AdminUploadImage)
 	fileUploadAdminReq.Post("/plan/image/:planId", phandlers.UploadPlanImage)
 	fileUploadAdminReq.Post("/member/image/:memberId", uhandlers.UploadMemberImage)
-	fileUploadAdminReq.Post("/blog/image/:articleId", ahandlers.UploadArticleImage)
+	fileUploadAdminReq.Post("/blog/image/:articleTitleUrl", ahandlers.UploadArticleImage)
 	fileUploadAdminReq.Post("/customer/image/:customerId", cuhandlers.UploadCustomerImage)
 	fileUploadAdminReq.Post("/portfolio/image/:portfolioId", pfhandlers.UploadPortfolioImage)
 	
@@ -104,9 +104,9 @@ func Route(app *fiber.App) {
 	
 	// article
 	adminArticleReq := apiV1.Group("/admin/blog", ghandlers.AdminArticleRequired)
-	adminArticleReq.Post("/create/:titleUrl", ahandlers.CreateArticle)
-	adminArticleReq.Put("/edit/:titleUrl", ahandlers.EditArticle)
-	adminArticleReq.Delete("/delete/:titleUrl", ahandlers.DeleteArticle)
+	adminArticleReq.Post("/create/:articleTitleUrl", ahandlers.CreateArticle)
+	adminArticleReq.Put("/edit/:articleTitleUrl", ahandlers.EditArticle)
+	adminArticleReq.Delete("/delete/:articleTitleUrl", ahandlers.DeleteArticle)
 	
 	// article category
 	adminArticleCategoryReq := apiV1.Group("/admin/article-category", ghandlers.AdminRequired)
@@ -202,7 +202,7 @@ func Route(app *fiber.App) {
 	// file upload admin required
 	// apt not found
 	apiOnly.Use(func (c *fiber.Ctx) error{
-		return utils.JSONResponse(c, 404, fiber.Map{"error":"API not found."})
+		return utils.JSONResponse(c, 404, fiber.Map{"error":"API not found.", "apis": app.GetRoutes()})
 	})
 	
 	// Static

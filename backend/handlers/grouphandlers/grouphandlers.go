@@ -148,11 +148,11 @@ func AdminArticleRequired(c *fiber.Ctx) error{
 		// check the article is for user or not. if not add other to field
 		
 		if len(splited) < 7{
-			return utils.JSONResponse(c, 400, fiber.Map{"error":"articleId didn't send"})
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"articleTitleUrl didn't send"})
 		}
 
-		titleUrl := c.Params("titleUrl")
-		if titleUrl==""{
+		titleUrl := splited[6]//c.Params("articleTitleUrl")
+		if titleUrl=="" || strings.Contains(titleUrl, "'"){
 			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid titleUrl"})
 		}
 		var article amodels.Article

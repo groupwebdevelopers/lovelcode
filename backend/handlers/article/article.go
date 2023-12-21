@@ -206,7 +206,7 @@ func CreateArticle(c *fiber.Ctx) error {
 		return utils.JSONResponse(c, 400, fiber.Map{"error": err.Error()})
 	}
 
-	titleUrl := c.Params("titleUrl")
+	titleUrl := c.Params("articleTitleUrl")
 	if titleUrl==""{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid titleUrl"})
 	}
@@ -247,7 +247,7 @@ func CreateArticle(c *fiber.Ctx) error {
 // function getting article id and a image
 func UploadArticleImage(c *fiber.Ctx) error {
 
-	id := utils.GetIDFromParams(c, "articleId")
+	id := utils.GetIDFromParams(c, "articleTitleUrl")
 	if id == 0 {
 		return utils.JSONResponse(c, 400, fiber.Map{"error": "the articleId didn't send"})
 	}
@@ -318,14 +318,14 @@ func EditArticle(c *fiber.Ctx) error {
 		return utils.JSONResponse(c, 400, fiber.Map{"error": "invalid json"})
 	}
 
-	// check article is exist
-	if err := database.DB.First(&amodels.Article{}, &amodels.Article{TitleUrl: article.TitleUrl}).Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			return utils.ServerError(c, err)
-		}
-	} else {
-		return utils.JSONResponse(c, 400, fiber.Map{"error": "the article title already exist"})
-	}
+	// // check article is exist
+	// if err := database.DB.First(&amodels.Article{}, &amodels.Article{TitleUrl: article.TitleUrl}).Error; err != nil {
+	// 	if err != gorm.ErrRecordNotFound {
+	// 		return utils.ServerError(c, err)
+	// 	}
+	// } else {
+	// 	return utils.JSONResponse(c, 400, fiber.Map{"error": "the article title already exist"})
+	// }
 
 	// check Article validation
 	if err := al.Check(); err != nil {
