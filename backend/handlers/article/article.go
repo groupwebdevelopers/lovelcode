@@ -292,7 +292,7 @@ func UploadArticleImage(c *fiber.Ctx) error {
 	}
 	defer fl.Close()
 
-	imageURL := path.Join(fmt.Sprintf(database.Settings.ImageSaveUrl,"/article/%s", image))
+	imageURL := path.Join(database.Settings.ImageSaveUrl, fmt.Sprintf("/article/%s", image))
 
 	err = s3.PutObject(fl, imageURL)
 	// err = c.SaveFile(file, fmt.Sprintf("../frontend/dist/images/%s", image))

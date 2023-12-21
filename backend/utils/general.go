@@ -131,12 +131,12 @@ func ConvertToPersianTime(t time.Time) time.Time{
 	sub := t.Sub(time.Date(1970, 1, 1,0,0,0,0, time.UTC))
 	sub += 3.5 * 60 * 60 * time.Second
 	// 1348 10 11
-	return time.Date(1348, 10, 11,0,0,0,0, time.FixedZone("Tehran", 3.5*60*60)).Add(sub)
+	return time.Date(1348, 10, 10,0,0,0,0, time.FixedZone("Tehran", 3.5*60*60)).Add(sub)
 }
 
 // get +3.5 hours time
 func ConvertToMiladiTime(t time.Time) time.Time{
-	sub := t.Sub(time.Date(1348, 10, 11,0,0,0,0, time.FixedZone("Tehran", 3.5*60*60)))
+	sub := t.Sub(time.Date(1348, 10, 10,0,0,0,0, time.FixedZone("Tehran", 3.5*60*60)))
 	return time.Date(1970, 1, 1,0,0,0,0, time.UTC).Add(sub)
 }
 
@@ -148,7 +148,7 @@ func ConvertStringToTime(t string, loc *time.Location) (time.Time, error){
 	}
 	year, err1 := strconv.Atoi(splited[0])
 	month, err2 := strconv.Atoi(splited[1])
-	day, err3 := strconv.Atoi(splited[2])
+	day, err3 := strconv.Atoi(strings.Split(splited[2], "T")[0])
 
 	var err error
 	if err1!=nil{err=err1}
