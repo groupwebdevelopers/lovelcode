@@ -3,7 +3,7 @@ package article
 import (
 	"errors"
 	"fmt"
-	"os"
+
 	"slices"
 	"strings"
 	"time"
@@ -247,23 +247,38 @@ func CreateArticle(c *fiber.Ctx) error {
 // function getting article id and a image
 func UploadArticleImage(c *fiber.Ctx) error {
 
-	id := utils.GetIDFromParams(c, "articleTitleUrl")
-	if id == 0 {
-		return utils.JSONResponse(c, 400, fiber.Map{"error": "the articleId didn't send"})
-	}
+	// id := utils.GetIDFromParams(c, "articleTitleUrl")
+	// if id == 0 {
+	// 	return utils.JSONResponse(c, 400, fiber.Map{"error": "the articleId didn't send"})
+	// }
 
-	// check Article is exist
-	var article amodels.Article
-	if err := database.DB.First(&article, &amodels.Article{ID: id}).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return utils.JSONResponse(c, 404, fiber.Map{"error": "Article not found"})
-		}
-		return utils.ServerError(c, err)
-	}
+	// // check Article is exist
+	// var article amodels.Article
+	// if err := database.DB.First(&article, &amodels.Article{ID: id}).Error; err != nil {
+	// 	if err == gorm.ErrRecordNotFound {
+	// 		return utils.JSONResponse(c, 404, fiber.Map{"error": "Article not found"})
+	// 	}
+	// 	return utils.ServerError(c, err)
+	// }
+
+		article := c.Locals("article").(amodels.Article)
 
 	file, err := c.FormFile("i")
 	if err != nil {
 		return utils.ServerError(c, err)
+	}
+
+	// delete last image if exist
+	if article.ImagePath != ""{
+		if strings.Contains(article.ImagePath, "*") {
+			return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
+		}
+		if article.ImagePath != "" {
+			err := s3.DeleteObject(fmt.Sprintf(".%s", article.ImagePath))
+			if err != nil {
+				return utils.ServerError(c, err)
+			}
+		}
 	}
 
 	uniqueId := uuid.New()
@@ -286,7 +301,7 @@ func UploadArticleImage(c *fiber.Ctx) error {
 
 	imageURL := fmt.Sprintf("/images/article/%s", image)
 
-	if err = database.DB.Model(&amodels.Article{}).Where(&amodels.Article{ID: id}).Update("image_path", imageURL).Error; err != nil {
+	if err = database.DB.Model(&amodels.Article{}).Where(&amodels.Article{ID: article.ID}).Update("image_path", imageURL).Error; err != nil {
 		return utils.ServerError(c, err)
 	}
 
@@ -359,7 +374,7 @@ func DeleteArticle(c *fiber.Ctx) error {
 		return utils.ServerError(c, errors.New("one star is exist in image path. maybe hacker do this"))
 	}
 	if article.ImagePath != "" {
-		err := os.Remove(fmt.Sprintf(".%s", article.ImagePath))
+		err := s3.DeleteObject(fmt.Sprintf(".%s", article.ImagePath))
 		if err != nil {
 			return utils.ServerError(c, err)
 		}
@@ -425,3 +440,5 @@ func AddViewArticle(articleID uint64, views uint64, sess *main_session.Session) 
 
 	}
 }
+
+

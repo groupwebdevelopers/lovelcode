@@ -71,3 +71,12 @@ func PutObject(body io.ReadSeeker, key string) error{
 
 	return err
 }
+
+func DeleteObject(key string) error {
+	_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
+		Bucket: bucket,
+		Key: aws.String(key),
+	})
+
+	return err
+}

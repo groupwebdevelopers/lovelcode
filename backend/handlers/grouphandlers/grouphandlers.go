@@ -78,7 +78,10 @@ func AdminRequired(c *fiber.Ctx) error{
 }
 
 func AdminUploadImage(c *fiber.Ctx) error{
-	
+	ct, ok := c.GetReqHeaders()["Content-Type"]
+	if ct[:19	]!="multipart/form-data" || !ok{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid header. header must be multipart/form-data"})
+	}
 	// auth required
 	status, mp, err := authRequired(c)
 	if err!=nil{
@@ -105,10 +108,35 @@ func AdminUploadImage(c *fiber.Ctx) error{
 	}
 
 		splited := strings.Split(c.OriginalURL(), "/")
-		if len(splited) < 4{
+		if len(splited) < 6{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"URL not found"})
 		}
 		field := splited[3];fmt.Println(field)
+		if field == "blog"{
+
+
+			titleUrl := splited[5]//c.Params("articleTitleUrl")
+		if titleUrl=="" || strings.Contains(titleUrl, "'"){
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid titleUrl"})
+		}
+			
+			var article amodels.Article
+		if err:=database.DB.First(&article, &amodels.Article{TitleUrl: titleUrl}).Error;err!=nil{
+			if err== gorm.ErrRecordNotFound{
+				return utils.JSONResponse(c, 404, fiber.Map{"error":"article not found"})
+			}
+			return utils.ServerError(c, err)
+		}
+			field = "edit"
+			if article.UserID != user.ID{
+				field += "Other"
+			}else{
+				field += "My"
+			}
+			field += "Article"
+			c.Locals("article", article)
+			// c.Locals("articleID", article.ID)
+		}
 		adminCode := utils.CheckAdminPermision(user.AdminPermisions, field)
 		if adminCode != 1{
 			if adminCode == 2{
