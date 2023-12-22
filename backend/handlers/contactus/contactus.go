@@ -53,7 +53,7 @@ func GetAllUnseenContactUss(c *fiber.Ctx) error{
 	}
 
 	var ContactUss []comodels.OContactUs
-	if err:= database.DB.Model(&comodels.ContactUs{}).Where(&comodels.ContactUs{IsSeen: true}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&ContactUss).Error; err!=nil{
+	if err:= database.DB.Model(&comodels.ContactUs{}).Where(&comodels.ContactUs{IsSeen: false}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&ContactUss).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no ContactUs found"})
 		}
@@ -72,15 +72,17 @@ func GetAllContactUss(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid query:"+err.Error()})
 	}
 
-	var ContactUss []comodels.OContactUs
-	if err:= database.DB.Model(&comodels.ContactUs{}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&ContactUss).Error; err!=nil{
+	var contactUss []comodels.OContactUs
+	if err:= database.DB.Model(&comodels.ContactUs{}).Offset((page-1)*pageLimit).Limit(pageLimit).Find(&contactUss).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no ContactUs found"})
 		}
 		return utils.ServerError(c, err)
 	}
+	//todo:
+	// hutils.ConvertContactUsStringTimesForOutput(contactUss)
 
-	return utils.JSONResponse(c, 200, fiber.Map{"data":ContactUss})
+	return utils.JSONResponse(c, 200, fiber.Map{"data":contactUss})
 }
 
 // GET, admin, /:contactusId
@@ -99,11 +101,46 @@ func GetContactUs(c *fiber.Ctx) error{
 		return utils.ServerError(c, err)
 	}
 
+
 	return utils.JSONResponse(c, 200, fiber.Map{"data":ContactUs})
 	
 }
 
-// DELETE, admin /:title
+// POST, admin, /:id
+func SaveAsSeen(c *fiber.Ctx) error{
+	id := utils.GetIDFromParams(c, "contactusId")
+	if id == 0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+
+	if err:= database.DB.Model(&comodels.ContactUs{}).Where(&comodels.ContactUs{ID: id}).Update("is_seen", 1).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 400, fiber.Map{"error": "Contactus ID not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"msg": "successfuly saved"})
+}
+
+// POST, admin, /:id
+func SaveAsUnSeen(c *fiber.Ctx) error{
+	id := utils.GetIDFromParams(c, "contactusId")
+	if id == 0{
+		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid id"})
+	}
+
+	if err:= database.DB.Model(&comodels.ContactUs{}).Where(&comodels.ContactUs{ID: id}).Update("is_seen", false).Error; err!=nil{
+		if err==gorm.ErrRecordNotFound{
+			return utils.JSONResponse(c, 400, fiber.Map{"error": "Contactus ID not found"})
+		}
+		return utils.ServerError(c, err)
+	}
+
+	return utils.JSONResponse(c, 200, fiber.Map{"msg": "successfuly saved"})
+}
+
+// DELETE, admin /:id
 func DeleteContactUs(c *fiber.Ctx) error{
 	
 	id := utils.GetIDFromParams(c, "contactusId")

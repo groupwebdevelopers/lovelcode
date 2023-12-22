@@ -177,7 +177,11 @@ func Route(app *fiber.App) {
 	contactusAdminReq.Get("/get/:contactusId", cohandlers.GetContactUs)
 	contactusAdminReq.Delete("/delete/:contactusId", cohandlers.DeleteContactUs)
 	contactusAdminReq.Get("/get-all/", cohandlers.GetAllContactUss) // with query
+	contactusAdminReq.Get("/get-all-unseen/", cohandlers.GetAllUnseenContactUss) // with query
+	contactusAdminReq.Post("/save-as-seen/:contactusId", cohandlers.SaveAsSeen) // with query
+	contactusAdminReq.Post("/save-as-unseen/:contactusId", cohandlers.SaveAsUnSeen) // with query
 	
+
 	// member
 	statisticAdminReq := apiV1.Group("/admin/statistic", ghandlers.AdminRequired)
 	statisticAdminReq.Post("/create/:statisticId", sshandlers.CreateStatistic)

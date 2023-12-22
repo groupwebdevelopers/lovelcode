@@ -11,7 +11,7 @@ type ContactUs struct{
 	Title string `gorm:"size:100,not null"`
 	Body string `gorm:"size:400,not null"`
 	Email string `gorm:"size:400,not null"`
-	Number uint32
+	Number uint64
 
 	IsSeen bool
 	
@@ -23,7 +23,7 @@ type IContactUs struct{
 	Title string `json:"title"`
 	Body string `json:"body"`
 	Email string `json:"email"`
-	Number uint32 `json:"number"`
+	Number uint64 `json:"number"`
 }
 
 
@@ -31,7 +31,6 @@ type OContactUs struct{
 	ID uint64 `json:"id"`
 	Title string `json:"title"`
 	Body string `json:"body"`
-	TitleUrl string `json:"titleUrl"`
 	Email string `json:"email"`
 	Number uint64 `json:"number"`
 	IsSeen bool `json:"isSeen"`
@@ -40,10 +39,10 @@ type OContactUs struct{
 
 func (i *IContactUs) Check() error{
 	if err:=utils.IsNotInvalidCharacter(i.Title, "/"); err!=nil{
-		return errors.New("invalid title:" +i.Check().Error())
+		return errors.New("invalid title:" +err.Error())
 	}
 	if err:=utils.IsNotInvalidCharacter(i.Body); err!=nil{
-		return errors.New("invalid body:" +i.Check().Error())
+		return errors.New("invalid body:" +err.Error())
 	}
 
 	if len(i.Title) > 100{
@@ -51,6 +50,9 @@ func (i *IContactUs) Check() error{
 	}
 	if len(i.Body) > 400{
 		return errors.New("too long body")
+	}
+	if i.Number < 9000000000 || i.Number > 9999999999{
+		return errors.New("invalid number")
 	}
 
 	return nil
