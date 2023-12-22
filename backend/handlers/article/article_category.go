@@ -51,7 +51,7 @@ func CreateArticleCategory(c *fiber.Ctx) error{
 				return utils.ServerError(c, err)
 			}
 		}else{
-			return utils.JSONResponse(c, 400, fiber.Map{"error":"the article title already exist"})
+			return utils.JSONResponse(c, 400, fiber.Map{"error":"the category name already exist"})
 		}
 	
 	// create Article category and fill it

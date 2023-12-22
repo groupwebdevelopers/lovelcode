@@ -84,7 +84,7 @@ func Route(app *fiber.App) {
 	
 	
 	// comment
-	commentAuthReq := apiV1.Group("/comment", ghandlers.AuthRequired)
+	commentAuthReq := apiV1.Group("/blog-comment", ghandlers.AuthRequired)
 	commentAuthReq.Post("/create/:articleTitleUrl", ahandlers.CreateComment)
 	commentAuthReq.Put("/edit/:commentId", ahandlers.EditComment)
 	commentAuthReq.Delete("/delete/:commentId", ahandlers.DeleteComment)
@@ -211,6 +211,7 @@ func Route(app *fiber.App) {
 	app.Static("*", "../frontend/dist/index.html")
 	app.Static("*", "/frontend/dist/index.html")
 
+	// todo:add robots.txt
 
 	// static not found
 	app.Use(func (c *fiber.Ctx) error{

@@ -160,7 +160,7 @@ func GetAllArticleComments(c *fiber.Ctx) error{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":err.Error()})
 	}
 	var Comments []amodels.OComment
-	if err:= database.DB.Model(&amodels.Comment{}).Select("comments.body, users.name, users.family").Joins("INNER JOIN users ON comments.user_id=users.id").Offset((page-1)*pageLimit).Limit(pageLimit).Scan(&Comments).Error; err!=nil{
+	if err:= database.DB.Model(&amodels.Comment{}).Select("comments.id, comments.comment_answer_id, comments.body, users.name, users.family").Joins("INNER JOIN users ON comments.user_id=users.id").Offset((page-1)*pageLimit).Limit(pageLimit).Scan(&Comments).Error; err!=nil{
 		if err==gorm.ErrRecordNotFound{
 			return utils.JSONResponse(c, 404, fiber.Map{"error":"no Comment found"})
 		}
