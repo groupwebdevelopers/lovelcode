@@ -24,9 +24,9 @@ import (
 
 
 func ApiOnly(c *fiber.Ctx) error{
-	return c.Next()
+	// return c.Next()
 	ct, ok := c.GetReqHeaders()["Content-Type"]
-	if ct=="application/json" && ok{
+	if ok && ct[0]=="application/json"{
 		return c.Next()
 	}
 	return utils.JSONResponse(c, 400, fiber.Map{"error":"Content-Type must be application/json"})
@@ -78,8 +78,8 @@ func AdminRequired(c *fiber.Ctx) error{
 }
 
 func AdminUploadImage(c *fiber.Ctx) error{
-	ct, ok := c.GetReqHeaders()["Content-Type"]
-	if ct[:19	]!="multipart/form-data" || !ok{
+	ct, ok := c.GetReqHeaders()["Content-Type"]	
+	if (len(ct) > 0 && len(ct[0]) >= 19 && ct[0][:19]!="multipart/form-data") || len(ct) == 0 || len(ct[0]) < 19 || !ok{
 		return utils.JSONResponse(c, 400, fiber.Map{"error":"invalid header. header must be multipart/form-data"})
 	}
 	// auth required

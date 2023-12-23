@@ -2,11 +2,16 @@ package main
 
 import (
 	"log"
+	"time"
 	// "strings"
 
 	"github.com/gofiber/fiber/v2"
 	// "github.com/gofiber/template/html/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/helmet"
+	"github.com/gofiber/fiber/v2/middleware/csrf"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	
 	"lovelcode/router"
 	"lovelcode/database"
@@ -34,6 +39,22 @@ func main(){
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
+
+	app.Use(helmet.New())
+	app.Use(csrf.New(csrf.Config{
+		CookieName: "r",
+		CookieSecure: true,
+		CookieSessionOnly: true,
+		CookieHTTPOnly: true,
+		Expiration: 5 * time.Minute,
+	}))
+	app.Use(limiter.New(limiter.Config{
+		Max: 20,
+		Expiration: 2 * time.Minute,
+	}))
+	app.Use(logger.New(logger.Config{
+		Format: "${green}${time}, ${blue}[${ip}]:${port} ${yellow}${status} - ${cyan}${method} ${magenta}${path}\n",
 	}))
 
 	// remove
